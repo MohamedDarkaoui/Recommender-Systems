@@ -1,0 +1,17 @@
+body{
+    background:blue;
+}
+div.box{
+    width: 500px;
+    height: 500px;
+    position: relative;
+    background: white;
+    padding: 5px;
+    margin: 10% auto;
+}
+input[type="email"]{
+    display: block;
+    position: relative;
+    margin: 40% auto;
+    width: 250px;
+}
