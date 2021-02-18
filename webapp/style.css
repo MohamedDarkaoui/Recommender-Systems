@@ -1,17 +1,36 @@
-body{
-    background:blue;
+body {
+    background-image: linear-gradient( rgb(212, 132, 30), rgb(120, 0, 150));
+    background-attachment:fixed;
 }
+
 div.box{
     width: 500px;
     height: 500px;
     position: relative;
-    background: white;
+    background-image: linear-gradient(rgb(167, 162, 162),rgb(212, 209, 209));
     padding: 5px;
     margin: 10% auto;
 }
 input[type="email"]{
     display: block;
     position: relative;
-    margin: 40% auto;
+    margin: auto auto auto auto;
     width: 250px;
+}
+input[type="password"]{
+    display: block;
+    position: relative;
+    margin: 5% auto auto auto;
+    width: 250px;
+}
+button.login{
+    display: block;
+    position: relative;
+    margin: 15% auto auto auto;
+}
+img{
+    height: 200px;
+    width: 328px;
+    position: relative;
+    margin-left: 20%;
 }
