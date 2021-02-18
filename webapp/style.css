@@ -35,6 +35,10 @@ button.signup{
     margin: 2% auto auto auto;
 }
 
+a:link{
+    text-decoration: none;
+}
+
 img{
     height: 200px;
     width: 328px;
