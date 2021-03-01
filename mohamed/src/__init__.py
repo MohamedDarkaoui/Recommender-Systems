@@ -19,6 +19,5 @@ def create_app():
 
     from .models import User
 
-
     return app
 

@@ -1,0 +1,43 @@
+{% extends "interface.html" %}
+{% block title %} log in {% endblock %}
+{% block content  %}
+    <!-- navigation -->
+    <nav class="navbar nav-tabs navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">PPDB</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{{url_for('auth.login')}}">log in<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('auth.signup')}}">sign up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">about</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">contact</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- login -->
+      <form method="POST">
+        <div class= "box">   
+            <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" name = "email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+            </div>
+            <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" name = "password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>  
+{% endblock %}
