@@ -11,14 +11,14 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class={% block home %}"nav-item"{% endblock %}>
             <a class="nav-link" href="{{url_for('views.home')}}"> Home<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
+        <li class={% block about %}"nav-item"{% endblock %}>
             <a class="nav-link" href="{{url_for('views.about')}}">About</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('views.contact')}}">Contact</a>
+        <li class= {% block contact %}"nav-item"{% endblock %}>
+            <a class= "nav-link" href="{{url_for('views.contact')}}">Contact</a>
         </li>
         </ul>
         <ul class="navbar-nav navbar-right">
@@ -33,11 +33,16 @@
 
 
 
-<div class="sidenav" >
-    <a {% block activate_databases %}  {% endblock %} href="{{url_for('views.datasets')}}">Datasets</a>
-    <a {% block activate_scenarios %}  {% endblock %} href="{{url_for('views.scenarios')}}">Scenarios</a>
-    <a {% block activate_models %}  {% endblock %} href="{{url_for('views.models')}}">Models</a>
-    <a {% block activate_experiments %}  {% endblock %} href="{{url_for('views.experiments')}}">Experiments</a>
+
+<div class="row sidenav">
+  <div class="col-3 temp">
+    <div class="nav flex-column nav-pills temp1" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <a class= {% block activate_datasets %} "nav-link" {% endblock %}  href="{{url_for('views.datasets')}} "role="tab" aria-selected="false">Datasets</a>
+      <a class= {% block activate_scenarios %} "nav-link" {% endblock %} href="{{url_for('views.scenarios')}}" role="tab" aria-selected="false">Scenarios</a>
+      <a class= {% block activate_models %} "nav-link" {% endblock %}   href="{{url_for('views.models')}}" role="tab" aria-selected="false">Models</a>
+      <a class= {% block activate_experiments %} "nav-link" {% endblock %} href="{{url_for('views.experiments')}}" role="tab" aria-selected="false">Experiments</a>
+    </div>
+  </div>
 </div>
 
 

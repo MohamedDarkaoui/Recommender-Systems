@@ -9,7 +9,7 @@ def default():
 
 @views.route('/home')
 def home():
-    return render_template("base.html")
+    return render_template("home.html")
 
 @views.route('/datasets')
 def datasets():
