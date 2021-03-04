@@ -4,7 +4,7 @@
 
 <!-- navigation -->
 <nav class="navbar nav-tabs navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="#">PPDB</a>
+    <a class="navbar-brand" href="{{url_for('views.home')}}">PPDB</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -15,10 +15,10 @@
             <a class="nav-link" href="{{url_for('views.home')}}"> Home<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href="{{url_for('views.about')}}">About</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" href="{{url_for('views.contact')}}">Contact</a>
         </li>
         </ul>
         <ul class="navbar-nav navbar-right">
