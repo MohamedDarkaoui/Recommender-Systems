@@ -9,4 +9,21 @@ def default():
 
 @views.route('/home')
 def home():
-    return render_template("interface.html")
+    return render_template("base.html")
+
+@views.route('/datasets')
+def datasets():
+    return render_template("datasets.html")
+
+@views.route('/experiments')
+def experiments():
+    return render_template("experiments.html")
+
+@views.route('/models')
+def models():
+    return render_template("models.html")
+
+@views.route('/scenarios')
+def scenarios():
+    return render_template("scenarios.html")
+
