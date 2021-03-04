@@ -1,7 +1,7 @@
 /* The sidebar menu */
 .sidenav {
     height: 100%;
-    width: 160px; /* Set the width of the sidebar */
+    width: auto; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
     top: auto; /* Stay at the top */
@@ -33,4 +33,8 @@
   }
   .navbar {
       background-color: #1f2833;
+  }
+
+  .sidenav .active{
+    background-color: black;
   }
