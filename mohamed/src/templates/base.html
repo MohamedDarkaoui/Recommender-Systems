@@ -23,17 +23,12 @@
         </ul>
         <ul class="navbar-nav navbar-right">
             <li class="nav-item">
-                <a class="nav-link" href="#"> Log out</a>
+                <a class="nav-link" href="{{url_for('auth.login')}}"> Log out</a>
             </li>
         </ul>
     </div>
 </nav>
 <!-- Side navigation -->
-
-
-
-
-
 <div class="row sidenav">
   <div class="col-3 temp">
     <div class="nav flex-column nav-pills temp1" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -44,7 +39,11 @@
     </div>
   </div>
 </div>
-
+<!-- Page content -->
+<div class="main">
+    {% block page_content%}
+    {% endblock%}
+</div>
 
     
 {% endblock %}

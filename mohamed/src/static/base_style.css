@@ -37,7 +37,10 @@
 
 
 
-  
+  .main {
+    margin-left: 170px; /* Same as the width of the sidebar */
+    padding: 0px 10px;
+  }
   .sidenav .temp .temp1 .active{
     background-color: #950740;
   }
