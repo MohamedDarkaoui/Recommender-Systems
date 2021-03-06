@@ -3,7 +3,7 @@
 
 /*===== VARIABLES CSS =====*/
 :root{
-  --nav-width: 92px;
+  --nav-width: 220px;
 
   /*===== Colores =====*/
   --first-color: #0C5DF4;
@@ -149,4 +149,18 @@ a{
 /*Rotate icon*/
 .rotate{
   transform: rotate(180deg);
+}
+.main{
+  margin-left: 120px;
+}
+.main .upload{
+  margin-left: 850px;
+}
+
+.btn-primary {
+  background-color: #12192C; 
+}
+    
+.btn-outline-primary {
+  color: none;
 }
