@@ -13,27 +13,27 @@
             <nav class="nav">
                 <div>
                     <div class="nav__brand">
-                        <a href="{{url_for('views.home')}}" class="nav__logo">PPDB Team 3</a>
+                        <a href="{{url_for('views.home')}}" class="nav__logo not-active">PPDB Team 3</a>
                     </div>
                     <div class="nav__list">
-                        <a href="{{url_for('views.home')}}" class={% block activate_dashboard %} "nav__link" {% endblock %}>
+                        <a href="{{url_for('views.home')}}" class={% block activate_dashboard %} "nav__link not-active" {% endblock %}>
                             <ion-icon name="home-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Dashboard</span>
                         </a>
-                        <a href="{{url_for('views.datasets')}}" class={% block activate_datasets %} "nav__link" {% endblock %}>
+                        <a href="{{url_for('views.datasets')}}" class={% block activate_datasets %} "nav__link not-active" {% endblock %}>
                             <ion-icon name="file-tray-full-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Datasets</span>
                         </a>
 
-                        <a href="{{url_for('views.scenarios')}}" class={% block activate_scenarios %} "nav__link" {% endblock %}>
+                        <a href="{{url_for('views.scenarios')}}" class={% block activate_scenarios %} "nav__link not-active" {% endblock %}>
                             <ion-icon name="funnel-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Scenarios</span>
                         </a>
-                        <a href="{{url_for('views.models')}}" class={% block activate_models %} "nav__link" {% endblock %}>
+                        <a href="{{url_for('views.models')}}" class={% block activate_models %} "nav__link not-active" {% endblock %}>
                             <ion-icon name="cube-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Models</span>
                         </a>
-                        <a href="{{url_for('views.experiments')}}" class={% block activate_experiments %} "nav__link" {% endblock %}>
+                        <a href="{{url_for('views.experiments')}}" class={% block activate_experiments %} "nav__link not-active" {% endblock %}>
                             <ion-icon name="flask-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Experiments</span>
                         </a>
@@ -41,11 +41,11 @@
                 </div>
 
                 <div class="nav__list">
-                    <a href="{{url_for('views.settings')}}" class={% block activate_settings %} "nav__link" {% endblock %}>
+                    <a href="{{url_for('views.settings')}}" class={% block activate_settings %} "nav__link not-active" {% endblock %}>
                         <ion-icon name="settings-outline" class="nav__icon"></ion-icon>
                         <span class="nav__name">Settings</span>
                     </a>
-                    <a href="{{url_for('views.profile')}}" class={% block activate_profile %} "nav__link" {% endblock %}>
+                    <a href="{{url_for('views.profile')}}" class={% block activate_profile %} "nav__link not-active" {% endblock %}>
                         <ion-icon name="person-outline" class="nav__icon"></ion-icon>
                         <span class="nav__name">Profile</span>
                     </a>

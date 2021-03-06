@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block title %} Datasets {% endblock %}
 {% block activate_datasets %} 
-"nav__link active"
+"nav__link active not-active"
 {% endblock %}
 {% block unique %}
 <form class="form-inline">
@@ -34,6 +34,17 @@
                 <input type="file" class="custom-file-input" id="customFile">
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
+            <br><br>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown button
+                </button>
+                <div class="dropdown-menu" aria-labelledby="Datatypes">
+                  <a class="dropdown-item" href="#">Numerical</a>
+                  <a class="dropdown-item" href="#">String</a>
+                  <a class="dropdown-item" href="#">URL for image</a>
+                </div>
+              </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -42,4 +53,61 @@
       </div>
     </div>
   </div>
+  <br><br>
+  <h3>My Datasets:</h3> 
+  <br>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Date</th>
+        <th scope="col">Interactions</th>
+        <th scope="col">Metadata</th>
+        <th scope="col">Share</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>dataset1</td>
+        <td>02/02/2021</td>
+        <td><a href="#" class="list-group-item list-group-item-action">Interaction1</a></td>
+        <td><a href="#" class="list-group-item list-group-item-action">Metadata1</a></td>
+        <td>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                <label class="custom-control-label" for="customSwitch1"></label>
+              </div>
+        </td>
+        
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>dataset2</td>
+        <td>03/03/2021</td>
+        <td><a href="#" class="list-group-item list-group-item-action">Interaction2</a></td>
+        <td><a href="#" class="list-group-item list-group-item-action">Metadata2</a></td>
+        <td>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitch2">
+                <label class="custom-control-label" for="customSwitch2"></label>
+              </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>dataset3</td>
+        <td>04/04/2021</td>
+        <td><a href="#" class="list-group-item list-group-item-action">Interaction3</a></td>
+        <td><a href="#" class="list-group-item list-group-item-action">Metadata3</a></td>
+        <td>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitch3">
+                <label class="custom-control-label" for="customSwitch3"></label>
+              </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 {% endblock %}
