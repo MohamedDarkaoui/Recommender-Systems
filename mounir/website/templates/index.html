@@ -6,7 +6,7 @@
 
         <!-- ===== CSS ===== -->
         <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
-        <title>Dashboard</title>
+        <title>{% block title %} {% endblock %}</title>
     </head>
     <body id="body-pd">
         <div class="l-navbar" id="navbar">
@@ -14,44 +14,27 @@
                 <div>
                     <div class="nav__brand">
                         <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"></ion-icon>
-                        <a href="#" class="nav__logo">Team 3</a>
+                        <a href="{{url_for('views.home')}}" class="nav__logo">PPDB Team 3</a>
                     </div>
                     <div class="nav__list">
-                        <a href="#" class="nav__link active">
+                        <a href="{{url_for('views.home')}}" class={% block activate_dashboard %} "nav__link" {% endblock %}>
                             <ion-icon name="home-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Dashboard</span>
                         </a>
-                        <a href="#" class="nav__link">
+                        <a href="{{url_for('views.datasets')}}" class={% block activate_datasets %} "nav__link" {% endblock %}>
                             <ion-icon name="file-tray-full-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Datasets</span>
                         </a>
 
-                        <a href="#" class="nav__link">
+                        <a href="{{url_for('views.scenarios')}}" class={% block activate_scenarios %} "nav__link" {% endblock %}>
                             <ion-icon name="funnel-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Scenarios</span>
                         </a>
-
-                        <!--
-                                HOW TO CREATE A COLLAPSE NAV LINK
-                        <div  class="nav__link collapse">
-                            <ion-icon name="folder-outline" class="nav__icon"></ion-icon>
-                            <span class="nav__name">Projects</span>
-
-                            <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-
-                            <ul class="collapse__menu">
-                                <a href="#" class="collapse__sublink">Data</a>
-                                <a href="#" class="collapse__sublink">Group</a>
-                                <a href="#" class="collapse__sublink">Members</a>
-                            </ul>
-                        </div>
-                        -->
-
-                        <a href="#" class="nav__link">
+                        <a href="{{url_for('views.models')}}" class={% block activate_models %} "nav__link" {% endblock %}>
                             <ion-icon name="cube-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Models</span>
                         </a>
-                        <a href="#" class="nav__link">
+                        <a href="{{url_for('views.experiments')}}" class={% block activate_experiments %} "nav__link" {% endblock %}>
                             <ion-icon name="flask-outline" class="nav__icon"></ion-icon>
                             <span class="nav__name">Experiments</span>
                         </a>
@@ -59,23 +42,21 @@
                 </div>
 
                 <div class="nav__list">
-                    <a href="#" class="nav__link">
+                    <a href="{{url_for('views.settings')}}" class={% block activate_settings %} "nav__link" {% endblock %}>
                         <ion-icon name="settings-outline" class="nav__icon"></ion-icon>
                         <span class="nav__name">Settings</span>
                     </a>
-                    <a href="#" class="nav__link">
+                    <a href="{{url_for('views.profile')}}" class={% block activate_profile %} "nav__link" {% endblock %}>
                         <ion-icon name="person-outline" class="nav__icon"></ion-icon>
                         <span class="nav__name">Profile</span>
                     </a>
-                    <a href="#" class="nav__link">
+                    <a href="/logout" class="nav__link">
                         <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
                         <span class="nav__name">Log Out</span>
                     </a>
                 </div>
             </nav>
         </div>
-
-        <h1>wtf</h1>
         <!-- ===== IONICONS ===== -->
         <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
         

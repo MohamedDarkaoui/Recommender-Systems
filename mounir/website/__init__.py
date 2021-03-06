@@ -8,7 +8,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'messicristianoneymarmbappehaaland'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:database123!@localhost/usersdatabase'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Noob1234@localhost/ppdb'
     db.init_app(app)
 
     from .views import views
@@ -18,7 +18,6 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
 
     from .models import User
-
 
     return app
 
