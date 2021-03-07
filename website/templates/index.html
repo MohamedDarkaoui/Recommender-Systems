@@ -41,10 +41,6 @@
                 </div>
 
                 <div class="nav__list">
-                    <a href="{{url_for('views.settings')}}" class={% block activate_settings %} "nav__link not-active" {% endblock %}>
-                        <ion-icon name="settings-outline" class="nav__icon"></ion-icon>
-                        <span class="nav__name">Settings</span>
-                    </a>
                     <a href="{{url_for('views.profile')}}" class={% block activate_profile %} "nav__link not-active" {% endblock %}>
                         <ion-icon name="person-outline" class="nav__icon"></ion-icon>
                         <span class="nav__name">Profile</span>
