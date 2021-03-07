@@ -3,3 +3,36 @@
 {% block activate_models %} 
 "nav__link active not-active"
 {% endblock %}
+{% block unique %}
+<button type="button" class="btn btn-primary class upload" data-toggle="modal" data-target="#exampleModal">Make model</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Model</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form class="form-inline">
+                <input class="form-control mr-sm-2 search_width" type="search" placeholder="Search Scenario" aria-label="Search">
+                <button class="btn btn-primary class" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="form-group selection">
+            <select class="form-control" id="sel1">
+              <option>choose a algorithm</option>
+              <option>Algorithm1</option>
+              <option>Algorithm2</option>
+              <option>Algorithm3</option>
+            </select>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Make</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
