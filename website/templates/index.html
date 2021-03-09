@@ -16,9 +16,9 @@
                         <a href="{{url_for('views.home')}}" class="nav__logo not-active">PPDB Team 3</a>
                     </div>
                     <div class="nav__list">
-                        <a href="{{url_for('views.home')}}" class={% block activate_dashboard %} "nav__link not-active" {% endblock %}>
+                        <a href="{{url_for('views.home')}}" class={% block activate_home %} "nav__link not-active" {% endblock %}>
                             <ion-icon name="home-outline" class="nav__icon"></ion-icon>
-                            <span class="nav__name">Dashboard</span>
+                            <span class="nav__name">Home</span>
                         </a>
                         <a href="{{url_for('views.datasets')}}" class={% block activate_datasets %} "nav__link not-active" {% endblock %}>
                             <ion-icon name="file-tray-full-outline" class="nav__icon"></ion-icon>
@@ -41,6 +41,10 @@
                 </div>
 
                 <div class="nav__list">
+                    <a href="{{url_for('views.users')}}" class={% block activate_users%} "nav__link not-active" {% endblock %}>
+                        <ion-icon name="person-outline" class="nav__icon"></ion-icon>
+                        <span class="nav__name">Users</span>
+                    </a>
                     <a href="{{url_for('views.profile')}}" class={% block activate_profile %} "nav__link not-active" {% endblock %}>
                         <ion-icon name="person-outline" class="nav__icon"></ion-icon>
                         <span class="nav__name">Profile</span>

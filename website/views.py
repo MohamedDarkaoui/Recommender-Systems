@@ -7,7 +7,7 @@ views = Blueprint('views', __name__)
 @views.route('/home')
 @login_required
 def home():
-    return render_template("dashboard.html")
+    return render_template("home.html")
 
 @views.route('/datasets')
 @login_required
@@ -33,6 +33,11 @@ def experiments():
 @login_required
 def settings():
     return render_template("settings.html")
+
+@views.route('/users')
+@login_required
+def users():
+    return render_template("users.html")    
 
 @views.route('/profile')
 @login_required
