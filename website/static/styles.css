@@ -11,13 +11,10 @@
   --sub-color: #B6CEFC;
   --white-color: #FFF;
   
-  /*===== Fuente y tipografia =====*/
+  /*===== typography =====*/
   --body-font: 'Poppins', sans-serif;
   --normal-font-size: 1rem;
   --small-font-size: .875rem;
-  
-  /*===== z index =====*/
-  --z-fixed: 100;
 }
 
 
@@ -56,7 +53,6 @@ a{
   color: var(--white-color);
   padding: 1.5rem 1.5rem 2rem;
   transition: .5s;
-  z-index: var(--z-fixed);
 }
 
 /*===== NAV =====*/
