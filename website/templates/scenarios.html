@@ -16,6 +16,20 @@
         </div>
         <div class="modal-body">
             <input class="form-control form-control-lg" type="text" placeholder="Name">
+            <br>
+            <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Preprocessing</a>
+            <div class="collapse multi-collapse" id="multiCollapseExample1">
+                <div class="card card-body">
+                  stappen
+                </div>
+            </div>
+            <br><br>
+            <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Postprocessing</a>
+            <div class="collapse multi-collapse" id="multiCollapseExample2">
+                <div class="card card-body">
+                  stappen
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -24,4 +38,38 @@
       </div>
     </div>
   </div>
+  <br><br>
+  <h3>My Scenarios:</h3> 
+  <br>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Dataset</th>
+        <th scope="col">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>scenario1</td>
+        <td>dataset1</td>
+        <td>02/02/2021</td>
+        
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>scenario2</td>
+        <td>dataset2</td>
+        <td>03/03/2021</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>scenario3</td>
+        <td>dataset2</td>
+        <td>04/04/2021</td>
+      </tr>
+    </tbody>
+  </table>
 {% endblock %}

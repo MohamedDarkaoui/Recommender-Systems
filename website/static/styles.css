@@ -135,3 +135,12 @@ a{
   width: 250px;
   margin-left: 15px;
 }
+.main .search_width {
+  width: 1100px;
+}
+
+.main .modal .modal-dialog .modal-body .form-group .item_exp_popup {
+  width: 40%;
+  height: 30px;
+  margin-right: auto;
+}

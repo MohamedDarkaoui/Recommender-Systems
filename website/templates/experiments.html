@@ -3,3 +3,55 @@
 {% block activate_experiments %} 
 "nav__link active not-active"
 {% endblock %}
+{% block unique %}
+<button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Make Experiment</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New experiment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input class="form-control form-control-lg" type="text" placeholder="Name">
+          <br>
+          <form class="form-inline">
+              <input class="form-control mr-sm-2 search_width" type="search" placeholder="Search model" aria-label="Search">
+              <button class="btn btn-primary class" type="submit">Search</button>
+          </form>            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Make</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+  <h3>My Experiments:</h3> 
+  <br>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>experiment1</td>        
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>experiment2</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>experiment3</td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock%}
