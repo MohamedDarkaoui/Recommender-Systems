@@ -32,7 +32,7 @@ def registration():
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('auth.registration'))
 
     return render_template('registration.html')
 
