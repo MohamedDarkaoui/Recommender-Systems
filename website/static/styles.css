@@ -144,3 +144,7 @@ a{
   height: 30px;
   margin-right: auto;
 }
+
+.main .d-flex .home .image{
+  height: 600px;
+}
