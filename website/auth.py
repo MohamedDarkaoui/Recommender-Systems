@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from .models import Users
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from . import views
 from flask_login import login_user, login_required, logout_user, current_user
+from random import randint
 
 
 
@@ -16,7 +17,7 @@ def registration():
     if request.method == 'POST' and request.form.get('which-form') == "sign-in":
         email = request.form.get('email')
         password = request.form.get('password')
-        user = User.query.filter_by(email=email).first()
+        user = Users.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
                 login_user(user)
@@ -25,10 +26,12 @@ def registration():
         email = request.form.get('email')
         password = request.form.get('password')
         passwordConf = request.form.get('passwordConf')
+        name = request.form.get('name')
+        username = request.form.get('username')
         if password == passwordConf:
-            user = User.query.filter_by(email=email).first()
+            user = Users.query.filter_by(email=email).first()
             if not user:
-                new_user = User(email=email, password=generate_password_hash(password, method='sha256'))
+                new_user = Users(id = randint(0,9*10^10),email=email, password=generate_password_hash(password, method='sha256'), name = name, username = username)
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)
