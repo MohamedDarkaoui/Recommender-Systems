@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, redirect, request
 from flask_login import login_user, login_required, logout_user, current_user
 
 views = Blueprint('views', __name__)
@@ -9,9 +9,16 @@ views = Blueprint('views', __name__)
 def home():
     return render_template("home.html")
 
-@views.route('/datasets')
+@views.route('/datasets', methods=['GET', 'POST'])
 @login_required
 def datasets():
+    if request.method == 'POST' and request.form.get('which-form') == "uploadDataset":
+        datasetName = request.form.get('datasetname')
+        interactionsCSV = request.form.get('interactionscsv')
+        metadataCSV = request.form.get('metadatacsv')
+        
+        print(datasetName)
+    
     return render_template("datasets.html")
 
 @views.route('/scenarios')

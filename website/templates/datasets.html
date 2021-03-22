@@ -11,45 +11,42 @@
 </form>
   
   <!-- Popup -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Dataset</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <input class="form-control form-control-lg" type="text" placeholder="Name">
-            <br><br>
-            Interactions:
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile">
-                <label class="custom-file-label" for="customFile">Choose file</label>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New Dataset</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form method="POST" name = "uploadDataset">
+            <input type="hidden" name="which-form" value="uploadDataset">
+            <div class="modal-body">
+              <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="Name">
+              <br><br>
+              Interactions:
+              <div class="custom-file">
+                  <input name="csvinteractions" type="file" class="custom-file-input" id="customFile">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+              <br><br>
+              Metadata:
+              <div class="custom-file">
+                  <input name="csvmetadata" type="file" class="custom-file-input" id="customFile">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
             </div>
-            <br><br>
-            Metadata:
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile">
-                <label class="custom-file-label" for="customFile">Choose file</label>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Upload</button>
             </div>
-        </div>
-        <div class="form-group selection">
-          <select class="form-control" id="sel1">
-            <option>Choose datatype</option>
-            <option>Numerical</option>
-            <option>String</option>
-            <option>URL for image</option>
-          </select>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Upload</button>
+          </form>
         </div>
       </div>
     </div>
-  </div>
+  
+
   <br><br>
   <h3>My Datasets:</h3> 
   <br>
