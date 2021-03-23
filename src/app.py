@@ -8,18 +8,18 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'messicristianoneymarmbappehaaland'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:mohamed@localhost/ppdb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:database123!@localhost/team3'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
     
-    from .views import views
-    from .auth import auth
+    from views import views
+    from auth import auth
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    from .models import Users
+    from models import Users
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.registration'
@@ -31,3 +31,4 @@ def create_app():
 
     return app
 
+app = create_app()

@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, redirect, request
 from flask_login import login_user, login_required, logout_user, current_user
+import pandas as pd
+import csv
+
 
 views = Blueprint('views', __name__)
 
@@ -14,10 +17,14 @@ def home():
 def datasets():
     if request.method == 'POST' and request.form.get('which-form') == "uploadDataset":
         datasetName = request.form.get('datasetname')
-        interactionsCSV = request.form.get('interactionscsv')
-        metadataCSV = request.form.get('metadatacsv')
-        
+        interactionsCSV = request.files['csvinteractions']
+        metadataCSV = request.files['csvmetadata']
         print(datasetName)
+        print(interactionsCSV.filename)
+        print(metadataCSV.filename)
+        df = pd.read_csv(interactionsCSV)
+        print(df)
+
     
     return render_template("datasets.html")
 

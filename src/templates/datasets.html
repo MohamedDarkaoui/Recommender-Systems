@@ -20,21 +20,21 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form method="POST" name = "uploadDataset">
+          <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="which-form" value="uploadDataset">
             <div class="modal-body">
               <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="Name">
               <br><br>
               Interactions:
-              <div class="custom-file">
-                  <input name="csvinteractions" type="file" class="custom-file-input" id="customFile">
-                  <label class="custom-file-label" for="customFile">Choose file</label>
+              <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="csvinteractions" name="csvinteractions">
+                <label class="custom-file-label" for="csvinteractions">Choose file</label>
               </div>
               <br><br>
               Metadata:
-              <div class="custom-file">
-                  <input name="csvmetadata" type="file" class="custom-file-input" id="customFile">
-                  <label class="custom-file-label" for="customFile">Choose file</label>
+              <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="csvmetadata" name="csvmetadata">
+                <label class="custom-file-label" for="csvmetadata">Choose file</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -96,4 +96,5 @@
       </tr>
     </tbody>
   </table>
+  
 {% endblock %}
