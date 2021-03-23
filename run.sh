@@ -1,1 +1,1 @@
-python3 src/wgsi.py
+python3 src/app.py

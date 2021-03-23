@@ -1,4 +1,4 @@
-from app import db
+from appCreator import db
 from flask_login import UserMixin
 
 class Users(db.Model, UserMixin):
