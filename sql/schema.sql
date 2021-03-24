@@ -27,7 +27,7 @@ CREATE TABLE dataset (
 );
 
 
-CREATE TABLE dataset_element (
+CREATE TABLE interaction (
   id INT PRIMARY KEY,
   dataset_id INT NOT NULL REFERENCES dataset(id),
   client_id INT NOT NULL REFERENCES client(id),

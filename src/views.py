@@ -1,7 +1,17 @@
 from flask import Blueprint, render_template, redirect, request
 from flask_login import login_user, login_required, logout_user, current_user
+from database.DBConnection import DBConnection 
+from database.datasetDB import DatasetDB
+from entitiesDB.dataset import Dataset
+from config import config_data
+from random import randint
 import pandas as pd
 import csv
+
+
+
+# /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
+connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 
 
 views = Blueprint('views', __name__)
@@ -19,11 +29,14 @@ def datasets():
         datasetName = request.form.get('datasetname')
         interactionsCSV = request.files['csvinteractions']
         metadataCSV = request.files['csvmetadata']
-        print(datasetName)
-        print(interactionsCSV.filename)
-        print(metadataCSV.filename)
-        df = pd.read_csv(interactionsCSV)
-        print(df)
+        interactions = pd.read_csv(interactionsCSV)
+        
+        # insert dataset
+        dataset = Dataset(id=randint(0,10^20), name=datasetName, usr_id=str(current_user.id), private=True)
+        datasetDB = DatasetDB(connection)
+        datasetDB.add_dataset(dataset)
+
+        #insert interaction
 
     
     return render_template("datasets.html")
