@@ -11,3 +11,10 @@ class DatasetDB:
         except:
             self.connection.rollback()
             raise Exception('Unable to save dataset: ' + dtsetOBJ.name)
+    
+    def delete_dataset(self):
+        pass
+
+    def get_dataset(self):
+        pass
+
