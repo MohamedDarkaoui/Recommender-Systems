@@ -17,4 +17,9 @@ class DatasetDB:
 
     def get_dataset(self):
         pass
+    
+    def getDatasetsFromUser(self, user_id):
 
+
+        #return [list of dataset objecten]
+        pass

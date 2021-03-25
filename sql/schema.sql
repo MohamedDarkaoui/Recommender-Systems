@@ -46,11 +46,11 @@ CREATE TABLE metadata (
 
 
 CREATE TABLE metadata_element (
-  id INT PRIMARY KEY,
   item_id INT NOT NULL,
   dataset_id INT NOT NULL,
   metadata_id INT NOT NULL REFERENCES metadata (id),
-  data TEXT NOT NULL,
   description TEXT NOT NULL,
-  FOREIGN KEY (item_id, dataset_id) REFERENCES item(id, dataset_id)
+  data TEXT NOT NULL,
+  FOREIGN KEY (item_id, dataset_id) REFERENCES item(id, dataset_id),
+  PRIMARY KEY (item_id, metadata_id, description)
 );

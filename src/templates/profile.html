@@ -14,9 +14,9 @@
                             <div class="user-avatar">
                                 <img src="{{url_for('static', filename='profile.png')}}">
                             </div>
-                            <h5 class="name">Name</h5>
-                            <h6 class="user-name"><b>Username: </b> test</h6>
-                            <h6 class="user-email"><b>Email: </b> test@domain.com</h6>
+                            <h5 class="name">{{currentUser.name}}</h5>
+                            <h6 class="user-name"><b>Username: </b> {{currentUser.username}}</h6>
+                            <h6 class="user-email"><b>Email: </b> {{currentUser.email}}</h6>
 
                         </div>
                     </div>

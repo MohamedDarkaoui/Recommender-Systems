@@ -6,6 +6,8 @@ from database.datasetDB import DatasetDB
 from database.interactionDB import interactionDB
 from database.itemDB import ItemDB
 from database.clientDB import ClientDB
+from database.metadataDB import MetadataDB
+from database.metadataElementDB import MetadataElementDB
 from entitiesDB.dataset import Dataset
 from config import config_data
 from random import randint
@@ -17,11 +19,16 @@ from sqlalchemy import create_engine
 # /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
+engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
+#engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
+
 
 datasetDB = DatasetDB(connection)
 ItemDB = ItemDB(connection)
 ClientDB = ClientDB(connection)
 interactionDB = interactionDB(connection)
+MetadataDB = MetadataDB(connection)
+MetadataElementDB = MetadataElementDB(connection)
 
 views = Blueprint('views', __name__)
 
@@ -40,38 +47,47 @@ def datasets():
         metadataCSV = request.files['csvmetadata']
 
         if interactionsCSV.content_type == 'text/csv' and len(datasetName) > 0:
-            
             # insert dataset
             dataset = Dataset(id=randint(0,10^20), name=datasetName, usr_id=str(current_user.id), private=True)
             datasetDB.add_dataset(dataset)
-            
-            #insert interaction
+            #insert interactions, items and clients
             interactions = pd.read_csv(interactionsCSV)
             columns = list(interactions.columns)
             items = interactions[columns[1]].unique()
             clients = interactions[columns[0]].unique()
+
             for item in items:
                 ItemDB.add_item(str(item), str(dataset.id))
             for client in clients:
                 ClientDB.add_client(str(client), str(dataset.id))
 
+            interactions.rename(columns={columns[0]: 'client_id', columns[1]: 'item_id', columns[2]: 'timestamp'})
+            interactions.columns = ['client_id', 'item_id', 'timestamp']
+            interactions.insert(0, 'dataset_id', dataset.id)
+            interactions.to_sql('interaction', engine, if_exists='append', index = False)
             
-            # deze voegt heel onze interaction tabel toe in de dataset, MAAAAAAAAAR
-            # vervangt alle colommen in die tabel nr nieuwe namen
-            engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
-            interactions.to_sql('interaction', engine, if_exists='replace', index = False)
-            
-            """
-            for index, row in interactions.iterrows():
-                print(index)
-                client_id = row[columns[0]]
-                item_id = row[columns[1]]
-                timestamp = row[columns[2]]
+            #insert metadata if exists
+            if metadataCSV.content_type == 'text/csv':
+                metadata = pd.read_csv(metadataCSV)
+                columns = list(metadata.columns)
+                #insert metadata
+                metadataId = randint(0,10^20)
+                MetadataDB.add_metadata(id = metadataId, dataset_id = dataset.id)
+                for index, row in metadata.iterrows():
+                    print(index)
+                    itemId = row[columns[0]]
+                    #iterate through all columns
+                    for column in columns[1:]:
+                        #get info
+                        data = row[column]
+                        description = column
+                        #add metadata_element
+                        MetadataElementDB.add_metadataElement(item_id = itemId, dataset_id = dataset.id, 
+                            metadata_id = metadataId, description = description, data = data)
 
-                interactionDB.add_interaction(dataset_id=dataset.id,client_id=str(client_id),item_id=str(item_id),timestamp=str(timestamp))
-            """
-    
-    return render_template("datasets.html")
+
+    datasets = [('1', 'dataset1', '03/12/21'), ('2', 'datasetMohamed', '12/05/20')]
+    return render_template("datasets.html", datasets = datasets)
 
 @views.route('/scenarios')
 @login_required
@@ -101,4 +117,4 @@ def users():
 @views.route('/profile')
 @login_required
 def profile():
-    return render_template("profile.html")
+    return render_template("profile.html", currentUser = current_user)
