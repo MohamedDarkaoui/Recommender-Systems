@@ -31,7 +31,7 @@ def registration():
         if password == passwordConf:
             user = Users.query.filter_by(email=email).first()
             if not user:
-                new_user = Users(id = randint(0,9*10^10),email=email, password=generate_password_hash(password, method='sha256'), name = name, username = username)
+                new_user = Users(email=email, password=generate_password_hash(password, method='sha256'), name = name, username = username)
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)

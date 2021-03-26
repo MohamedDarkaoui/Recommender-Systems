@@ -8,10 +8,11 @@ from database.itemDB import ItemDB
 from database.clientDB import ClientDB
 from database.metadataDB import MetadataDB
 from database.metadataElementDB import MetadataElementDB
-from entitiesDB.dataset import Dataset
+from entitiesDB.dataset import Dataset, Metadata
 from config import config_data
 from random import randint
 import pandas as pd
+from datetime import datetime
 import csv
 
 from sqlalchemy import create_engine
@@ -19,8 +20,8 @@ from sqlalchemy import create_engine
 # /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
-#engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
+#engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
+engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
 
 
 datasetDB = DatasetDB(connection)
@@ -48,8 +49,9 @@ def datasets():
 
         if interactionsCSV.content_type == 'text/csv' and len(datasetName) > 0:
             # insert dataset
-            dataset = Dataset(id=randint(0,10^20), name=datasetName, usr_id=str(current_user.id), private=True)
-            datasetDB.add_dataset(dataset)
+            dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+            dataset = Dataset(name=datasetName, usr_id=str(current_user.id), date_time=dt_string, private=True)
+            dataset = datasetDB.add_dataset(dataset)
             #insert interactions, items and clients
             interactions = pd.read_csv(interactionsCSV)
             columns = list(interactions.columns)
@@ -70,9 +72,9 @@ def datasets():
             if metadataCSV.content_type == 'text/csv':
                 metadata = pd.read_csv(metadataCSV)
                 columns = list(metadata.columns)
+                metadataOBJ = Metadata(dataset.id)
                 #insert metadata
-                metadataId = randint(0,10^20)
-                MetadataDB.add_metadata(id = metadataId, dataset_id = dataset.id)
+                metadataOBJ = MetadataDB.add_metadata(metadataOBJ)
                 for index, row in metadata.iterrows():
                     print(index)
                     itemId = row[columns[0]]
@@ -82,11 +84,12 @@ def datasets():
                         data = row[column]
                         description = column
                         #add metadata_element
-                        MetadataElementDB.add_metadataElement(item_id = itemId, dataset_id = dataset.id, 
-                            metadata_id = metadataId, description = description, data = data)
+                        MetadataElementDB.add_metadataElement(item_id=itemId, dataset_id=dataset.id, 
+                            metadata_id=metadataOBJ.id, description=description, data=data)
 
-
-    datasets = [('1', 'dataset1', '03/12/21'), ('2', 'datasetMohamed', '12/05/20')]
+    datasets = datasetDB.getDatasetsFromUser(current_user)
+    for i in range(len(datasets)):
+        datasets[i] = (i+1, datasets[i].name, dataset.date_time)
     return render_template("datasets.html", datasets = datasets)
 
 @views.route('/scenarios')
