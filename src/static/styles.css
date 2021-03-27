@@ -48,7 +48,7 @@ a{
   top: 0;
   left: 0;
   width: var(--nav-width);
-  height: 100vh;
+  height: 100%;
   background-color: var(--bg-color);
   color: var(--white-color);
   padding: 1.5rem 1.5rem 2rem;
@@ -95,9 +95,6 @@ a{
 }
 .main{
   margin-left: 120px;
-}
-.main .upload{
-  margin-left: 850px;
 }
 
 .btn-primary {
@@ -147,4 +144,8 @@ a{
 
 .main .d-flex .home .image{
   height: 600px;
+}
+
+.main .home_image{
+  width: 100%;
 }
