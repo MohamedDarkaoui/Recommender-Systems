@@ -15,12 +15,16 @@
           </button>
         </div>
         <div class="modal-body">
-            <input class="form-control form-control-lg" type="text" placeholder="Name">
-            <br>
-            <form class="form-inline">
-              <input class="form-control mr-sm-2 search_width" type="search" placeholder="Search dataset" aria-label="Search">
-              <button class="btn btn-primary class" type="submit">Search</button>
-          </form>
+          <input class="form-control form-control-lg" type="text" placeholder="Name">
+          <br>
+          <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01">
+              <option selected>Choose Dataset</option>
+              <option value="1">dataset1</option>
+              <option value="2">dataset2</option>
+              <option value="3">dataset3</option>
+            </select>
+          </div>
           <br>
           <b>Timestamp:</b><br>
           Start date: <input type="text" id="from" name="from"> 
