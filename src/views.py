@@ -20,8 +20,8 @@ from sqlalchemy import create_engine
 # /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-#engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
-engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
+engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
+#engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
 #engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
 
 
@@ -96,7 +96,12 @@ def datasets():
 @views.route('/scenarios')
 @login_required
 def scenarios():
-    return render_template("scenarios.html")
+
+    
+    datasets = datasetDB.getDatasetsFromUser(current_user)
+    for i in range(len(datasets)):
+        datasets[i] = (i+1, datasets[i].name)
+    return render_template("scenarios.html", datasets = datasets)
 
 @views.route('/models')
 @login_required
