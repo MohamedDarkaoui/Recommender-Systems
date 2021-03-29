@@ -1,4 +1,4 @@
-from entitiesDB.dataset import Metadata
+from database.entitiesDB import Metadata
 
 class MetadataDB:
     def __init__(self, connection):

@@ -1,3 +1,5 @@
+import io
+
 class MetadataElementDB:
     def __init__(self, connection):
         self.connection = connection

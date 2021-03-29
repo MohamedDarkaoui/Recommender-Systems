@@ -1,4 +1,4 @@
-from entitiesDB.dataset import Dataset
+from database.entitiesDB import Dataset
 
 class DatasetDB:
     def __init__(self, connection):

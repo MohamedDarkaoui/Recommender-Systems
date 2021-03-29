@@ -8,21 +8,22 @@ from database.itemDB import ItemDB
 from database.clientDB import ClientDB
 from database.metadataDB import MetadataDB
 from database.metadataElementDB import MetadataElementDB
-from entitiesDB.dataset import Dataset, Metadata
+from database.entitiesDB import Dataset, Metadata
 from config import config_data
 from random import randint
 import pandas as pd
 from datetime import datetime
 import csv
+import io
 
 from sqlalchemy import create_engine
 
 # /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
+#engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
 #engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
-#engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
+engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
 
 
 datasetDB = DatasetDB(connection)
@@ -31,7 +32,6 @@ ClientDB = ClientDB(connection)
 interactionDB = interactionDB(connection)
 MetadataDB = MetadataDB(connection)
 MetadataElementDB = MetadataElementDB(connection)
-
 views = Blueprint('views', __name__)
 
 
@@ -53,31 +53,37 @@ def datasets():
             dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
             dataset = Dataset(name=datasetName, usr_id=str(current_user.id), date_time=dt_string, private=True)
             dataset = datasetDB.add_dataset(dataset)
-            #insert interactions, items and clients
+            
+            # create pandas objects
             interactions = pd.read_csv(interactionsCSV)
             columns = list(interactions.columns)
-            items = interactions[columns[1]].unique()
-            clients = interactions[columns[0]].unique()
-
-            for item in items:
-                ItemDB.add_item(str(item), str(dataset.id))
-            for client in clients:
-                ClientDB.add_client(str(client), str(dataset.id))
-
             interactions.rename(columns={columns[0]: 'client_id', columns[1]: 'item_id', columns[2]: 'timestamp'})
             interactions.columns = ['client_id', 'item_id', 'timestamp']
             interactions.insert(0, 'dataset_id', dataset.id)
-            interactions.to_sql('interaction', engine, if_exists='append', index = False)
+            
+            items = interactions[['item_id','dataset_id']].copy()
+            items.columns = ['id','dataset_id']
+            items = items.drop_duplicates()
+
+            clients = interactions[['client_id','dataset_id']]
+            clients.columns = ['id','dataset_id']
+            clients = clients.drop_duplicates()
+
+            # insert items,clients and interactions
+            ItemDB.add_item(items)
+            ClientDB.add_client(clients)
+            interactionDB.add_interaction(interactions)
+
             
             #insert metadata if exists
             if metadataCSV.content_type == 'text/csv':
+            
                 metadata = pd.read_csv(metadataCSV)
                 columns = list(metadata.columns)
                 metadataOBJ = Metadata(dataset.id)
                 #insert metadata
                 metadataOBJ = MetadataDB.add_metadata(metadataOBJ)
                 for index, row in metadata.iterrows():
-                    print(index)
                     itemId = row[columns[0]]
                     #iterate through all columns
                     for column in columns[1:]:
