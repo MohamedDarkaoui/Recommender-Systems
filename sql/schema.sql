@@ -31,7 +31,7 @@ CREATE TABLE client (
 );
 
 CREATE TABLE interaction (
-  id bigint GENERATED ALWAYS AS IDENTITY,
+  id bigint GENERATED ALWAYS AS IDENTITY UNIQUE,
   dataset_id INT NOT NULL,
   client_id INT NOT NULL,
   item_id INT NOT NULL,
