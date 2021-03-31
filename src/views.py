@@ -144,7 +144,7 @@ def profile():
         if username != "":
             user.username = username
             db.session.commit()
-        elif current != "" and new != "" and confirm != "":
+        if current != "" and new != "" and confirm != "":
             if new == confirm:
                 if check_password_hash(user.password, current):
                     user.password = generate_password_hash(new, method='sha256')
