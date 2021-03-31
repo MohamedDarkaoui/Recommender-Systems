@@ -25,23 +25,24 @@
         </div>
         <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
             <div class="card h-100">
-                <div class="card-body">
-                    <form>
+                <div class="card-body form change">
+                    <form method="POST" name = "change">
+                        <input type="hidden" name="which-form" value="change">
                         <div class="mb-3">
                             <label for="formGroupExampleInput" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput">
+                            <input type="text" class="form-control" name="Username">
                         </div>
                         <div class="mb-3">
                           <label for="exampleInputPassword1" class="form-label">Current Password</label>
-                          <input type="password" class="form-control" id="exampleInputPassword1">
+                          <input type="password" class="form-control" name="Current">
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1">
+                            <input type="password" class="form-control" name="New">
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Confirm New Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1">
+                            <input type="password" class="form-control" name="Confirm">
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                       </form>

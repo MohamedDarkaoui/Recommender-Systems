@@ -9,8 +9,11 @@ from database.clientDB import ClientDB
 from database.metadataDB import MetadataDB
 from database.metadataElementDB import MetadataElementDB
 from database.entitiesDB import Dataset, Metadata
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import config_data
 from random import randint
+from models import Users
+from appCreator import db
 import pandas as pd
 from datetime import datetime
 import csv
@@ -129,7 +132,21 @@ def settings():
 def users():
     return render_template("users.html")    
 
-@views.route('/profile')
+@views.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    if request.method == 'POST' and request.form.get('which-form') == "change":
+        current = request.form.get('Current')
+        new = request.form.get('New')
+        confirm = request.form.get('Confirm')
+        username = request.form.get('Username')
+        user = Users.query.filter_by(email=current_user.email).first()
+        if username != "":
+            user.username = username
+            db.session.commit()
+        elif current != "" and new != "" and confirm != "":
+            if new == confirm:
+                if check_password_hash(user.password, current):
+                    user.password = generate_password_hash(new, method='sha256')
+                    db.session.commit()
     return render_template("profile.html", currentUser = current_user)
