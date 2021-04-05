@@ -8,6 +8,7 @@ from database.itemDB import ItemDB
 from database.clientDB import ClientDB
 from database.metadataDB import MetadataDB
 from database.metadataElementDB import MetadataElementDB
+from database.scenarioDB import ScenarioDB
 from database.entitiesDB import Dataset, Metadata
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import config_data
@@ -35,6 +36,7 @@ ClientDB = ClientDB(connection)
 interactionDB = interactionDB(connection)
 MetadataDB = MetadataDB(connection)
 MetadataElementDB = MetadataElementDB(connection)
+ScenarioDB = ScenarioDB(connection)
 views = Blueprint('views', __name__)
 
 
@@ -73,10 +75,12 @@ def datasets():
             clients = clients.drop_duplicates()
 
             # insert items,clients and interactions
+            print('inserting items')
             ItemDB.add_item(items)
+            print('inserting clients')
             ClientDB.add_client(clients)
+            print('inserting interactions')
             interactionDB.add_interaction(interactions)
-
             
             #insert metadata if exists
             if metadataCSV.content_type == 'text/csv':
@@ -102,9 +106,29 @@ def datasets():
         datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private)
     return render_template("datasets.html", datasets = datasets)
 
-@views.route('/scenarios')
+@views.route('/scenarios',methods=['GET', 'POST'])
 @login_required
 def scenarios():
+    if request.method == 'POST' and request.form.get('which-form') == 'chooseScenario':
+        scenarioName = request.form.get('scenarioName')
+        datasetID = request.form.get('datasetSelect')
+        time1 = request.form.get('startDate')
+        time2 = request.form.get('endDate')
+        umin = request.form.get('user_min')
+        umax = request.form.get('user_max')
+        imin = request.form.get('item_min')
+        imax = request.form.get('item_max')
+
+
+        print(scenarioName)
+        print(datasetID)
+        print(time1)
+        print(time2)
+
+        if len(scenarioName) > 0:
+                scen = ScenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
+                print(scen)
+
 
     
     datasets = datasetDB.getDatasetsFromUser(current_user)

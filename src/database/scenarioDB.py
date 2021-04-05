@@ -22,39 +22,17 @@ class ScenarioDB:
             self.connection.rollback()
             raise Exception('Unable to save scenario: ' + scenarioOBJ.name)
 
-    def get_interactionsPD(self,usr_id, dataset_id, time1, time2, imin, imax, umin,umax):   
+    def get_interactionsPD(self, dataset_id, time1, time2, imin, imax, umin,umax):   
+
+        print('-------------------LMAO----------------------------------')
         cursor = self.connection.get_cursor()
-        code = """ CREATE OR REPLACE VIEW choose_timestamp AS (
-                    SELECT I1.id FROM interaction I1
-                    WHERE I1.timestamp > %s
-                    AND I1.timestamp < %s
-                     );
+        cursor.execute(
+        """ select id from subset_for_scenario (%s, %s, %s) 
+        natural join subset_for_scenario_client (%s, %s, %s,%s,%s)
+        natural join subset_for_scenario_item (%s, %s, %s,%s,%s)""",
+        (time1,time2,dataset_id,time1,time2,dataset_id,umin,umax,time1,time2,dataset_id,imin,imax))
 
-                    CREATE OR REPLACE VIEW choose_dataset_and_user AS (
-                        SELECT I1.id FROM interaction I1, dataset D, users U
-                        WHERE I1.dataset_id = D.id
-                        AND D.usr_id = U.id
-                        AND I1.dataset_id = %s
-                        AND U.id = %s
-                        );
-
-                    SELECT I.id FROM interaction I
-                    WHERE I.id IN ( SELECT * FROM  choose_timestamp )
-                    AND I.id IN ( SELECT * FROM  choose_dataset_and_user )
-                    AND I.client_id IN (	SELECT DISTINCT I1.client_id FROM interaction I1
-                    WHERE I1.id IN ( SELECT * FROM  choose_timestamp )
-                    AND I1.id IN ( SELECT * FROM  choose_dataset_and_user )
-                    GROUP BY I1.client_id
-                    HAVING COUNT(I1.client_id) > %s
-                    AND COUNT(I1.client_id) < %s)
-                    AND I.item_id IN (	SELECT DISTINCT I1.item_id FROM interaction I1
-                    WHERE I1.id IN ( SELECT * FROM  choose_timestamp )
-                    AND I1.id IN ( SELECT * FROM  choose_dataset_and_user )
-                    GROUP BY I1.item_id
-                    HAVING COUNT(I1.item_id) > %s
-                    AND COUNT(I1.item_id) < %s);"""
-
-        cursor.execute(code, (time1,time2,dataset_id,usr_id,umin,umax,imin,imax,))
+        print('--------------LMAO---------------------------')
         ids = cursor.fetchall()
         interaction_ids = DataFrame (ids, columns=['interaction_id'])
         return interaction_ids
