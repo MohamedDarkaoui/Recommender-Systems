@@ -22,7 +22,7 @@ class Scenario:
     def __init__(self, name, usr_id, date_time, dataset_id, id=None):
         self.name = name
         self.usr_id = usr_id
-        self.datte_time = date_time
+        self.date_time = date_time
         self.dataset_id = dataset_id
         self.id = id
 

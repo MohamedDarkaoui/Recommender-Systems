@@ -9,7 +9,7 @@ from database.clientDB import ClientDB
 from database.metadataDB import MetadataDB
 from database.metadataElementDB import MetadataElementDB
 from database.scenarioDB import ScenarioDB
-from database.entitiesDB import Dataset, Metadata
+from database.entitiesDB import Dataset, Metadata, Scenario
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import config_data
 from random import randint
@@ -119,22 +119,39 @@ def scenarios():
         imin = request.form.get('item_min')
         imax = request.form.get('item_max')
 
+        if len(time1) == 0:
+            time1 = '-infinity' 
+        if len(time2) == 0:
+            time2 = 'infinity'
+        if len(umin) == 0:
+            umin = '0'
+        if len(umax) == 0:
+            umax = 'infinity'
+        if len(imin) == 0:
+            imin = '0'
+        if len(imax) == 0:
+            imax = 'infinity'
 
-        print(scenarioName)
-        print(datasetID)
-        print(time1)
-        print(time2)
 
-        if len(scenarioName) > 0:
-                scen = ScenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
-                print(scen)
+        if len(scenarioName) > 0 and len(datasetID) > 0:
+            dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+            scenario = Scenario(name=scenarioName,usr_id=str(current_user.id),date_time=dt_string,dataset_id=datasetID)
+            scenario = ScenarioDB.add_scenario(scenario)
+            scen_elem = ScenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
+            scen_elem.insert(0, 'scenario_id', scenario.id)
+            ScenarioDB.add_scenario_elements(scen_elem)
+            
 
+    scenarios = ScenarioDB.getScenariosFromUser(current_user)
+    for i in range(len(scenarios)):
+        scenarios[i] = (i+1, scenarios[i].name, scenarios[i].dataset_id, scenarios[i].date_time)
 
     
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
         datasets[i] = (i+1, datasets[i].name)
-    return render_template("scenarios.html", datasets = datasets)
+    return render_template("scenarios.html", datasets = datasets,scenarios=scenarios)
+
 
 @views.route('/models')
 @login_required
