@@ -1,0 +1,183 @@
+{% extends "index.html" %}
+{% block title %} {% endblock %}
+{% block unique %}
+<div class="d-flex p-2">
+    <div class="card" style="width: 100%;">
+        <div class="card-body">
+          <h2>Titel</h2>
+        </div>
+    </div>
+</div>
+<div class="card-group">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Information</h5>
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Number of Interactions
+              <span class="badge badge-primary badge-pill">14</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Number of items
+              <span class="badge badge-primary badge-pill">2</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Number of clients
+              <span class="badge badge-primary badge-pill">1</span>
+            </li>
+            {% block scenario_sample %}
+            {% endblock %}
+          </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Interactions</h5>
+        <div style="height: 340px; overflow-x: scroll; width: 100%;">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">item</th>
+                    <th scope="col">client</th>
+                    <th scope="col">timestamp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Metadata</h5>
+        <select class="custom-select" id="inputGroupSelect01">
+            <option selected>Select an Item</option>
+            <option value="1">item1</option>
+            <option value="2">item2</option>
+            <option value="3">item3</option>
+        </select>
+        <div style="height: 300px; overflow-x: scroll; width: 100%;">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Genre</th>
+                    <th scope="col">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>test</td>
+                    <td>test</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock%}

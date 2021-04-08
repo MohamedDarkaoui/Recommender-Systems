@@ -85,6 +85,7 @@
         <th scope="col">Name</th>
         <th scope="col">Dataset</th>
         <th scope="col">Date</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -94,12 +95,7 @@
           <td>{{scenario[1]}}</td>
           <td>{{scenario[2]}}</td>
           <td>{{scenario[3]}}</td>
-          <td>
-              <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                  <label class="custom-control-label" for="customSwitch1"></label>
-                </div>
-          </td>
+          <td><a class="btn btn-primary" href="{{url_for('views.scen_samples')}}" role="button">More</a></td>
         </tr>
       {% endfor %}
     </tbody>

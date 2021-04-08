@@ -58,6 +58,7 @@
         <th scope="col">Name</th>
         <th scope="col">Date</th>
         <th scope="col">Share</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -72,6 +73,7 @@
                   <label class="custom-control-label" for="customSwitch1"></label>
                 </div>
           </td>
+          <td><a class="btn btn-primary" href="{{url_for('views.data_samples')}}" role="button">More</a></td>
         </tr>
       {% endfor %}
     </tbody>

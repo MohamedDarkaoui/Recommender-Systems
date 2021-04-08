@@ -26,8 +26,8 @@ from sqlalchemy import create_engine
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 #engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
-#engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
-engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
+engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
+#engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
 
 
 datasetDB = DatasetDB(connection)
@@ -172,6 +172,14 @@ def settings():
 @login_required
 def users():
     return render_template("users.html")    
+@views.route('/datasets/dataset_samples')
+@login_required
+def data_samples():
+    return render_template("dataset_sample_page.html")
+@views.route('/scenarios/scenario_samples')
+@login_required
+def scen_samples():
+    return render_template("scenario_sample.html")
 
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
