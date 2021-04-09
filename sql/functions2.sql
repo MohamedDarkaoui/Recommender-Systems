@@ -1,10 +1,10 @@
 --selects a subset of interactions between the given timestamps that belongs to the given dataset
 CREATE OR REPLACE FUNCTION subset_for_scenario (TIMESTAMP, TIMESTAMP, INT)
-RETURNS TABLE (timestamp TIMESTAMP, client_id INT,item_id INT)
+RETURNS TABLE (times DATE, client_id INT,item_id INT)
 AS
 $body$
 	
-	SELECT timestamp, client_id, item_id FROM interaction I1
+	SELECT I1.timestamp, I1.client_id, I1.item_id FROM interaction I1
 	WHERE I1.dataset_id = $3
 	AND I1.timestamp BETWEEN $1 AND $2
 
@@ -12,11 +12,11 @@ $body$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION subset_for_scenario ( INT)
-RETURNS TABLE (timestamp TIMESTAMP, client_id INT, item_id INT)
+RETURNS TABLE (times DATE, client_id INT, item_id INT)
 AS
 $body$
 	
-	SELECT timestamp, client_id, item_id FROM interaction I1
+	SELECT I1.timestamp, I1.client_id, I1.item_id  FROM interaction I1
 	WHERE I1.dataset_id = $1
 
 $body$

@@ -16,8 +16,8 @@ from sqlalchemy import create_engine
 # /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-#engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
-engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
+engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
+#engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
 #engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
 
 

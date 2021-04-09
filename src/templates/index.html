@@ -83,17 +83,25 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js%22%3E"</script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js%22%3E"</script>
         <script>
-           $(function(){
-        $("#to").datepicker({ format: 'yyyy-mm-dd' });
-        $("#from").datepicker({ format: 'yyyy-mm-dd' }).bind("change",function(){
-            var minValue = $(this).val();
-            minValue = $.datepicker.parseDate('yyyy-mm-dd', minValue);
-            minValue.setDate(minValue.getDate()+1);
-            $("#to").datepicker( "option", "minDate", minValue );
-        })
-    }); 
+            $(function() {   
+                $( "#from" ).datepicker({ 
+                    format: 'yyyy-mm-dd', 
+                    changeMonth: true,   
+                    numberOfMonths: 1,  
+                    onClose: function( selectedDate ) {  
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );  
+                    }  
+                });  
+                $( "#to" ).datepicker({
+                    format: 'yyyy-mm-dd',  
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                    }
+                });  
+            }); 
         </script>
-        
-            
+
     </body>
 </html>
