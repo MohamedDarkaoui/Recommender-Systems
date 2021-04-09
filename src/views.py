@@ -16,9 +16,9 @@ from sqlalchemy import create_engine
 # /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
+#engine = create_engine('postgresql+psycopg2://postgres:mounir@localhost/ppdb')
 #engine = create_engine('postgresql+psycopg2://postgres:khalil@localhost/ppdb')
-#engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
+engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
 
 
 datasetDB = DatasetDB(connection)
@@ -53,8 +53,8 @@ def datasets():
             # create pandas objects
             interactions = pd.read_csv(interactionsCSV)
             columns = list(interactions.columns)
-            interactions.rename(columns={columns[0]: 'client_id', columns[1]: 'item_id', columns[2]: 'timestamp'})
-            interactions.columns = ['client_id', 'item_id', 'timestamp']
+            interactions.rename(columns={columns[0]: 'client_id', columns[1]: 'item_id', columns[2]: 'tmstamp'})
+            interactions.columns = ['client_id', 'item_id', 'tmstamp']
             interactions.insert(0, 'dataset_id', dataset.id)
             
             items = interactions[['item_id','dataset_id']].copy()
@@ -122,7 +122,6 @@ def scenarios():
             imin = '0'
         if len(imax) == 0:
             imax = 'infinity'
-
 
         if len(scenarioName) > 0 and len(datasetID) > 0:
             dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))

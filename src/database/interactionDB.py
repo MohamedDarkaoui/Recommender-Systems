@@ -10,7 +10,7 @@ class interactionDB:
             pdOBJ.to_csv(output,sep='\t', header=False, index=False)
             output.seek(0)
             contents = output.getvalue()
-            cursor.copy_from(file=output, table='interaction(dataset_id,client_id,item_id,timestamp)', null='') 
+            cursor.copy_from(file=output, table='interaction(dataset_id,client_id,item_id,tmstamp)', null='') 
             self.connection.commit()
 
         except:

@@ -26,42 +26,45 @@ class ScenarioDB:
     def get_interactionsPD(self, dataset_id, time1, time2, imin, imax, umin,umax):   
 
         cursor = self.connection.get_cursor()
+        try:
+            if time1 == '-infinity' and time2 == 'infinity':
+                if imin == '0' and imax == 'infinity':
+                    cursor.execute(""" select * from subset_for_scenario(%s)
+                    NATURAL JOIN subset_for_scenario_client (%s,%s,%s)""",
+                    (dataset_id,dataset_id,umin,umax))
+                elif umin == '0' and umax == 'infinity':
+                    cursor.execute(""" select * from subset_for_scenario(%s)
+                    NATURAL JOIN  subset_for_scenario_item (%s,%s,%s)""",
+                    (dataset_id,dataset_id,imin,imax))
+                else:
+                    cursor.execute(""" select * from subset_for_scenario(%s)
+                    NATURAL JOIN subset_for_scenario_client (%s,%s,%s)
+                    NATURAL JOIN subset_for_scenario_item (%s,%s,%s)""",
+                    (dataset_id,dataset_id,umin,umax,dataset_id,imin,imax))
 
-        if time1 == '-infinity' and time2 == 'infinity':
-            if imin == '0' and imax == 'infinity':
-                cursor.execute(""" select id from subset_for_scenario(%s)
-                NATURAL JOIN subset_for_scenario_client (%s,%s,%s)""",
-                (dataset_id,dataset_id,umin,umax))
+            elif imin == '0' and imax == 'infinity':
+                cursor.execute(
+                """ select * from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
+                natural join subset_for_scenario_client (%s::timestamp, %s::timestamp, %s,%s,%s)""",
+                (time1,time2,dataset_id,time1,time2,dataset_id,umin,umax))
             elif umin == '0' and umax == 'infinity':
-                cursor.execute(""" select id from subset_for_scenario(%s)
-                NATURAL JOIN  subset_for_scenario_item (%s,%s,%s)""",
-                (dataset_id,dataset_id,imin,imax))
+                cursor.execute(
+                """ select * from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
+                natural join subset_for_scenario_item (%s::timestamp, %s::timestamp, %s,%s,%s)""",
+                (time1,time2,dataset_id,time1,time2,dataset_id,imin,imax))
             else:
-                cursor.execute(""" select id from subset_for_scenario(%s)
-                NATURAL JOIN subset_for_scenario_client (%s,%s,%s)
-                NATURAL JOIN subset_for_scenario_item (%s,%s,%s)""",
-                (dataset_id,dataset_id,umin,umax,dataset_id,imin,imax))
+                cursor.execute(
+                """ select * from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
+                natural join subset_for_scenario_client (%s::timestamp, %s::timestamp, %s,%s,%s)
+                natural join subset_for_scenario_item (%s::timestamp, %s::timestamp, %s,%s,%s)""",
+                (time1,time2,dataset_id,time1,time2,dataset_id,umin,umax,time1,time2,dataset_id,imin,imax))
 
-        elif imin == '0' and imax == 'infinity':
-            cursor.execute(
-            """ select id from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
-            natural join subset_for_scenario_client (%s::timestamp, %s::timestamp, %s,%s,%s)""",
-            (time1,time2,dataset_id,time1,time2,dataset_id,umin,umax))
-        elif umin == '0' and umax == 'infinity':
-            cursor.execute(
-            """ select id from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
-            natural join subset_for_scenario_item (%s::timestamp, %s::timestamp, %s,%s,%s)""",
-            (time1,time2,dataset_id,time1,time2,dataset_id,imin,imax))
-        else:
-            cursor.execute(
-            """ select id from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
-            natural join subset_for_scenario_client (%s::timestamp, %s::timestamp, %s,%s,%s)
-            natural join subset_for_scenario_item (%s::timestamp, %s::timestamp, %s,%s,%s)""",
-            (time1,time2,dataset_id,time1,time2,dataset_id,umin,umax,time1,time2,dataset_id,imin,imax))
-
-        ids = cursor.fetchall()
-        interaction_ids = DataFrame (ids, columns=['interaction_id'])
-        return interaction_ids
+            result = cursor.fetchall()
+            returnResult = DataFrame (result, columns=['client_id','item_id','tmstamp'])
+            return returnResult
+        except:
+            self.connection.rollback()
+            raise Exception('unable to select from interaction')
 
     def add_scenario_elements(self,pdOBJ):
         cursor = self.connection.get_cursor()
@@ -75,7 +78,7 @@ class ScenarioDB:
 
         except:
             self.connection.rollback()
-            raise Exception('Unable to save interaction')
+            raise Exception('Unable to save scenario elements')
     
     
     def getScenariosFromUser(self, usr):
