@@ -1,18 +1,9 @@
 from datetime import time
 from flask import Blueprint, render_template, redirect, request
 from flask_login import login_user, login_required, logout_user, current_user
-from database.DBConnection import DBConnection 
-from database.datasetDB import DatasetDB
-from database.interactionDB import interactionDB
-from database.itemDB import ItemDB
-from database.clientDB import ClientDB
-from database.metadataDB import MetadataDB
-from database.metadataElementDB import MetadataElementDB
-from database.scenarioDB import ScenarioDB
-from database.entitiesDB import Dataset, Metadata, Scenario
 from werkzeug.security import generate_password_hash, check_password_hash
+from database import *
 from config import config_data
-from random import randint
 from models import Users
 from appCreator import db
 import pandas as pd
