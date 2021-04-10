@@ -22,12 +22,12 @@ engine = create_engine('postgresql+psycopg2://postgres:mohamed@localhost/ppdb')
 
 
 datasetDB = DatasetDB(connection)
-ItemDB = ItemDB(connection)
-ClientDB = ClientDB(connection)
+itemDB = ItemDB(connection)
+clientDB = ClientDB(connection)
 interactionDB = interactionDB(connection)
-MetadataDB = MetadataDB(connection)
-MetadataElementDB = MetadataElementDB(connection)
-ScenarioDB = ScenarioDB(connection)
+metadataDB = MetadataDB(connection)
+metadataElementDB = MetadataElementDB(connection)
+scenarioDB = ScenarioDB(connection)
 views = Blueprint('views', __name__)
 
 
@@ -36,7 +36,7 @@ views = Blueprint('views', __name__)
 def home():
     return render_template("home.html")
 
-@views.route('/datasets', methods=['GET', 'POST'])
+@views.route('/datasets/', methods=['GET', 'POST'])
 @login_required
 def datasets():
     if request.method == 'POST' and request.form.get('which-form') == "uploadDataset":
@@ -67,9 +67,9 @@ def datasets():
 
             # insert items,clients and interactions
             print('inserting items')
-            ItemDB.add_item(items)
+            itemDB.add_item(items)
             print('inserting clients')
-            ClientDB.add_client(clients)
+            clientDB.add_client(clients)
             print('inserting interactions')
             interactionDB.add_interaction(interactions)
             
@@ -78,9 +78,9 @@ def datasets():
             
                 metadata = pd.read_csv(metadataCSV)
                 columns = list(metadata.columns)
-                metadataOBJ = Metadata(dataset.id)
+                metadataOBJ = metadata(dataset.id)
                 #insert metadata
-                metadataOBJ = MetadataDB.add_metadata(metadataOBJ)
+                metadataOBJ = metadataDB.add_metadata(metadataOBJ)
                 for index, row in metadata.iterrows():
                     itemId = row[columns[0]]
                     #iterate through all columns
@@ -89,7 +89,7 @@ def datasets():
                         data = row[column]
                         description = column
                         #add metadata_element
-                        MetadataElementDB.add_metadataElement(item_id=itemId, dataset_id=dataset.id, 
+                        metadataElementDB.add_metadataElement(item_id=itemId, dataset_id=dataset.id, 
                             metadata_id=metadataOBJ.id, description=description, data=data)
 
     datasets = datasetDB.getDatasetsFromUser(current_user)
@@ -126,13 +126,13 @@ def scenarios():
         if len(scenarioName) > 0 and len(datasetID) > 0:
             dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
             scenario = Scenario(name=scenarioName,usr_id=str(current_user.id),date_time=dt_string,dataset_id=datasetID)
-            scenario = ScenarioDB.add_scenario(scenario)
-            scen_elem = ScenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
+            scenario = scenarioDB.add_scenario(scenario)
+            scen_elem = scenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
             scen_elem.insert(0, 'scenario_id', scenario.id)
-            ScenarioDB.add_scenario_elements(scen_elem)
+            scenarioDB.add_scenario_elements(scen_elem)
             
 
-    scenarios = ScenarioDB.getScenariosFromUser(current_user)
+    scenarios = scenarioDB.getScenariosFromUser(current_user)
     for i in range(len(scenarios)):
         scenarios[i] = (i+1, scenarios[i].name, scenarios[i].dataset_id, scenarios[i].date_time)
 
@@ -162,10 +162,24 @@ def settings():
 @login_required
 def users():
     return render_template("users.html")    
-@views.route('/datasets/dataset_samples')
+
+
+@views.route('/datasets/<dataset_name>')
 @login_required
-def data_samples():
-    return render_template("dataset_sample_page.html")
+def data_samples(dataset_name):
+
+    dataset_id = datasetDB.getDatasetID(current_user.id,dataset_name)
+    client_count = clientDB.getCountClients(dataset_id)
+    item_count = itemDB.getCountItems(dataset_id)
+    interaction_count = interactionDB.getCountInteractions(dataset_id)
+    interaction_sample = interactionDB.getInteractionSample(dataset_id)
+
+    print(dataset_id)
+
+    return render_template("dataset_sample.html",dataset_name=dataset_name, 
+    client_count=client_count,item_count=item_count,interaction_count=interaction_count,interaction_sample=interaction_sample)
+
+
 @views.route('/scenarios/scenario_samples')
 @login_required
 def scen_samples():

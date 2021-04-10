@@ -39,3 +39,18 @@ class DatasetDB:
             datasets.append(dataset)
 
         return datasets
+
+    def getDatasetID(self,usr_id,name):
+        """
+        returns the ID of the dataset with the given name that belongs to the given user
+        """
+
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT D.id FROM dataset D
+                                WHERE D.usr_id = %s
+                                AND D.name = %s """,(usr_id, name))
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            raise Exception('Unable to select the count of intercations')

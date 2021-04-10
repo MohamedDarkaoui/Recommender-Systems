@@ -69,11 +69,11 @@
           <td>{{dataset[2]}}</td>
           <td>
               <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                  <label class="custom-control-label" for="customSwitch1"></label>
+                  <input type="checkbox" class="custom-control-input" id="customSwitch{{dataset[0]}}">
+                  <label class="custom-control-label" for="customSwitch{{dataset[0]}}"></label>
                 </div>
           </td>
-          <td><a class="btn btn-primary" href="{{url_for('views.data_samples')}}" role="button">More</a></td>
+          <td><a class="btn btn-primary" href="{{dataset[1]}}" role="button">More</a></td>
         </tr>
       {% endfor %}
     </tbody>

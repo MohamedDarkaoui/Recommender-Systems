@@ -16,3 +16,17 @@ class ItemDB:
         except:
             self.connection.rollback()
             raise Exception('Unable to save item: ' + id)
+
+    def getCountItems(self, dataset_id):
+        """
+        given a dataset id, returns the number of items
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT COUNT (I.dataset_id) FROM item I
+                                WHERE I.dataset_id = %s
+                                GROUP BY I.dataset_id;""",(dataset_id,))
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            raise Exception('Unable to select the count of item')
