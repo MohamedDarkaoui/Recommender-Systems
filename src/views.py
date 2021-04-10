@@ -75,22 +75,46 @@ def datasets():
             
             #insert metadata if exists
             if metadataCSV.content_type == 'text/csv':
-            
                 metadata = pd.read_csv(metadataCSV)
                 columns = list(metadata.columns)
-                metadataOBJ = metadata(dataset.id)
+                metadata.drop(columns[0], axis=1)
+                metadataOBJ = Metadata(dataset.id)
+
                 #insert metadata
                 metadataOBJ = metadataDB.add_metadata(metadataOBJ)
-                for index, row in metadata.iterrows():
-                    itemId = row[columns[0]]
-                    #iterate through all columns
-                    for column in columns[1:]:
-                        #get info
-                        data = row[column]
-                        description = column
-                        #add metadata_element
-                        metadataElementDB.add_metadataElement(item_id=itemId, dataset_id=dataset.id, 
-                            metadata_id=metadataOBJ.id, description=description, data=data)
+
+                #add dataset and metadata id columns
+                metadata.insert(1, 'dataset_id', dataset.id)
+                metadata.insert(2, 'metadata_id', metadataOBJ.id)
+
+                #rename de item id
+                metadata = metadata.rename(columns={columns[0]: 'item_id'})
+
+                columns = list(metadata.columns)
+                #CREATE TEMPORARY DESC DATAFRAMES
+                tempDataframes = []
+                for column in columns[3:]:
+                    tempDataframes.append(pd.DataFrame([metadata[column]]).transpose())
+
+                #REMOVE ALL DESC FROM METADATA
+                metadata = metadata.drop(columns[3:], axis=1)
+                
+                #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
+                for tempDataframe in tempDataframes:
+                    #ADD DESC
+                    descName = tempDataframe.columns[0]
+                    metadata.insert(3, 'description', descName)
+                    tempDataframe = tempDataframe.rename(columns={descName: 'data'})
+
+                    #ADD DATA
+                    metadata = pd.concat([metadata, tempDataframe], axis=1)
+
+                    #COPY INTO DATABASE
+                    #### HIER MOHAMED ######
+                    ##copy_from(metadata) into database table metadataelement
+
+                    #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
+                    metadata = metadata.drop(metadata.columns[3:5], axis=1)
 
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
