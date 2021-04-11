@@ -1,107 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=0.5">
-        <!--bootstrap link-->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <!--css file link-->
-        <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
-        <!--Title-->
-        <title>{% block title %} {% endblock %}</title>
-        <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-        <!--scripts-->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-    </head>
-    <body id="body-pd">
-        <div class="l-navbar" id="navbar">
-            <nav class="nav">
-                <div>
-                    <div class="nav__brand">
-                        <a href="{{url_for('views.home')}}" class="nav__logo not-active">PPDB Team 3</a>
-                    </div>
-                    <div class="nav__list">
-                        <a href="{{url_for('views.home')}}" class={% block activate_home %} "nav__link not-active" {% endblock %}>
-                            <ion-icon name="home-outline" class="nav__icon"></ion-icon>
-                            <span class="nav__name">Home</span>
-                        </a>
-                        <a href="{{url_for('views.datasets')}}" class={% block activate_datasets %} "nav__link not-active" {% endblock %}>
-                            <ion-icon name="file-tray-full-outline" class="nav__icon"></ion-icon>
-                            <span class="nav__name">Datasets</span>
-                        </a>
 
-                        <a href="{{url_for('views.scenarios')}}" class={% block activate_scenarios %} "nav__link not-active" {% endblock %}>
-                            <ion-icon name="funnel-outline" class="nav__icon"></ion-icon>
-                            <span class="nav__name">Scenarios</span>
-                        </a>
-                        <a href="{{url_for('views.models')}}" class={% block activate_models %} "nav__link not-active" {% endblock %}>
-                            <ion-icon name="cube-outline" class="nav__icon"></ion-icon>
-                            <span class="nav__name">Models</span>
-                        </a>
-                        <a href="{{url_for('views.experiments')}}" class={% block activate_experiments %} "nav__link not-active" {% endblock %}>
-                            <ion-icon name="flask-outline" class="nav__icon"></ion-icon>
-                            <span class="nav__name">Experiments</span>
-                        </a>
-                    </div>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <!--bootstrap link-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--css file link-->
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
+    <!--Title-->
+    <title>{% block title %} {% endblock %}</title>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <!--scripts-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+</head>
+
+<body id="body-pd">
+    <div class="l-navbar" id="navbar">
+        <nav class="nav">
+            <div>
+                <div class="nav__brand">
+                    <a href="{{url_for('views.home')}}" class="nav__logo not-active">PPDB Team 3</a>
                 </div>
-
                 <div class="nav__list">
-                    <a href="{{url_for('views.users')}}" class={% block activate_users%} "nav__link not-active" {% endblock %}>
-                        <ion-icon name="person-outline" class="nav__icon"></ion-icon>
-                        <span class="nav__name">Users</span>
+                    <a href="{{url_for('views.home')}}" class={% block activate_home %} "nav__link not-active" {%
+                        endblock %}>
+                        <ion-icon name="home-outline" class="nav__icon"></ion-icon>
+                        <span class="nav__name">Home</span>
                     </a>
-                    <a href="{{url_for('views.profile')}}" class={% block activate_profile %} "nav__link not-active" {% endblock %}>
-                        <ion-icon name="person-outline" class="nav__icon"></ion-icon>
-                        <span class="nav__name">Profile</span>
+                    <a href="{{url_for('views.datasets')}}" class={% block activate_datasets %} "nav__link not-active"
+                        {% endblock %}>
+                        <ion-icon name="file-tray-full-outline" class="nav__icon"></ion-icon>
+                        <span class="nav__name">Datasets</span>
                     </a>
-                    <a href="/logout" class="nav__link">
-                        <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
-                        <span class="nav__name">Log Out</span>
+
+                    <a href="{{url_for('views.scenarios')}}" class={% block activate_scenarios %} "nav__link not-active"
+                        {% endblock %}>
+                        <ion-icon name="funnel-outline" class="nav__icon"></ion-icon>
+                        <span class="nav__name">Scenarios</span>
+                    </a>
+                    <a href="{{url_for('views.models')}}" class={% block activate_models %} "nav__link not-active" {%
+                        endblock %}>
+                        <ion-icon name="cube-outline" class="nav__icon"></ion-icon>
+                        <span class="nav__name">Models</span>
+                    </a>
+                    <a href="{{url_for('views.experiments')}}" class={% block activate_experiments
+                        %} "nav__link not-active" {% endblock %}>
+                        <ion-icon name="flask-outline" class="nav__icon"></ion-icon>
+                        <span class="nav__name">Experiments</span>
                     </a>
                 </div>
-            </nav>
-        </div>
-        <div class="main">
-            {% block unique %}
-            {% endblock %}
-        </div>
-        <script>
-            $(".custom-file-input").on("change", function() {
-                var fileName = $(this).val().split("\\").pop();
-                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-            });
-        </script>
-       <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" />
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js%22%3E"</script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js%22%3E"</script>
-        <script>
-            $(function() {   
-                $( "#from" ).datepicker({ 
-                    format: 'yyyy-mm-dd', 
-                    changeMonth: true,   
-                    numberOfMonths: 1,  
-                    onClose: function( selectedDate ) {  
-                    $( "#to" ).datepicker( "option", "minDate", selectedDate );  
-                    }  
-                });  
-                $( "#to" ).datepicker({
-                    format: 'yyyy-mm-dd',  
-                    changeMonth: true,
-                    numberOfMonths: 1,
-                    onClose: function( selectedDate ) {
-                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
-                    }
-                });  
-            }); 
-        </script>
+            </div>
 
-    </body>
+            <div class="nav__list">
+                <a href="{{url_for('views.users')}}" class={% block activate_users%} "nav__link not-active" {% endblock
+                    %}>
+                    <ion-icon name="person-outline" class="nav__icon"></ion-icon>
+                    <span class="nav__name">Users</span>
+                </a>
+                <a href="{{url_for('views.profile')}}" class={% block activate_profile %} "nav__link not-active" {%
+                    endblock %}>
+                    <ion-icon name="person-outline" class="nav__icon"></ion-icon>
+                    <span class="nav__name">Profile</span>
+                </a>
+                <a href="/logout" class="nav__link">
+                    <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
+                    <span class="nav__name">Log Out</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        {% block unique %}
+        {% endblock %}
+    </div>
+    <script>
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js%22%3E"</script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js%22%3E"</script>
+    <script type="text/javascript" src="{{ url_for('static',filename='datepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='algo_input_getter.js') }}"></script>
+</body>
+
 </html>
