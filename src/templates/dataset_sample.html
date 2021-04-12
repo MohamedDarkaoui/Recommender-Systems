@@ -71,51 +71,20 @@
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Genre</th>
-                    <th scope="col">Value</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Data</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>test</td>
-                    <td>test</td>
-                  </tr>
+                  {%for index, row in metadata_sample.iterrows()%}
+                    <tr>
+                    <th scope="row">{{index+1}}</th>
+                      <td>{{row["item_id"]}}</td>
+                      <td>{{row["description"]}}</td>
+                      <td>{{row["data"]}}</td>
+                    </tr>
+                  {% endfor %}
                 </tbody>
               </table>
         </div>

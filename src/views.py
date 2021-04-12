@@ -7,9 +7,11 @@ from config import config_data
 from models import Users
 from appCreator import db
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import csv
 import io
+
 
 from sqlalchemy import create_engine
 
@@ -107,11 +109,11 @@ def datasets():
                     tempDataframe = tempDataframe.rename(columns={descName: 'data'})
 
                     #ADD DATA
-                    metadata = pd.concat([metadata, tempDataframe], axis=1)
-
+                    metadata = pd.concat([metadata, tempDataframe], axis=1)  
+                    if metadata['data'].dtypes == 'object':
+                        metadata['data'] = metadata['data'].astype(str).str.replace('\n','')
                     #COPY INTO DATABASE
-                    #### HIER MOHAMED ######
-                    ##copy_from(metadata) into database table metadataelement
+                    metadataElementDB.add_metadataElements(metadata)
 
                     #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
                     metadata = metadata.drop(metadata.columns[3:5], axis=1)
@@ -120,6 +122,11 @@ def datasets():
     for i in range(len(datasets)):
         datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private)
     return render_template("datasets.html", datasets = datasets)
+
+
+def parseMetadata(pdOBJ):
+    return pdOBJ
+
 
 @views.route('/scenarios',methods=['GET', 'POST'])
 @login_required
@@ -197,11 +204,12 @@ def data_samples(dataset_name):
     item_count = itemDB.getCountItems(dataset_id)
     interaction_count = interactionDB.getCountInteractions(dataset_id)
     interaction_sample = interactionDB.getInteractionSample(dataset_id)
+    metadata_sample = metadataElementDB.getMetadataSample(dataset_id)
 
     print(dataset_id)
 
     return render_template("dataset_sample.html",dataset_name=dataset_name, 
-    client_count=client_count,item_count=item_count,interaction_count=interaction_count,interaction_sample=interaction_sample)
+    client_count=client_count,item_count=item_count,interaction_count=interaction_count,interaction_sample=interaction_sample,metadata_sample=metadata_sample)
 
 
 @views.route('/scenarios/scenario_samples')
