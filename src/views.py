@@ -111,7 +111,8 @@ def datasets():
                     #ADD DATA
                     metadata = pd.concat([metadata, tempDataframe], axis=1)  
                     if metadata['data'].dtypes == 'object':
-                        metadata['data'] = metadata['data'].astype(str).str.replace('\n','')
+                        metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
+                    print(metadata)
                     #COPY INTO DATABASE
                     metadataElementDB.add_metadataElements(metadata)
 
@@ -156,7 +157,8 @@ def scenarios():
 
         if len(scenarioName) > 0 and len(datasetID) > 0:
             dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
-            scenario = Scenario(name=scenarioName,usr_id=str(current_user.id),date_time=dt_string,dataset_id=datasetID)
+            scenario = Scenario(name=scenarioName,usr_id=str(current_user.id),date_time=dt_string,dataset_id=datasetID,time_min=time1,time_max=time2,
+            item_min=imin,item_max=imax,client_min=umin,client_max=umax)
             scenario = scenarioDB.add_scenario(scenario)
             scen_elem = scenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
             scen_elem.insert(0, 'scenario_id', scenario.id)
@@ -205,17 +207,26 @@ def data_samples(dataset_name):
     interaction_count = interactionDB.getCountInteractions(dataset_id)
     interaction_sample = interactionDB.getInteractionSample(dataset_id)
     metadata_sample = metadataElementDB.getMetadataSample(dataset_id)
-
-    print(dataset_id)
-
+ 
     return render_template("dataset_sample.html",dataset_name=dataset_name, 
     client_count=client_count,item_count=item_count,interaction_count=interaction_count,interaction_sample=interaction_sample,metadata_sample=metadata_sample)
 
 
-@views.route('/scenarios/scenario_samples')
+@views.route('/scenarios/<scenario_name>')
 @login_required
-def scen_samples():
-    return render_template("scenario_sample.html")
+def scen_samples(scenario_name):
+
+    scen_id = scenarioDB.getScenarioID(name=scenario_name,user_id=current_user.id)
+    item_count = scenarioDB.getScenarioItemCount(scen_id)
+    client_count = scenarioDB.getScenarioItemCount(scen_id)
+    scenario_interactions_count = scenarioDB.getScenarioInteractionsCount(scen_id)
+    scenario_sample = scenarioDB.getScenarioSample(scen_id)
+    preprocessing = scenarioDB.getPreProcessingSteps(scen_id) 
+    
+
+    df = pd.DataFrame({})
+    return render_template("scenario_sample.html",dataset_name=scenario_name,client_count=client_count,
+    item_count=item_count,interaction_count=scenario_interactions_count,interaction_sample=scenario_sample,metadata_sample=df,preprocessing=preprocessing)
 
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required

@@ -7,16 +7,15 @@ class MetadataElementDB:
 
     def add_metadataElements(self, pdOBJ):
         cursor = self.connection.get_cursor()
-        try:
-            output = io.StringIO()
-            pdOBJ.to_csv(output,sep='\t', header=False, index=False)
-            output.seek(0)
-            contents = output.getvalue()
-            cursor.copy_from(file=output, table='metadata_element', null='') 
-            self.connection.commit()
-        except:
-            self.connection.rollback()
-            raise Exception('Unable to save metadata elements')
+        
+        output = io.StringIO()
+        pdOBJ.to_csv(output,sep='\t', header=False, index=False)
+        output.seek(0)
+        contents = output.getvalue()
+        cursor.copy_from(file=output, table='metadata_element', null='') 
+        self.connection.commit()
+
+
 
     def getMetadataSample(self, dataset_id):
         """

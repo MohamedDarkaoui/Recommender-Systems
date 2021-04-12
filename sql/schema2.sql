@@ -59,6 +59,12 @@ CREATE TABLE scenario (
   usr_id INT NOT NULL,
   date_time TIMESTAMP,
   dataset_id INT NOT NULL REFERENCES dataset(id),
+  sDate TIMESTAMP NOT NULL,
+  eDate TIMESTAMP NOT NULL,
+  max_items INT NOT NULL,
+  min_items INT NOT NULL,
+  max_clients INT NOT NULL,
+  min_clients INT NOT NULL,
   PRIMARY KEY (usr_id,name)
   );
 
@@ -69,3 +75,4 @@ CREATE TABLE scenario_element (
   tmstamp TIMESTAMP NOT NULL,
   PRIMARY KEY (scenario_id, client_id, item_id, tmstamp)
 );
+ 
