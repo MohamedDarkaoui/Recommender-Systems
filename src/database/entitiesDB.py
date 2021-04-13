@@ -30,7 +30,7 @@ class Scenario:
         self.client_min=client_min
         self.client_max=client_max
         self.time_min=time_min
-        self.time_max=time_max,
+        self.time_max=time_max
 
 
 

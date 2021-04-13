@@ -175,9 +175,13 @@ def scenarios():
     return render_template("scenarios.html", datasets = datasets,scenarios=scenarios)
 
 
-@views.route('/models')
+@views.route('/models',methods=['GET', 'POST'])
 @login_required
 def models():
+    if request.method == 'POST' and request.form.get('which-form') == 'chooseScenario':
+        scenarioName = request.form.get('scenarioName')
+        datasetID = request.form.get('datasetSelect')
+
     return render_template("models.html")
 
 @views.route('/experiments')
