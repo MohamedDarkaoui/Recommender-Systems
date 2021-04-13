@@ -1,7 +1,7 @@
 server {
     listen 80;
     server_name 0.0.0.0 team3.ua-ppdb.me;
-
+    client_max_body_size 100M;
     location / {
         include proxy_params;
         proxy_pass http://unix:/home/app/Recommender-Systems/src/webapp.sock;
