@@ -131,7 +131,7 @@ def parseMetadata(pdOBJ):
 @views.route('/scenarios',methods=['GET', 'POST'])
 @login_required
 def scenarios():
-    if request.method == 'POST' and request.form.get('which-form') == 'chooseScenario':
+    if request.method == 'POST' and request.form.get('which-form') == 'makeScenario':
         scenarioName = request.form.get('scenarioName')
         datasetID = request.form.get('datasetSelect')
         time1 = request.form.get('startDate')
@@ -178,11 +178,12 @@ def scenarios():
 @views.route('/models',methods=['GET', 'POST'])
 @login_required
 def models():
-    if request.method == 'POST' and request.form.get('which-form') == 'chooseScenario':
-        scenarioName = request.form.get('scenarioName')
-        datasetID = request.form.get('datasetSelect')
+    if request.method == 'POST' and request.form.get('which-form') == 'makeModel':
+        pass
+    
 
-    return render_template("models.html")
+    models = [] #get models list
+    return render_template("models.html", models = models)
 
 @views.route('/experiments')
 @login_required
