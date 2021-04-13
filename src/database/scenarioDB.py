@@ -127,7 +127,7 @@ class ScenarioDB:
         except:
             raise Exception('Unable to select the count of items in scenario')    
     
-    def getScenarioItemCount(self, scenario_id):
+    def getScenarioClientCount(self, scenario_id):
         """
         counts the number of clients
         """

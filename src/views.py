@@ -148,11 +148,11 @@ def scenarios():
         if len(umin) == 0:
             umin = '0'
         if len(umax) == 0:
-            umax = 'infinity'
+            umax = str(clientDB.getCountClients(datasetID))
         if len(imin) == 0:
             imin = '0'
         if len(imax) == 0:
-            imax = 'infinity'
+            imax = str(itemDB.getCountItems(datasetID))
 
         if len(scenarioName) > 0 and len(datasetID) > 0:
             dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
@@ -217,7 +217,7 @@ def scen_samples(scenario_name):
 
     scen_id = scenarioDB.getScenarioID(name=scenario_name,user_id=current_user.id)
     item_count = scenarioDB.getScenarioItemCount(scen_id)
-    client_count = scenarioDB.getScenarioItemCount(scen_id)
+    client_count = scenarioDB.getScenarioClientCount(scen_id)
     scenario_interactions_count = scenarioDB.getScenarioInteractionsCount(scen_id)
     scenario_sample = scenarioDB.getScenarioSample(scen_id)
     preprocessing = scenarioDB.getPreProcessingSteps(scen_id) 

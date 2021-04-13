@@ -10,8 +10,8 @@ def create_app():
     app.config['SECRET_KEY'] = 'messicristianoneymarmbappehaaland'
     #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:mounir@localhost/ppdb'
     #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:khalil@localhost/ppdb'
-    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:mohamed@localhost/ppdb'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/ppdb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:mohamed@localhost/ppdb'
+    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/ppdb'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
