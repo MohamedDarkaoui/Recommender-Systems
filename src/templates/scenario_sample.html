@@ -1,5 +1,5 @@
 {% extends "dataset_sample.html" %}
-{% block title %}  {% endblock %}
+{% block title %} Sample {% endblock %}
 {% block scenario_sample %}
 <li class="list-group-item d-flex justify-content-between align-items-center">
     startDate
@@ -8,7 +8,7 @@
 <li class="list-group-item d-flex justify-content-between align-items-center">
     endDate
     <span class="badge badge-primary badge-pill">{{preprocessing[1]}}</span>
-</li> 
+</li>
 <li class="list-group-item d-flex justify-content-between align-items-center">
     Minimum - Maximum Users Activity
     <span class="badge badge-primary badge-pill">{{preprocessing[4]}}-{{preprocessing[5]}}</span>
@@ -18,3 +18,4 @@
     <span class="badge badge-primary badge-pill">{{preprocessing[2]}} - {{preprocessing[3]}}</span>
 </li>                               
 {% endblock %}
+{% block meta_delete %} {% endblock %}
