@@ -53,4 +53,18 @@ class DatasetDB:
             result = cursor.fetchall()
             return result[0][0]
         except:
-            raise Exception('Unable to select the count of intercations')
+            raise Exception('Unable to select the ID of the dataset')
+
+    def getDatasetName(self,id):
+        """
+        returns the name of the dataset with the given ID that belongs to the current user
+        """
+
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT D.name FROM dataset D
+                                WHERE D.id =  %s """,(id,))
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            raise Exception('Unable to select the name of the dataset')

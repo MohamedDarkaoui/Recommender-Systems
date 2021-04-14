@@ -32,5 +32,13 @@ class Scenario:
         self.time_min=time_min
         self.time_max=time_max
 
+class Model:
+    def __init__(self,usr_id,name,algorithm,scenario_id,date_time,id=None):
+        self.id = id
+        self.name = name
+        self.usr_id = usr_id
+        self.algorithm = algorithm
+        self.scenario_id = scenario_id
+        self.date_time = date_time
 
 

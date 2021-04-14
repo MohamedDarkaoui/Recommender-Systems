@@ -7,3 +7,5 @@ from database.itemDB import *
 from database.metadataDB import *
 from database.metadataElementDB import *
 from database.scenarioDB import *
+from database.modelDB import *
+

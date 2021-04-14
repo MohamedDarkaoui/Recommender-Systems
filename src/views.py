@@ -30,6 +30,7 @@ interactionDB = interactionDB(connection)
 metadataDB = MetadataDB(connection)
 metadataElementDB = MetadataElementDB(connection)
 scenarioDB = ScenarioDB(connection)
+modelDB = ModelDB(connection)
 views = Blueprint('views', __name__)
 
 
@@ -133,13 +134,15 @@ def parseMetadata(pdOBJ):
 def scenarios():
     if request.method == 'POST' and request.form.get('which-form') == 'makeScenario':
         scenarioName = request.form.get('scenarioName')
-        datasetID = request.form.get('datasetSelect')
+        datasetName = request.form.get('datasetSelect')
         time1 = request.form.get('startDate')
         time2 = request.form.get('endDate')
         umin = request.form.get('user_min')
         umax = request.form.get('user_max')
         imin = request.form.get('item_min')
         imax = request.form.get('item_max')
+
+        datasetID = datasetDB.getDatasetID(current_user.id,datasetName)
 
         if len(time1) == 0:
             time1 = '-infinity' 
@@ -154,7 +157,7 @@ def scenarios():
         if len(imax) == 0:
             imax = str(itemDB.getCountItems(datasetID))
 
-        if len(scenarioName) > 0 and len(datasetID) > 0:
+        if len(scenarioName) > 0 and len(datasetName) > 0:
             dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
             scenario = Scenario(name=scenarioName,usr_id=str(current_user.id),date_time=dt_string,dataset_id=datasetID,time_min=time1,time_max=time2,
             item_min=imin,item_max=imax,client_min=umin,client_max=umax)
@@ -163,10 +166,11 @@ def scenarios():
             scen_elem.insert(0, 'scenario_id', scenario.id)
             scenarioDB.add_scenario_elements(scen_elem)
             
-
+    
     scenarios = scenarioDB.getScenariosFromUser(current_user)
     for i in range(len(scenarios)):
-        scenarios[i] = (i+1, scenarios[i].name, scenarios[i].dataset_id, scenarios[i].date_time)
+        datasetName = datasetDB.getDatasetName(scenarios[i].dataset_id)
+        scenarios[i] = (i+1, scenarios[i].name, datasetName, scenarios[i].date_time)
 
     
     datasets = datasetDB.getDatasetsFromUser(current_user)
@@ -179,11 +183,17 @@ def scenarios():
 @login_required
 def models():
     if request.method == 'POST' and request.form.get('which-form') == 'makeModel':
-        pass
-    
+        modelName = request.form.get('modelName')
+        scenarioName = request.form.get('modelSelect')
 
+        #scenario_id = scenarioDB.getScenarioID(scenarioName)
+    
     models = [] #get models list
-    return render_template("models.html", models = models)
+
+    scenarios = scenarioDB.getScenariosFromUser(current_user)
+    for i in range(len(scenarios)):
+        scenarios[i] = (i+1, scenarios[i].name)
+    return render_template("models.html", scenarios = scenarios,models=models)
 
 @views.route('/experiments')
 @login_required
