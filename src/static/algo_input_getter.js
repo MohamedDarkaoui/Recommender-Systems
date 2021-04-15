@@ -26,6 +26,9 @@ function getform() {
         closeall()
         document.getElementById("iknn").style.display = "block";
     }
+    if (a=="random"){
+        closeall()
+    }
     
 
 };

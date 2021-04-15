@@ -6,126 +6,133 @@
 {% block unique %}
 <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Make model</button>
 
-<form method = "POST">
-<div>
-  <input type="hidden" name="which-form" value="makeModel">
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Model</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <input name="modelName" class="form-control form-control-lg" type="text" placeholder="Name">
-          <br><br>
-          <div class="input-group mb-3">
-            <select name = "scenarioSelect" class="custom-select" id="inputGroupSelect01">
-              <option selected>Choose Scenario</option>
-                  {% for scenario in scenarios %}
-                    <option value={{scenario[1]}}>{{scenario[1]}}</option>
-                  {% endfor %}
-            </select>
+<form method="POST">
+  <div>
+    <input type="hidden" name="which-form" value="makeModel">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New Model</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-          <br>
-          <div class="input-group mb-3">
-            <select name="algorithmName" class="custom-select" id="selected" onchange="getform()">
-              <option selected value="default">Choose Algorithm</option>
-              <option value="ease">ease</option>
-              <option value="iknn">iknn</option>
-              <option value="pop">pop</option>
-              <option value="wmf">wmf</option>
-              <option value="random">random</option>
-            </select>
-          </div>
-          <div id="ease" style="display: none;">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_ease" >
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0.0" class="form-control" placeholder="l2" name = "l2">
-                </div>
-              </div>
+          <div class="modal-body">
+            <input name="modelName" class="form-control form-control-lg" type="text" placeholder="Name">
+            <br><br>
+            <div class="input-group mb-3">
+              <select name="scenarioSelect" class="custom-select" id="inputGroupSelect01">
+                <option selected>Choose Scenario</option>
+                {% for scenario in scenarios %}
+                <option value={{scenario[1]}}>{{scenario[1]}}</option>
+                {% endfor %}
+              </select>
             </div>
-          </div>
-           <div id="iknn" style="display: none;">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_iknn" >
-                </div>
-                <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="k" name="k" >
-                </div>
+            <br>
+            <div class="input-group mb-3">
+              <select name="algorithmName" class="custom-select" id="selected" onchange="getform()">
+                <option selected value="default">Choose Algorithm</option>
+                <option value="ease">ease</option>
+                <option value="iknn">iknn</option>
+                <option value="pop">pop</option>
+                <option value="wmf">wmf</option>
+                <option value="random">random</option>
+              </select>
+            </div>
+            <div id="ease" style="display: none;">
+              <div class="row">
+                <div class="col-md-6">
                   <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="normalize" name="normalize" >
+                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_ease">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="0.0" class="form-control" placeholder="l2" name="l2">
+                  </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0.0" class="form-control" placeholder="l2" name = "l2">
+            </div>
+            <div id="iknn" style="display: none;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_iknn">
+                  </div>
+                  <div class="form-group">
+                    <input type="number" min="1" class="form-control" placeholder="k" name="k">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="0.0" class="form-control" placeholder="l2" name="l2">
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+                      <select class="custom-select">
+                        <option selected value="default">Normalize?</option>
+                        <option value="true">YES</option>
+                        <option value="false">NO</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="pop" style="display: none;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_pop">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="wmf" style="display: none;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_wmf">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="0" class="form-control" placeholder="alpha" name="alpha">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="0" class="form-control" placeholder="factors" name="factors">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="0" class="form-control" placeholder="regularization"
+                      name="regularization">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" min="0" class="form-control" placeholder="iterations" name="iterations">
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div id="pop" style="display: none;">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_pop">
-                </div>
-              </div>
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Make</button>
           </div>
-          <div id="wmf" style="display: none;">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_wmf">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="alpha" name = "alpha"> 
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="factors" name = "factors">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="regularization" name = "regularization">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="iterations" name = "iterations">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Make</button>
         </div>
       </div>
     </div>
   </div>
-</div>
 </form>
 
 <br><br>
@@ -143,13 +150,13 @@
   </thead>
   <tbody>
     {% for model in models %}
-      <tr>
-        <th scope="row">{{model[0]}}</th>
-        <td>{{model[1]}}</td>
-        <td>{{model[2]}}</td>
-        <td>{{model[3]}}</td>
-        <td>{{model[4]}}</td>
-      </tr>
+    <tr>
+      <th scope="row">{{model[0]}}</th>
+      <td>{{model[1]}}</td>
+      <td>{{model[2]}}</td>
+      <td>{{model[3]}}</td>
+      <td>{{model[4]}}</td>
+    </tr>
     {% endfor %}
   </tbody>
 </table>
