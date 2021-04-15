@@ -6,11 +6,13 @@ from database import *
 from config import config_data
 from models import Users
 from appCreator import db
+from algorithm import *
 import pandas as pd
 import numpy as np
 from datetime import datetime
 import csv
 import io
+
 
 
 from sqlalchemy import create_engine
@@ -184,16 +186,91 @@ def scenarios():
 def models():
     if request.method == 'POST' and request.form.get('which-form') == 'makeModel':
         modelName = request.form.get('modelName')
-        scenarioName = request.form.get('modelSelect')
+        scenarioName = request.form.get('scenarioSelect')
+        algorithmName = request.form.get('algorithmName')
 
-        #scenario_id = scenarioDB.getScenarioID(scenarioName)
-    
-    models = [] #get models list
+        scenario_id = scenarioDB.getScenarioID(scenarioName,current_user.id)
+        dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+        param = {}
+        
+        if algorithmName == 'ease':
+            top_k_ease= request.form.get('top_k_ease')
+            param['top_k_ease'] = top_k_ease
+            if len(top_k_ease) == 0:
+                    param['top_k_ease'] = '5'
+            l2 = request.form.get('l2')
+            param['l2'] = l2
+            if len(l2) == 0:
+                param['l2'] = '200.0'
+
+        elif algorithmName == 'wmf':
+            top_k_wmf= request.form.get('top_k_wmf')
+            param['top_k_wmf'] = top_k_wmf
+            if len(top_k_wmf) == 0:
+                    param['top_k_wmf'] = '5'
+            alpha = request.form.get('alpha')
+            factors = request.form.get('factors')
+            regularization = request.form.get('regularization')
+            iterations = request.form.get('iterations')
+            param['alpha'] = alpha
+            param['factors'] = factors
+            param['regularization'] = regularization
+            param['iterations'] = iterations
+            if len(alpha) == 0:
+                param['alpha'] = '40.0'
+            if len(factors) == 0:
+                param['factors'] = '20'
+            if len(regularization) == 0:
+                param['regularization'] = '0.01'
+            if len(iterations) == 0:
+                param['iterations'] = '20'
+
+        elif algorithmName == 'iknn':
+            top_k_iknn= request.form.get('top_k_iknn')
+            param['top_k_iknn'] = top_k_iknn
+            if len(top_k_iknn) == 0:
+                    param['top_k_iknn'] = '5'
+            k = request.form.get('k')
+            normalize = request.form.get('normalize')
+            param['k'] = k
+            param['normalize'] = normalize
+            if len(k) == 0:
+                param['k'] = '200'
+            if len(normalize) == 0:
+                param['normalize'] = 'False'
+        
+        elif algorithmName == 'pop':
+            top_k_pop = request.form.get('top_k_pop')
+            param['top_k_pop'] = top_k_pop
+            if len(top_k_pop) == 0:
+                    param['top_k_pop'] = '5'
+
+        parameters = []
+
+        for dict_elem in param:
+            parameters.append([dict_elem,param[dict_elem]])
+
+        #plan is:
+        #we zetten de scenario (select pandas object) in een csv file
+        #we slagen dat ergens op in een file en steken de file path hier in deze functie
+        print(runAlgorithm(algorithmName,param,'datasets/interactions.csv'))
+        model = Model(usr_id=current_user.id,name=modelName,algorithm=algorithmName,scenario_id=scenario_id,parameters=parameters,date_time=dt_string)
+        model = modelDB.add_model(model)
+
+
+
+    models = modelDB.getModelsFromUser(current_user)
+    for i in range(len(models)):
+        scenarioName = scenarioDB.getScenarioName(models[i].scenario_id)
+        models[i] = (i+1, models[i].name, scenarioName,models[i].algorithm, models[i].date_time)
 
     scenarios = scenarioDB.getScenariosFromUser(current_user)
     for i in range(len(scenarios)):
         scenarios[i] = (i+1, scenarios[i].name)
+
     return render_template("models.html", scenarios = scenarios,models=models)
+
+
 
 @views.route('/experiments')
 @login_required

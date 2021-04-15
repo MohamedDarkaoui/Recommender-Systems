@@ -83,6 +83,7 @@ CREATE TABLE model (
   algorithm VARCHAR (50) NOT NULL,
   scenario_id INT NOT NULl REFERENCES scenario(id),
   date_time TIMESTAMP NOT NULL,
+  parameters VARCHAR[][2] NOT NULL,
   PRIMARY KEY (usr_id,name)
 );
 

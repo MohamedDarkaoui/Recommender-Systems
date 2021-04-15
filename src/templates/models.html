@@ -6,8 +6,8 @@
 {% block unique %}
 <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Make model</button>
 
-
-<div method="POST" enctype="multipart/form-data">
+<form method = "POST">
+<div>
   <input type="hidden" name="which-form" value="makeModel">
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -32,106 +32,91 @@
           </div>
           <br>
           <div class="input-group mb-3">
-            <select class="custom-select" id="selected" onchange="getform()">
+            <select name="algorithmName" class="custom-select" id="selected" onchange="getform()">
               <option selected value="default">Choose Algorithm</option>
               <option value="ease">ease</option>
               <option value="iknn">iknn</option>
               <option value="pop">pop</option>
               <option value="wmf">wmf</option>
+              <option value="random">random</option>
             </select>
           </div>
-          <form id="ease" style="display: none;">
+          <div id="ease" style="display: none;">
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <input class="form-control" placeholder="Item-column">
+                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_ease" >
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <input class="form-control" placeholder="User-column">
+                  <input type="number" min="0.0" class="form-control" placeholder="l2" name = "l2">
+                </div>
+              </div>
+            </div>
+          </div>
+           <div id="iknn" style="display: none;">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_iknn" >
+                </div>
+                <div class="form-group">
+                  <input type="number" min="1" class="form-control" placeholder="k" name="k" >
+                </div>
+                  <div class="form-group">
+                  <input type="number" min="1" class="form-control" placeholder="normalize" name="normalize" >
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="number" min="0.0" class="form-control" placeholder="l2" name = "l2">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="pop" style="display: none;">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_pop">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="wmf" style="display: none;">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_wmf">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="number" min="0" class="form-control" placeholder="alpha" name = "alpha"> 
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="top-k">
+                  <input type="number" min="0" class="form-control" placeholder="factors" name = "factors">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="number" min="0.0" class="form-control" placeholder="l2">
-                </div>
-              </div>
-            </div>
-          </form>
-          <form id="pop" style="display: none;">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input class="form-control" placeholder="Item-column">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input class="form-control" placeholder="User-column">
+                  <input type="number" min="0" class="form-control" placeholder="regularization" name = "regularization">
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="top-k">
+                  <input type="number" min="0" class="form-control" placeholder="iterations" name = "iterations">
                 </div>
               </div>
             </div>
-          </form>
-          <form id="wmf" style="display: none;">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input class="form-control" placeholder="Item-column">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input class="form-control" placeholder="User-column">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="1" class="form-control" placeholder="top-k">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="alpha">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="factors">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="regularization">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="number" min="0" class="form-control" placeholder="iterations">
-                </div>
-              </div>
-            </div>
-          </form>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -141,6 +126,7 @@
     </div>
   </div>
 </div>
+</form>
 
 <br><br>
 <h3>My Models:</h3>

@@ -2,6 +2,8 @@ function closeall() {
     document.getElementById("ease").style.display = "none";
     document.getElementById("pop").style.display = "none";
     document.getElementById("wmf").style.display = "none";
+    document.getElementById("iknn").style.display = "none";
+
 }
 function getform() {
     var a = document.getElementById("selected").value;
@@ -22,6 +24,8 @@ function getform() {
     };
     if (a == "iknn"){
         closeall()
+        document.getElementById("iknn").style.display = "block";
     }
+    
 
 };

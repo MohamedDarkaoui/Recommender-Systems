@@ -84,7 +84,7 @@ class ScenarioDB:
     
     def getScenariosFromUser(self, usr):
         """
-        returns a list of datasets that are created by usr
+        returns a list of scenarios that are created by usr
         """
         scenarios = []
         cursor = self.connection.get_cursor()
@@ -110,7 +110,7 @@ class ScenarioDB:
             result = cursor.fetchall()
             return result[0][0]
         except:
-            raise Exception('Unable to select the count of intercations')
+            raise Exception('Unable to select the scenario id')
 
     def getScenarioItemCount(self, scenario_id):
         """
@@ -180,3 +180,17 @@ class ScenarioDB:
             return result[0]
         except:
             raise Exception('Unable to select the preprocessing steps')
+    
+    def getScenarioName(self,id):
+        """
+        returns the name of the scenario with the given ID that belongs to the current user
+        """
+
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT D.name FROM scenario D
+                                WHERE D.id =  %s """,(id,))
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            raise Exception('Unable to select the name of the scenario')
