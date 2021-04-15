@@ -29,6 +29,7 @@ def return_run(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int = 5):
     np.random.seed(SEED)
 
     alg.fit(X)
+    print('fit')
     return get_recommendations(alg, X, top_k=top_k)
 
 def get_recommendations(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int = 5):
@@ -36,67 +37,74 @@ def get_recommendations(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int =
     random.seed(SEED)
     np.random.seed(SEED)
 
-    test_users = random.sample(list(range(X.shape[0])), AMOUNT_TEST_USERS)
+    test_users = list(range(X.shape[0]))
     test_histories = X[test_users, :]
     predictions = alg.predict(test_histories)
+    print('predict')
     recommendations, scores = util.predictions_to_recommendations(predictions, top_k=top_k)
-    return_dict = {'users':[],'history':[],'recommendations':[],'scores':[]}
+    return_list = []
     for index, u in enumerate(test_users):
-        return_dict['users'].append(u)
-        return_dict['history'].append(np.where(test_histories[index].toarray().flatten())[0])
-        return_dict['recommendations'].append(recommendations[index])
-        return_dict['scores'].append(scores[index])
-    
-    return return_dict
+        result = []
+        result.append(u)
+        recom = recommendations[index].tolist()[0]
+        sco = scores[index].tolist()[0]
+        temp = []
+        for i in range(top_k):
+            temp.append((recom[i], sco[i]))
+        result.append(temp)
+        return_list.append(result)
 
+    return return_list
 
-def wmf(path: Path = PathArgument, item_col: str = "movieId", user_col: str = "userId", top_k: int = 5,
-         alpha: float = 40.0, factors: int = 20, regularization: float = 0.01, iterations: int = 20):
+def wmf(dataframe, top_k: int = 5, alpha: float = 40.0, factors: int = 20, regularization: float = 0.01, iterations: int = 20):
     """ Train and predict with the WMF model. """
     from Algorithms.src.algorithm.wmf import WMF
 
     alg = WMF(alpha=alpha, num_factors=factors, regularization=regularization, iterations=iterations)
-    X = util.path_to_csr(path, item_col=item_col, user_col=user_col)
+    X = util.df_to_csr(dataframe)
+    print('wmf')
     return return_run(alg, X, top_k=top_k)
 
-def ease(path: Path = PathArgument, item_col: str = "movieId", user_col: str = "userId", top_k: int = 5,
-         l2: float = 200.0):
+def ease(dataframe, top_k: int = 5, l2: float = 200.0):
     """ Train and predict with the EASE model. """
     from Algorithms.src.algorithm.ease import EASE
+    
 
     alg = EASE(l2=l2)
-    X = util.path_to_csr(path, item_col=item_col, user_col=user_col)
+    X = util.df_to_csr(dataframe)
     return return_run(alg, X, top_k=top_k)
 
-def pop(path: Path = PathArgument, item_col: str = "movieId", user_col: str = "userId", top_k: int = 5):
+def pop(dataframe, top_k: int = 5):
     """ Train and predict the popularity model. """
     from Algorithms.src.algorithm.popularity import Popularity
 
     alg = Popularity()
-    X = util.path_to_csr(path, item_col=item_col, user_col=user_col)
+    X = util.df_to_csr(dataframe)
     return return_run(alg, X, top_k=top_k)
 
-def iknn(path: Path = PathArgument, item_col: str = "movieId", user_col: str = "userId", top_k: int = 5,
-         k: int = 200, normalize: bool = False):
+def iknn(dataframe, top_k: int = 5, k: int = 200, normalize: bool = False):
     """ Train and predict with the Item KNN model. """
     from Algorithms.src.algorithm.item_knn import ItemKNN
 
     alg = ItemKNN(k=k, normalize=normalize)
-    X = util.path_to_csr(path, item_col=item_col, user_col=user_col)
+    X = util.df_to_csr(dataframe)
     return return_run(alg, X, top_k=top_k)
 
-def runAlgorithm(algorithmName, paramdict, file_path):
+def runAlgorithm(algorithmName, paramdict, dataframe):
     """ returns a dictionnary with all data """
     # voor de path gan we misschien de pandas.to_csv() functie gebruiken om dat in onze directory op te slaan
     if algorithmName == 'wmf':
-        return wmf(file_path,'movieId','userId', int(paramdict['top_k_wmf']),
-        float(paramdict['alpha']),int(paramdict['factors']),float(paramdict['regularization']), int(paramdict['iterations']))
+        return wmf(dataframe, int(paramdict['top_k_wmf']), float(paramdict['alpha']),int(paramdict['factors']), 
+            float(paramdict['regularization']), int(paramdict['iterations']))
+
     elif algorithmName == 'ease':
-        return ease(file_path,'movieId','userId', int(paramdict['top_k_ease']),float(paramdict['l2']))
+        return ease(dataframe, int(paramdict['top_k_ease']),float(paramdict['l2']))
+
     elif algorithmName == 'pop':
-        return pop(file_path,'movieId','userId',int(paramdict['top_k_pop']))
+        return pop(dataframe, int(paramdict['top_k_pop']))
+        
     elif algorithmName == 'iknn':
         normalize = False
-        if paramdict['normalize'] == 'true' or paramdict['normalize'] == 'true':
+        if paramdict['normalize'] == 'true' or paramdict['normalize'] == 'True':
             normalize = True
-        return iknn(file_path,'movieId','userId',int(paramdict['top_k_iknn']),int(paramdict['k']),normalize)
+        return iknn(dataframe, int(paramdict['top_k_iknn']), int(paramdict['k']),normalize)

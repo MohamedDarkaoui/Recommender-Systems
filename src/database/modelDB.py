@@ -6,15 +6,11 @@ class ModelDB:
 
     def add_model(self, ModelOBJ):
         cursor = self.connection.get_cursor()
-
-        #'{{"helo","hello"},{"woter","water"}}'
         params = '{'
         for i in ModelOBJ.parameters:
             params += '{' + '"' + i[0] + ',' + i[1] + '"' + '},'
         params = params [:-1]
         params += '}'
-
-
         cursor.execute(
             'INSERT INTO Model (usr_id,name,algorithm,scenario_id,date_time,parameters) VALUES (%s,%s,%s,%s,%s,%s)', 
             (ModelOBJ.usr_id,ModelOBJ.name,ModelOBJ.algorithm,ModelOBJ.scenario_id,ModelOBJ.date_time,params,))
@@ -37,3 +33,21 @@ class ModelDB:
             models.append(scenario)
 
         return models
+
+    def add_model_element(self, clientRecommendations, model_id):
+        cursor = self.connection.get_cursor()
+        for clientRecommendation in clientRecommendations:
+            client = clientRecommendation[0]
+            recommendations = clientRecommendation[1]
+            recommendationsAsString = '{'
+            for recommendation in recommendations:
+                recommendationsAsString += '{"' + str(recommendation[0]) + '", "' + str(recommendation[1]) + '"},'
+            if len(recommendationsAsString) > 1 :
+                recommendationsAsString = recommendationsAsString[:-1]
+            recommendationsAsString += '}'
+
+            cursor.execute(
+                'INSERT INTO model_element(model_id, client_id, recommendations) VALUES (%s,%s,%s)', 
+                (model_id,client,recommendationsAsString,))
+
+        self.connection.commit()

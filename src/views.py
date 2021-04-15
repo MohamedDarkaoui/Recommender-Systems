@@ -153,11 +153,11 @@ def scenarios():
         if len(umin) == 0:
             umin = '0'
         if len(umax) == 0:
-            umax = str(clientDB.getCountClients(datasetID))
+            umax =  str(interactionDB.getCountInteractions(datasetID))
         if len(imin) == 0:
             imin = '0'
         if len(imax) == 0:
-            imax = str(itemDB.getCountItems(datasetID))
+            imax = str(interactionDB.getCountInteractions(datasetID))
 
         if len(scenarioName) > 0 and len(datasetName) > 0:
             dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
@@ -166,6 +166,7 @@ def scenarios():
             scenario = scenarioDB.add_scenario(scenario)
             scen_elem = scenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
             scen_elem.insert(0, 'scenario_id', scenario.id)
+            print(scen_elem)
             scenarioDB.add_scenario_elements(scen_elem)
             
     
@@ -246,16 +247,15 @@ def models():
                     param['top_k_pop'] = '5'
 
         parameters = []
-
         for dict_elem in param:
             parameters.append([dict_elem,param[dict_elem]])
-
-        #plan is:
-        #we zetten de scenario (select pandas object) in een csv file
-        #we slagen dat ergens op in een file en steken de file path hier in deze functie
-        print(runAlgorithm(algorithmName,param,'datasets/interactions.csv'))
+        
+        #generate df from scenario
+        dfScenario = scenarioDB.getScenarioDataframe(scenario_id)
+        x = runAlgorithm(algorithmName,param, dfScenario) 
         model = Model(usr_id=current_user.id,name=modelName,algorithm=algorithmName,scenario_id=scenario_id,parameters=parameters,date_time=dt_string)
         model = modelDB.add_model(model)
+        modelDB.add_model_element(x, model.id)
 
 
 

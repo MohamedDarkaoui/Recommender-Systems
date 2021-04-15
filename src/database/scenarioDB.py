@@ -30,32 +30,32 @@ class ScenarioDB:
         try:
             if time1 == '-infinity' and time2 == 'infinity':
                 if imin == '0' and imax == 'infinity':
-                    cursor.execute(""" select * from subset_for_scenario(%s)
+                    cursor.execute(""" select client_id, item_id, tmstamp from subset_for_scenario(%s)
                     NATURAL JOIN subset_for_scenario_client (%s,%s,%s)""",
                     (dataset_id,dataset_id,umin,umax))
                 elif umin == '0' and umax == 'infinity':
-                    cursor.execute(""" select * from subset_for_scenario(%s)
+                    cursor.execute(""" select client_id, item_id, tmstamp from subset_for_scenario(%s)
                     NATURAL JOIN  subset_for_scenario_item (%s,%s,%s)""",
                     (dataset_id,dataset_id,imin,imax))
                 else:
-                    cursor.execute(""" select * from subset_for_scenario(%s)
+                    cursor.execute(""" select client_id, item_id, tmstamp from subset_for_scenario(%s)
                     NATURAL JOIN subset_for_scenario_client (%s,%s,%s)
                     NATURAL JOIN subset_for_scenario_item (%s,%s,%s)""",
                     (dataset_id,dataset_id,umin,umax,dataset_id,imin,imax))
 
             elif imin == '0' and imax == 'infinity':
                 cursor.execute(
-                """ select * from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
+                """ select client_id, item_id, tmstamp from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
                 natural join subset_for_scenario_client (%s::timestamp, %s::timestamp, %s,%s,%s)""",
                 (time1,time2,dataset_id,time1,time2,dataset_id,umin,umax))
             elif umin == '0' and umax == 'infinity':
                 cursor.execute(
-                """ select * from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
+                """ select client_id, item_id, tmstamp from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
                 natural join subset_for_scenario_item (%s::timestamp, %s::timestamp, %s,%s,%s)""",
                 (time1,time2,dataset_id,time1,time2,dataset_id,imin,imax))
             else:
                 cursor.execute(
-                """ select * from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
+                """ select client_id, item_id, tmstamp from subset_for_scenario (%s::timestamp, %s::timestamp, %s) 
                 natural join subset_for_scenario_client (%s::timestamp, %s::timestamp, %s,%s,%s)
                 natural join subset_for_scenario_item (%s::timestamp, %s::timestamp, %s,%s,%s)""",
                 (time1,time2,dataset_id,time1,time2,dataset_id,umin,umax,time1,time2,dataset_id,imin,imax))
@@ -74,7 +74,7 @@ class ScenarioDB:
             pdOBJ.to_csv(output,sep='\t', header=False, index=False)
             output.seek(0)
             contents = output.getvalue()
-            cursor.copy_from(file=output, table='scenario_element', null='') 
+            cursor.copy_from(file=output, table='scenario_element(scenario_id, client_id, item_id, tmstamp)', null='') 
             self.connection.commit()
 
         except:
@@ -194,3 +194,17 @@ class ScenarioDB:
             return result[0][0]
         except:
             raise Exception('Unable to select the name of the scenario')
+
+    def getScenarioDataframe(self, scenarioID):
+        """
+        returns a pandas object with a scenario that has the given id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.client_id, I.item_id FROM scenario_element I
+                                WHERE I.scenario_id = %s;""",(scenarioID,))
+            result = cursor.fetchall()
+            returnResult = DataFrame (result, columns=['client_id','item_id'])
+            return returnResult
+        except:
+            raise Exception('Unable to get df for scenario')

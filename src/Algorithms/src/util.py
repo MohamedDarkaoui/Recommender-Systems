@@ -3,8 +3,10 @@ import pandas as pd
 import numpy as np
 import scipy.sparse
 
-ITEM_ID = 'iid'
-USER_ID = 'uid'
+#ITEM_ID = 'iid'
+#USER_ID = 'uid'
+ITEM_ID = 'item_id'
+USER_ID = 'client_id'
 
 
 def df_to_csr(df: pd.DataFrame):
@@ -22,7 +24,6 @@ def path_to_df(path: Path, item_col, user_col):
     }, inplace=True)
     df = df[[ITEM_ID, USER_ID]]
     return df
-
 
 def path_to_csr(path: Path, item_col, user_col):
     """ Reads a csv file and converts it to a sparse csr matrix of interactions. """
