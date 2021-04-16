@@ -46,11 +46,16 @@ def get_recommendations(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int =
     for index, u in enumerate(test_users):
         result = []
         result.append(u)
-        recom = recommendations[index].tolist()[0]
-        sco = scores[index].tolist()[0]
+        recom = recommendations[index].tolist()
+        sco = scores[index].tolist()
         temp = []
+
+        if isinstance(recom[0],list):
+            recom = recommendations[index].tolist()[0]
+            sco = scores[index].tolist()[0]
         for i in range(top_k):
-            temp.append((recom[i], sco[i]))
+            temp.append((recom[i],sco[i]))    
+
         result.append(temp)
         return_list.append(result)
 

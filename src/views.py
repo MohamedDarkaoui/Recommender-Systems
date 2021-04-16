@@ -237,8 +237,6 @@ def models():
             param['normalize'] = normalize
             if len(k) == 0:
                 param['k'] = '200'
-            if len(normalize) == 0:
-                param['normalize'] = 'False'
         
         elif algorithmName == 'pop':
             top_k_pop = request.form.get('top_k_pop')
