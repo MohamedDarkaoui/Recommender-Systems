@@ -1,14 +1,25 @@
+function readonly(){
+    if (!document.getElementById("amount").checked) {
+        document.getElementById("amount_readonly").setAttribute("readonly", true)
+    }
+    if (!document.getElementById("item").checked) {
+        document.getElementById("item_readonly").setAttribute("readonly", true)
+    }
+}
+
 function checker() {
-    if (document.getElementById("amount").selected = true) {
-        document.getElementById("amount_readonly").removeAttribute("readonly")
+    if (document.getElementById("amount").checked) {
+        readonly()
+        document.getElementById("amount_readonly").removeAttribute("readonly");
     }
-    else if (document.getElementById("red").selected = true) {
-        console.log("Color selected: Red")
+    if (document.getElementById("item").checked) {
+        readonly()
+        document.getElementById("item_readonly").removeAttribute("readonly");
     }
-    else if (document.getElementById("green").selected = true) {
-        console.log("Color selected: Green")
+    if (document.getElementById("empty").checked) {
+        readonly()
     }
-    else if (document.getElementById("blue").selected = true) {
-        console.log("Color selected: Blue")
+    if (document.getElementById("random").checked) {
+        readonly()
     }
  }

@@ -17,19 +17,19 @@
       </div>
       <div class="modal-body">
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+          <input class="form-check-input" id="empty" onclick="checker()"  type="radio" name="flexRadioDefault" id="flexRadioDefault1">
           <label class="form-check-label" for="flexRadioDefault1">
             Empty Client
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <input class="form-check-input" id="random" onclick="checker()"   type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
           <label class="form-check-label" for="flexRadioDefault2">
             Random Client
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" id="amount" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <input class="form-check-input" id="amount" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault3" checked>
           <label class="form-check-label" for="flexRadioDefault2">
             Client with random items.
             <div class="form-group">
@@ -38,28 +38,30 @@
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <input class="form-check-input" id="item" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault4" checked>
           <label class="form-check-label" for="flexRadioDefault2">
             All Clients with the following item in their history:
             <div class="form-group">
-              <input id="item" class="form-control" placeholder="Item" readonly>
+              <input id="item_readonly" class="form-control" placeholder="Item" readonly>
             </div>
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <input class="form-check-input" id="copy" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault5" checked>
           <label class="form-check-label" for="flexRadioDefault2">
             Copy Client:
             <div class="input-group mb-3">
-              <select class="custom-select" id="inputGroupSelect01" aria-readonly="true">
-                <option selected>Choose client you want to copy</option>
-                <option>test</option>
+              <select id="copy_disabled" class="selectpicker" data-live-search="true" title="Copy client:" data-dropup-auto="false">
+                <option>mohamed</option>
+                <option>mounir</option>
+                <option>ferit</option>
+                <option>khalil</option>
               </select>
             </div>
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <input class="form-check-input" id="search_client" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault6" checked>
           <label class="form-check-label" for="flexRadioDefault2">
             <div class="input-group mb-3">
               <select class="selectpicker" data-live-search="true" title="Search Client:" data-dropup-auto="false">
