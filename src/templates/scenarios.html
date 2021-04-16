@@ -22,7 +22,7 @@
               <br>
               <div class="input-group mb-3">
                 <select name = "datasetSelect" class="custom-select" id="inputGroupSelect01">
-                  <option selected>Choose Dataset</option>
+                  <option disabled selected>Choose Dataset</option>
                   {% for dataset in datasets %}
                     <option value={{dataset[1]}}>{{dataset[1]}}</option>
                   {% endfor %}

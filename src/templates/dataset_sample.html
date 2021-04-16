@@ -1,5 +1,8 @@
 {% extends "index.html" %}
-{% block title %} {% endblock %}
+{% block title %} Sample {% endblock %}
+{% block activate_datasets %} 
+"nav__link active not-active"
+{% endblock %}
 {% block unique %}
 <div class="d-flex p-2">
     <div class="card" style="width: 100%;">
@@ -61,12 +64,6 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Metadata</h5>
-        <select class="custom-select" id="inputGroupSelect01">
-            <option selected>Select an Item</option>
-            <option value="1">item1</option>
-            <option value="2">item2</option>
-            <option value="3">item3</option>
-        </select>
         <div style="height: 300px; overflow-x: scroll; width: 100%;">
             <table class="table">
                 <thead>

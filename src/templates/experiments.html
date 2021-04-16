@@ -17,10 +17,12 @@
         <div class="modal-body">
           <input class="form-control form-control-lg" type="text" placeholder="Name">
           <br>
-          <form class="form-inline">
-              <input class="form-control mr-sm-2 search_width" type="search" placeholder="Search model" aria-label="Search">
-              <button class="btn btn-primary class" type="submit">Search</button>
-          </form>            
+          <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect01">
+              <option disabled selected>Choose Model</option>
+                <option>test</option>
+            </select>
+          </div>            
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -37,20 +39,28 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
+        <th scope="col">model</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <th scope="row">1</th>
-        <td>experiment1</td>        
+        <td>experiment1</td>
+        <td>test</td>
+        <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>        
       </tr>
       <tr>
         <th scope="row">2</th>
         <td>experiment2</td>
+        <td>test</td>
+        <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>       
       </tr>
       <tr>
         <th scope="row">3</th>
         <td>experiment3</td>
+        <td>test</td>
+        <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>        
       </tr>
     </tbody>
   </table>

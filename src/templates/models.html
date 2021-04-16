@@ -23,8 +23,8 @@
             <input name="modelName" class="form-control form-control-lg" type="text" placeholder="Name">
             <br><br>
             <div class="input-group mb-3">
-              <select name="scenarioSelect" class="custom-select" id="inputGroupSelect01">
-                <option selected>Choose Scenario</option>
+              <select name="scenarioSelect" class="custom-select" id="inputGroupSelect01" title="Choose Scenario">
+                <option disabled selected>Choose Scenario</option>
                 {% for scenario in scenarios %}
                 <option value={{scenario[1]}}>{{scenario[1]}}</option>
                 {% endfor %}
@@ -33,7 +33,7 @@
             <br>
             <div class="input-group mb-3">
               <select name="algorithmName" class="custom-select" id="selected" onchange="getform()">
-                <option selected value="default">Choose Algorithm</option>
+                <option disabled selected value="default">Choose Algorithm</option>
                 <option value="ease">ease</option>
                 <option value="iknn">iknn</option>
                 <option value="pop">pop</option>
@@ -45,12 +45,14 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_ease">
+                    <b>Top-K</b>
+                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_ease">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="0.0" class="form-control" placeholder="l2" name="l2">
+                    <b>l2</b>
+                    <input type="number" min="0.0" class="form-control" placeholder="200.0" name="l2">
                   </div>
                 </div>
               </div>
@@ -59,22 +61,25 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_iknn">
+                    <b>Top-K</b>
+                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_iknn">
                   </div>
+                  <b>K</b>
                   <div class="form-group">
-                    <input type="number" min="1" class="form-control" placeholder="k" name="k">
+                    <input type="number" min="1" class="form-control" placeholder="200" name="k">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="0.0" class="form-control" placeholder="l2" name="l2">
+                    <b>l2</b>
+                    <input type="number" min="0.0" class="form-control" placeholder="200.0" name="l2">
                   </div>
                   <div class="form-group">
+                    <b>Normalize</b>
                     <div class="input-group mb-3">
                       <select name = "normalize" class="custom-select">
-                        <option selected value="false">Normalize?</option>
                         <option value="true">YES</option>
-                        <option value="false">NO</option>
+                        <option selected value="false">NO</option>
                       </select>
                     </div>
                   </div>
@@ -85,7 +90,8 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_pop">
+                    <b>Top-K</b>
+                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_pop">
                   </div>
                 </div>
               </div>
@@ -94,24 +100,28 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="1" class="form-control" placeholder="top-k" name="top_k_wmf">
+                    <b>Top-K</b>
+                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_wmf">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="0" class="form-control" placeholder="alpha" name="alpha">
+                    <b>Alpha</b>
+                    <input type="number" min="0" class="form-control" placeholder="40.0" name="alpha">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="0" class="form-control" placeholder="factors" name="factors">
+                    <b>Factors</b>
+                    <input type="number" min="0" class="form-control" placeholder="20" name="factors">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="0" class="form-control" placeholder="regularization"
+                    <b>Regularization</b>
+                    <input type="number" min="0" class="form-control" placeholder="0.01"
                       name="regularization">
                   </div>
                 </div>
@@ -119,7 +129,8 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="number" min="0" class="form-control" placeholder="iterations" name="iterations">
+                    <b>Iterations</b>
+                    <input type="number" min="0" class="form-control" placeholder="20" name="iterations">
                   </div>
                 </div>
               </div>

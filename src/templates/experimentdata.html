@@ -1,0 +1,255 @@
+{% extends "index.html" %}
+{% block title %} Experiment Data {% endblock %}
+{% block activate_experiments %}
+"nav__link active not-active"
+{% endblock %}
+{% block unique %}
+<button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Add client</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add client</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+          <label class="form-check-label" for="flexRadioDefault1">
+            Empty Client
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <label class="form-check-label" for="flexRadioDefault2">
+            Random Client
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" id="amount" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <label class="form-check-label" for="flexRadioDefault2">
+            Client with random items.
+            <div class="form-group">
+              <input id="amount_readonly" type="number" min="1" class="form-control" placeholder="Amount" readonly>
+            </div>
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <label class="form-check-label" for="flexRadioDefault2">
+            All Clients with the following item in their history:
+            <div class="form-group">
+              <input id="item" class="form-control" placeholder="Item" readonly>
+            </div>
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <label class="form-check-label" for="flexRadioDefault2">
+            Copy Client:
+            <div class="input-group mb-3">
+              <select class="custom-select" id="inputGroupSelect01" aria-readonly="true">
+                <option selected>Choose client you want to copy</option>
+                <option>test</option>
+              </select>
+            </div>
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input check" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+          <label class="form-check-label" for="flexRadioDefault2">
+            <div class="input-group mb-3">
+              <select class="selectpicker" data-live-search="true" title="Search Client:" data-dropup-auto="false">
+                <option>mohamed</option>
+                <option>mounir</option>
+                <option>ferit</option>
+                <option>khalil</option>
+              </select>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br>
+<div class="card-group">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Client: 123</h5>
+      <div class="row">
+        <div class="column">
+          <h5>TOP K Recommendations:</h5>
+          <div style="height: 300px; overflow-x: scroll; width: 100%;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Recommendations</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>test</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>test</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+        <div class="column">
+          <h5>History:</h5>
+          <div style="height: 300px; overflow-x: scroll; width: 100%;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">History</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>test</td>
+                  <td><button type="button" class="btn btn-danger">X</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>test</td>
+                  <td><button type="button" class="btn btn-danger">X</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                  <td><button type="button" class="btn btn-danger">X</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                  <td><button type="button" class="btn btn-danger">X</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                  <td><button type="button" class="btn btn-danger">X</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                  <td><button type="button" class="btn btn-danger">X</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>test</td>
+                  <td><button type="button" class="btn btn-danger">X</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <select class="selectpicker" data-live-search="true" title="Search Item" data-dropup-auto="false">
+            <option>mohamed</option>
+            <option>mounir</option>
+            <option>ferit</option>
+            <option>khalil</option>
+            <option>mohamed</option>
+            <option>mounir</option>
+            <option>ferit</option>
+            <option>khalil</option>
+            <option>mohamed</option>
+            <option>mounir</option>
+            <option>ferit</option>
+            <option>khalil</option>
+            <option>mohamed</option>
+            <option>mounir</option>
+            <option>ferit</option>
+            <option>khalil</option>
+            <option>mohamed</option>
+            <option>mounir</option>
+            <option>ferit</option>
+            <option>khalil</option>
+            <option>mohamed</option>
+            <option>mounir</option>
+            <option>ferit</option>
+            <option>khalil</option>
+          </select>
+          <button type="button" class="btn btn-primary class">Add Item</button>
+          <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal2">Show
+            Metadata</button>
+
+          <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Metadata</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div style="height: 300px; overflow-x: scroll; width: 100%;">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Item</th>
+                          <th scope="col">Description</th>
+                          <th scope="col">Data</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+{% endblock%}

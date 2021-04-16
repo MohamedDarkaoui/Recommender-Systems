@@ -275,10 +275,10 @@ def models():
 def experiments():
     return render_template("experiments.html")
 
-@views.route('/settings')
+@views.route('/experiments/experimentdata')
 @login_required
-def settings():
-    return render_template("settings.html")
+def experimentdata():
+    return render_template("experimentdata.html")
 
 @views.route('/users')
 @login_required
