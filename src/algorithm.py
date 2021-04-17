@@ -29,8 +29,8 @@ def return_run(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int = 5):
     np.random.seed(SEED)
 
     alg.fit(X)
-    print('fit')
-    return get_recommendations(alg, X, top_k=top_k)
+    return alg
+    #return get_recommendations(alg, X, top_k=top_k)
 
 def get_recommendations(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int = 5):
     """ Show the recommendations for random users. """
@@ -95,7 +95,7 @@ def iknn(dataframe, top_k: int = 5, k: int = 200, normalize: bool = False):
     X = util.df_to_csr(dataframe)
     return return_run(alg, X, top_k=top_k)
 
-def runAlgorithm(algorithmName, paramdict, dataframe):
+def trainAlgorithm(algorithmName, paramdict, dataframe):
     """ returns a dictionnary with all data """
     # voor de path gan we misschien de pandas.to_csv() functie gebruiken om dat in onze directory op te slaan
     if algorithmName == 'wmf':

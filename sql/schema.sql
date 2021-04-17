@@ -84,13 +84,8 @@ CREATE TABLE model (
   scenario_id INT NOT NULl REFERENCES scenario(id),
   date_time TIMESTAMP NOT NULL,
   parameters VARCHAR[][2] NOT NULL,
+  matrix VARBINARY(MAX),
   PRIMARY KEY (usr_id,name)
 );
 
-CREATE TABLE model_element (
-  model_id INT REFERENCES model(id),
-  client_id INT NOT NULL,
-  recommendations FLOAT[][2],
-  PRIMARY KEY (client_id,model_id)
-);
 
