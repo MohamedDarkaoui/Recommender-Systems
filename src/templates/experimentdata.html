@@ -16,6 +16,7 @@
         </button>
       </div>
       <div class="modal-body">
+        <input name="modelName" class="form-control form-control-lg" type="text" placeholder="Name">
         <div class="form-check">
           <input class="form-check-input" id="empty" onclick="checker()"  type="radio" name="flexRadioDefault" id="flexRadioDefault1">
           <label class="form-check-label" for="flexRadioDefault1">
@@ -49,7 +50,7 @@
         <div class="form-check">
           <input class="form-check-input" id="copy" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault5" checked>
           <label class="form-check-label" for="flexRadioDefault2">
-            Copy Client:
+            Copy Client from page:
             <div class="input-group mb-3">
               <select id="copy_disabled" class="selectpicker" data-live-search="true" title="Copy client:" data-dropup-auto="false">
                 <option>mohamed</option>
@@ -63,8 +64,9 @@
         <div class="form-check">
           <input class="form-check-input" id="search_client" onclick="checker()" type="radio" name="flexRadioDefault" id="flexRadioDefault6" checked>
           <label class="form-check-label" for="flexRadioDefault2">
+            Copy client from Scenarios
             <div class="input-group mb-3">
-              <select class="selectpicker" data-live-search="true" title="Search Client:" data-dropup-auto="false">
+              <select class="selectpicker" id="search_reset" data-live-search="true" title="Search Client:" data-dropup-auto="false">
                 <option>mohamed</option>
                 <option>mounir</option>
                 <option>ferit</option>
@@ -250,6 +252,7 @@
       </div>
     </div>
   </div>
+  <button type="button" class="btn btn-danger">X</button>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
