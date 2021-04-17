@@ -6,7 +6,6 @@ class Dataset:
         self.date_time = date_time
         self.private = private
 
-
 class Item:
     def __init_(self,id,dataset_id):
         self.id = id
@@ -16,7 +15,6 @@ class Metadata:
     def __init__(self,dataset_id,id=None):
         self.id=id
         self.dataset_id=dataset_id
-
 
 class Scenario:
     def __init__(self, name, usr_id, date_time, dataset_id,item_min,item_max,client_min,client_max,time_min,time_max, id=None):
@@ -42,4 +40,11 @@ class Model:
         self.date_time = date_time
         self.parameters = parameters
 
+class Experiment:
+    def __init__(self,usr_id,name,model_id,date_time,id=None):
+        self.id = id
+        self.usr_id = usr_id
+        self.name = name
+        self.model_id = model_id
+        self.date_time = date_time
 

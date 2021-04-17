@@ -77,13 +77,10 @@ def models():
         # for pop = item_counts (array)
         model = Model(usr_id=current_user.id,name=modelName,algorithm=algorithmName,scenario_id=scenario_id,parameters=parameters,date_time=dt_string)
         if algorithmName in ['ease', 'iknn']:
-            print('adding ease or iknn')
             modelDB.add_model(model, pickle.dumps(alg.similarity_matrix_))
         elif algorithmName == 'wmf':
-            print('adding wmf')
             modelDB.add_model(model, pickle.dumps(alg.model.item_factors))
         elif algorithmName == 'pop':
-            print('adding pop')
             modelDB.add_model(model, pickle.dumps(alg.item_counts))
 
     models = modelDB.getModelsFromUser(current_user)

@@ -14,20 +14,25 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <input class="form-control form-control-lg" type="text" placeholder="Name">
-          <br>
-          <div class="input-group mb-3">
-            <select class="custom-select" id="inputGroupSelect01">
-              <option disabled selected>Choose Model</option>
-                <option>test</option>
-            </select>
-          </div>            
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Make</button>
-        </div>
+        <form method="POST">
+          <input type="hidden" name="which-form" value="createExperiment">
+          <div class="modal-body">
+            <input name = "experimentName" class="form-control form-control-lg" type="text" placeholder="Name">
+            <br>
+            <div class="input-group mb-3">
+              <select name = "modelId" class="custom-select" id="inputGroupSelect01">
+                <option disabled selected>Choose Model</option>
+                {% for model in models %}
+                  <option value={{model.id}}>{{model.name}}</option>
+                {% endfor %}
+              </select>
+            </div>            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Make</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -39,29 +44,19 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
-        <th scope="col">model</th>
+        <th scope="col">Model</th>
         <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>experiment1</td>
-        <td>test</td>
-        <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>        
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>experiment2</td>
-        <td>test</td>
-        <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>       
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>experiment3</td>
-        <td>test</td>
-        <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>        
-      </tr>
+      {% for experiment in experiments %}
+        <tr>
+          <th scope="row">{{experiment[0]}}</th>
+          <td>{{experiment[1].name}}</td>
+          <td>{{experiment[1].model_id}}</td>
+          <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>        
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
 {% endblock%}

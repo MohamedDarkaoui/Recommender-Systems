@@ -27,11 +27,20 @@ class ModelDB:
         models = []
         cursor = self.connection.get_cursor()
         id = str(usr.id)
-        cursor.execute('SELECT * FROM model WHERE usr_id = %s ORDER BY date_time', (id,))
+        cursor.execute('SELECT id,usr_id,name,algorithm,scenario_id,date_time,parameters FROM model WHERE usr_id = %s ORDER BY date_time', (id,))
 
         for row in cursor:
-            scenario = Model(id=row[0],usr_id=row[1],name=row[2],algorithm=row[3],scenario_id=row[4],date_time=row[5],parameters=row[6])
-            models.append(scenario)
+            model = Model(id=row[0],usr_id=row[1],name=row[2],algorithm=row[3],scenario_id=row[4],date_time=row[5],parameters=row[6])
+            models.append(model)
 
         return models
 
+    def getModelName(self, id):
+        """
+        returns the name of the model with id = id
+        """
+        cursor = self.connection.get_cursor()
+        id = str(id)
+        cursor.execute('SELECT name FROM model WHERE id = %s', (id,))
+        result = cursor.fetchall()
+        return result[0][0]

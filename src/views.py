@@ -28,6 +28,7 @@ metadataDB = MetadataDB(connection)
 metadataElementDB = MetadataElementDB(connection)
 scenarioDB = ScenarioDB(connection)
 modelDB = ModelDB(connection)
+experimentDB = ExperimentDB(connection)
 views = Blueprint('views', __name__)
 
 from datasets import datasets, data_samples
