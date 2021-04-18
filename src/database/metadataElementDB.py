@@ -15,8 +15,6 @@ class MetadataElementDB:
         cursor.copy_from(file=output, table='metadata_element', null='') 
         self.connection.commit()
 
-
-
     def getMetadataSample(self, dataset_id):
         """
         returns a pandas object with 50 metadata elements (random order) that belong to a certain dataset given the dataset_id

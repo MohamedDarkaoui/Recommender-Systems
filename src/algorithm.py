@@ -29,6 +29,7 @@ def return_run(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int = 5):
     np.random.seed(SEED)
 
     alg.fit(X)
+    
     return alg
     #return get_recommendations(alg, X, top_k=top_k)
 
@@ -40,7 +41,7 @@ def get_recommendations(alg: Algorithm, X: scipy.sparse.csr_matrix, top_k: int =
     test_users = list(range(X.shape[0]))
     test_histories = X[test_users, :]
     predictions = alg.predict(test_histories)
-    print('predict')
+
     recommendations, scores = util.predictions_to_recommendations(predictions, top_k=top_k)
     return_list = []
     for index, u in enumerate(test_users):
@@ -67,7 +68,6 @@ def wmf(dataframe, top_k: int = 5, alpha: float = 40.0, factors: int = 20, regul
 
     alg = WMF(alpha=alpha, num_factors=factors, regularization=regularization, iterations=iterations)
     X = util.df_to_csr(dataframe)
-    print('wmf')
     return return_run(alg, X, top_k=top_k)
 
 def ease(dataframe, top_k: int = 5, l2: float = 200.0):
@@ -99,7 +99,7 @@ def trainAlgorithm(algorithmName, paramdict, dataframe):
     """ returns a dictionnary with all data """
     # voor de path gan we misschien de pandas.to_csv() functie gebruiken om dat in onze directory op te slaan
     if algorithmName == 'wmf':
-        return wmf(dataframe, int(paramdict['top_k_wmf']), float(paramdict['alpha']),int(paramdict['factors']), 
+        return wmf(dataframe, int(paramdict['top_k_wmf']), float(paramdict['alpha']), int(paramdict['factors']), 
             float(paramdict['regularization']), int(paramdict['iterations']))
 
     elif algorithmName == 'ease':

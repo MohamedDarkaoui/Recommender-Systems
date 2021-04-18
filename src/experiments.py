@@ -1,9 +1,9 @@
 from views import *
 
+
 @views.route('/experiments', methods=['GET', 'POST'])
 @login_required
 def experiments():
-
     #ADD EXPERIMENT
     if request.method == 'POST' and request.form.get('which-form') == "createExperiment":
         experimentName = request.form.get('experimentName')
@@ -24,7 +24,72 @@ def experiments():
 
     return render_template("experiments.html", models = models, experiments = experiments)
 
-@views.route('/experiments/experimentdata')
+
+@views.route('/experiments/<experiment_name>', methods=['GET', 'POST'])
 @login_required
-def experimentdata():
-    return render_template("experimentdata.html")
+def experimentdata(experiment_name):
+    experiment = experimentDB.getExperimentByName(experiment_name, current_user.id)
+    scenario_id = modelDB.getScenarioIDFromModel(experiment.model_id)
+    itemcount = scenarioDB.getScenarioItemCount(scenario_id)
+    algorithmName = modelDB.getAlgorithmName(experiment.model_id)
+    
+    if request.method == 'POST' and request.form.get('which-form') == 'addClient':
+        clientName = request.form.get('clientName')
+        if len(clientName) > 0:
+            type = request.form.get('flexRadioDefault')
+            history = []
+            historyMatrix = None
+
+            if type == 'emptyClient':
+                historyMatrix = scipy.sparse.csr_matrix((1, itemcount), dtype=np.int8)
+            elif type == 'randomClient':
+                pass
+            elif type == 'randomItems':
+                pass
+            elif type == 'allClientsWithItem':
+                pass                
+            elif type == 'isCopyFromExperiment':
+                pass                
+            elif type == 'isCopyFromList':
+                pass
+            
+            #create algorithm
+            alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id))
+
+            #predict call
+            predictions = alg.predict(historyMatrix)
+            recommendations, scores = util.predictions_to_recommendations(predictions, top_k=20)
+            recommendations = recommendations[0].tolist()
+            #add client
+            newClient = Experiment_Client(clientName, experiment.id, recommendations, history)
+            experimentDB.addExperimentClient(newClient)
+
+    clients = experimentDB.getExperimentClients(experiment.id)
+    return render_template("experimentdata.html", clients=clients)
+
+
+def createAlgorithm(name, matrix):
+    alg = None
+    if name == 'ease':
+        from Algorithms.src.algorithm.ease import EASE
+        alg = EASE()
+        alg.similarity_matrix_ = matrix
+
+    elif name == 'iknn':
+        from Algorithms.src.algorithm.item_knn import ItemKNN
+        alg = ItemKNN()
+        alg.similarity_matrix_ = matrix
+        
+    elif name == 'pop':
+        from Algorithms.src.algorithm.popularity import Popularity
+        alg = Popularity()
+        alg.item_counts = matrix
+        
+    elif name == 'wmf':
+        from Algorithms.src.algorithm.wmf import WMF
+        alg = WMF()
+        alg.model = alg.create_model()
+        alg.model.item_factors = matrix
+        #print(alg.model.item_factors)
+    
+    return alg

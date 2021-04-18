@@ -35,7 +35,6 @@ def scenarios():
             scenario = scenarioDB.add_scenario(scenario)
             scen_elem = scenarioDB.get_interactionsPD(datasetID, time1=time1, time2=time2, imin=imin, imax=imax, umin=umin, umax=umax)
             scen_elem.insert(0, 'scenario_id', scenario.id)
-            print(scen_elem)
             scenarioDB.add_scenario_elements(scen_elem)
             
     

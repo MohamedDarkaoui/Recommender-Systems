@@ -1,25 +1,27 @@
 function readonly(){
-    if (!document.getElementById("amount").checked) {
-        document.getElementById("amount_readonly").setAttribute("readonly", true)
-    }
-    if (!document.getElementById("item").checked) {
-        document.getElementById("item_readonly").setAttribute("readonly", true)
+    if (!document.getElementById("isRandomItems").checked) {
+        document.getElementById("isRandomItems_readonly").setAttribute("readonly", true)
     }
 }
 
 function checker() {
-    if (document.getElementById("amount").checked) {
+    if (document.getElementById("isRandomItems").checked) {
         readonly()
-        document.getElementById("amount_readonly").removeAttribute("readonly");
+        document.getElementById("isRandomItems_readonly").removeAttribute("readonly");
     }
-    if (document.getElementById("item").checked) {
-        readonly()
-        document.getElementById("item_readonly").removeAttribute("readonly");
-    }
-    if (document.getElementById("empty").checked) {
+    if (document.getElementById("isRandomClient").checked) {
         readonly()
     }
-    if (document.getElementById("random").checked) {
+    if (document.getElementById("isEmptyClient").checked) {
+        readonly()
+    }
+    if (document.getElementById("isAllClients").checked) {
+        readonly()
+    }
+    if (document.getElementById("isCopyFromExperiment").checked) {
+        readonly()
+    }
+    if (document.getElementById("isCopyFromList").checked) {
         readonly()
     }
  }

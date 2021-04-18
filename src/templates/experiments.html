@@ -54,7 +54,7 @@
           <th scope="row">{{experiment[0]}}</th>
           <td>{{experiment[1].name}}</td>
           <td>{{experiment[1].model_id}}</td>
-          <td><a class="btn btn-primary" href="{{url_for('views.experimentdata')}}" role="button">More</a></td>        
+          <td><a class="btn btn-primary" href="/experiments/{{experiment[1].name}}" role="button">More</a></td>        
         </tr>
       {% endfor %}
     </tbody>

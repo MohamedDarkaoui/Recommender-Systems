@@ -1,6 +1,6 @@
 from views import *
 
-@views.route('/datasets/', methods=['GET', 'POST'])
+@views.route('/datasets', methods=['GET', 'POST'])
 @login_required
 def datasets():
     if request.method == 'POST' and request.form.get('which-form') == "uploadDataset":

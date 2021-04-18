@@ -48,3 +48,11 @@ class Experiment:
         self.model_id = model_id
         self.date_time = date_time
 
+class Experiment_Client:
+    def __init__(self, name, experiment_id, recommendations, history, id = None):
+        self.id = id
+        self.name = name
+        self.experiment_id = experiment_id
+        self.history = history
+        self.recommendations = recommendations
+        

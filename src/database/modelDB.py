@@ -1,4 +1,5 @@
 from database.entitiesDB import Model
+import pickle
 
 class ModelDB:
     def __init__(self, connection):
@@ -6,15 +7,15 @@ class ModelDB:
 
     def add_model(self, ModelOBJ, matrix):
         cursor = self.connection.get_cursor()
-        params = '{'
-        for i in ModelOBJ.parameters:
-            params += '{' + '"' + i[0] + ',' + i[1] + '"' + '},'
-        params = params [:-1]
-        params += '}'
+        #params = '{'
+        #for i in ModelOBJ.parameters:
+            #params += '{' + '"' + i[0] + ',' + i[1] + '"' + '},'
+        #params = params [:-1]
+        #params += '}'
 
         cursor.execute(
             'INSERT INTO Model (usr_id,name,algorithm,scenario_id,date_time,parameters,matrix) VALUES (%s,%s,%s,%s,%s,%s,%s)', 
-            (ModelOBJ.usr_id,ModelOBJ.name,ModelOBJ.algorithm,ModelOBJ.scenario_id,ModelOBJ.date_time,params,matrix,))
+            (ModelOBJ.usr_id,ModelOBJ.name,ModelOBJ.algorithm,ModelOBJ.scenario_id,ModelOBJ.date_time,ModelOBJ.parameters,matrix,))
         cursor.execute('SELECT LASTVAL()')
         ModelOBJ.id = cursor.fetchone()[0]
         self.connection.commit()
@@ -44,3 +45,49 @@ class ModelDB:
         cursor.execute('SELECT name FROM model WHERE id = %s', (id,))
         result = cursor.fetchall()
         return result[0][0]
+    
+    def getScenarioIDFromModel(self, id):
+        """
+        returns an model object
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.scenario_id FROM model I
+                                WHERE I.id = %s""",(id,))
+            result = cursor.fetchall()
+            return result[0][0]
+
+        except:
+            raise Exception('Unable to select the experiment')
+    
+    def getAlgorithmName(self, id):
+        """
+        returns an the name of the algorithm of the model with id = id
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.algorithm FROM model I
+                                WHERE I.id = %s""",(id,))
+            result = cursor.fetchall()
+            return result[0][0]
+
+        except:
+            raise Exception('Unable to select the algorithm')
+
+    def getMatrix(self, id):
+        """
+        returns the matrix of the model with id = id
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.matrix FROM model I
+                                WHERE I.id = %s""",(id,))
+            
+            result = pickle.loads(cursor.fetchone()[0])
+            return result
+
+        except:
+            raise Exception('Unable to select the algorithm')
