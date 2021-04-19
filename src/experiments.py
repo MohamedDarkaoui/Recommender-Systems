@@ -100,7 +100,7 @@ def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItem
 
         elif type == 'allClientsWithItem':
             itemId = request.form.get('fromItemId')
-            listOfClients = scenarioDB.getAllClientsWithItem(scenarido_id, itemId)
+            listOfClients = scenarioDB.getAllClientsWithItem(scenario_id, itemId)
             #create algorithm
             alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id))
 

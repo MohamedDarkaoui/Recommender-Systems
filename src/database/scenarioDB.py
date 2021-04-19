@@ -302,3 +302,21 @@ class ScenarioDB:
             return result
         except:
             raise Exception('Unable to select all the items')
+
+    def getAllClientsWithItem(self, scenario_id, item_id):
+        """
+        returns a list of clients that have an interaction with the given item inside the given scenario
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT DISTINCT (client_id) from scenario_element
+                                WHERE scenario_id = %s
+                                AND item_id = %s;""",(scenario_id,item_id))
+                                
+            result = [r[0] for r in cursor.fetchall()]
+            return result
+        except:
+            raise Exception('Unable to select the clients for that item')
+
+
+    
