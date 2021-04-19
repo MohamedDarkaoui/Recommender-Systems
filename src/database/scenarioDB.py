@@ -208,3 +208,50 @@ class ScenarioDB:
             return returnResult
         except:
             raise Exception('Unable to get df for scenario')
+
+    def getRandomClient(self,scenario_id):
+        """
+            get one client from the given scenario
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.client_id FROM scenario_element I
+                                WHERE I.scenario_id = %s
+                                ORDER BY RANDOM()
+                                LIMIT 1;""",(scenario_id,))
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            raise Exception('Unable to select random client')
+
+    def getRandomItems(self,scenario_id,amount):
+        """
+            get a list of rndom items with size=amount
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.item_id FROM scenario_element I
+                                WHERE I.scenario_id = %s
+                                ORDER BY RANDOM()
+                                LIMIT %s;""",(scenario_id,amount,))
+            result = [r[0] for r in cursor.fetchall()]
+            return result
+        except:
+            raise Exception('Unable to select random client')
+
+    def getClientHistory(self,scenario_id,client_id,):
+        """
+            get a list of items that belong to th ehistoy of the given client
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.item_id FROM scenario_element I
+                                WHERE I.scenario_id = %s
+								AND I.client_id = %s;""",(scenario_id,client_id,))
+            result = [r[0] for r in cursor.fetchall()]
+            return result
+        except:
+            raise Exception('Unable to select items from scenario for the given client')

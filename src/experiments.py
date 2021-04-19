@@ -1,3 +1,4 @@
+from database.scenarioDB import ScenarioDB
 from views import *
 
 
@@ -43,9 +44,12 @@ def experimentdata(experiment_name):
             if type == 'emptyClient':
                 historyMatrix = scipy.sparse.csr_matrix((1, itemcount), dtype=np.int8)
             elif type == 'randomClient':
-                pass
+                historyMatrix = modelDB.getMatrix(experiment.model_id)
+                client = scenarioDB.getRandomClient(scenario_id)
+                history = scenarioDB.getClientHistory(scenario_id,client)
             elif type == 'randomItems':
-                pass
+                historyMatrix = modelDB.getMatrix(experiment.model_id)
+                history = scenarioDB.getRandomItems(scenario_id,5)
             elif type == 'allClientsWithItem':
                 pass                
             elif type == 'isCopyFromExperiment':
