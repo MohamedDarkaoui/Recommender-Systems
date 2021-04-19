@@ -5,8 +5,6 @@ from pandas import DataFrame
 class ScenarioDB:
     def __init__(self, connection):
         self.connection = connection
-    
-
 
     def add_scenario(self, scenarioOBJ):
         cursor = self.connection.get_cursor()
@@ -232,16 +230,17 @@ class ScenarioDB:
         
         cursor = self.connection.get_cursor()
         try:
-            cursor.execute("""  SELECT I.item_id FROM scenario_element I
+            cursor.execute("""  SELECT * FROM (SELECT  DISTINCT (I.item_id)  FROM scenario_element I
                                 WHERE I.scenario_id = %s
-                                ORDER BY RANDOM()
-                                LIMIT %s;""",(scenario_id,amount,))
+                                LIMIT %s) SS
+								ORDER BY RANDOM()""",(scenario_id,amount,))
+                                
             result = [r[0] for r in cursor.fetchall()]
             return result
         except:
             raise Exception('Unable to select random client')
 
-    def getClientHistory(self,scenario_id,client_id,):
+    def getClientHistory(self,scenario_id,client_id):
         """
             get a list of items that belong to th ehistoy of the given client
         """
@@ -255,3 +254,51 @@ class ScenarioDB:
             return result
         except:
             raise Exception('Unable to select items from scenario for the given client')
+
+    def getMaxItem(self, scenario_id):
+        """
+            get the biggest item_id from a scenario
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT MAX (item_id) FROM scenario_element
+                                WHERE scenario_id = %s;""",(scenario_id,))
+
+            result = cursor.fetchall()
+            return result[0][0]
+            
+        except:
+            raise Exception('Unable to select the maximum item_id')
+
+    
+
+    def getAllClients(self,scenario_id):
+        """
+            get a list of all the clients from a scenario
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT DISTINCT (client_id) from scenario_element
+                                    WHERE scenario_id = %s ORDER BY client_id;""",(scenario_id,))
+                                
+            result = [r[0] for r in cursor.fetchall()]
+            return result
+        except:
+            raise Exception('Unable to select all the clients')
+
+    def getAllItems(self,scenario_id):
+        """
+            get a list of all the items from a scenario
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT DISTINCT (item_id) from scenario_element
+                                    WHERE scenario_id = %s ORDER BY item_id;""",(scenario_id,))
+                                
+            result = [r[0] for r in cursor.fetchall()]
+            return result
+        except:
+            raise Exception('Unable to select all the items')

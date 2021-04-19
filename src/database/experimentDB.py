@@ -6,15 +6,18 @@ class ExperimentDB:
 
     def add_experiment(self, ExpOBJ):
         cursor = self.connection.get_cursor()
+        try:
+            cursor.execute(
+                'INSERT INTO Experiment (usr_id,name,model_id,date_time) VALUES (%s,%s,%s,%s)', 
+                (ExpOBJ.usr_id,ExpOBJ.name, ExpOBJ.model_id, ExpOBJ.date_time,))
 
-        cursor.execute(
-            'INSERT INTO Experiment (usr_id,name,model_id,date_time) VALUES (%s,%s,%s,%s)', 
-            (ExpOBJ.usr_id,ExpOBJ.name, ExpOBJ.model_id, ExpOBJ.date_time,))
-
-        cursor.execute('SELECT LASTVAL()')
-        ExpOBJ.id = cursor.fetchone()[0]
-        self.connection.commit()
-        return ExpOBJ
+            cursor.execute('SELECT LASTVAL()')
+            ExpOBJ.id = cursor.fetchone()[0]
+            self.connection.commit()
+            return ExpOBJ
+        except:
+            self.connection.rollback()
+            raise Exception('Unable to add the experiment')
 
     def getExperimentsFromUser(self,usr):
         """
@@ -67,12 +70,13 @@ class ExperimentDB:
             adds a new client to a experiment
         """
         cursor = self.connection.get_cursor()
-        #try:
-        cursor.execute("""INSERT INTO experiment_client (name, experiment_id,recommendations,history) 
-                                VALUES (%s,%s,%s,%s)""",(client.name, client.experiment_id, client.recommendations, client.history,))
-        self.connection.commit()
-        #except:
-            #raise Exception('Unable to select the experiment')
+        try:
+            cursor.execute("""INSERT INTO experiment_client (name, experiment_id,recommendations,history) 
+                                    VALUES (%s,%s,%s,%s)""",(client.name, client.experiment_id, client.recommendations, client.history,))
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            raise Exception('Unable to add the experiment client')
 
     def getExperimentClients(self, experiment_id):
         """

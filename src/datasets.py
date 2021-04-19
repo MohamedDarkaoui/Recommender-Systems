@@ -30,11 +30,8 @@ def datasets():
             clients = clients.drop_duplicates()
 
             # insert items,clients and interactions
-            print('inserting items')
             itemDB.add_item(items)
-            print('inserting clients')
             clientDB.add_client(clients)
-            print('inserting interactions')
             interactionDB.add_interaction(interactions)
             
             #insert metadata if exists
@@ -74,7 +71,6 @@ def datasets():
                     metadata = pd.concat([metadata, tempDataframe], axis=1)  
                     if metadata['data'].dtypes == 'object':
                         metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
-                    print(metadata)
                     #COPY INTO DATABASE
                     metadataElementDB.add_metadataElements(metadata)
 

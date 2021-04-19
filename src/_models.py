@@ -45,12 +45,6 @@ def models():
             if len(iterations) == 0:
                 param['iterations'] = '20'
 
-            print('alpha: ' + param['alpha'])
-            print('factors: ' + param['factors'])
-            print('regularization: ' + param['regularization'])
-            print('iterations: ' + param['iterations'])
-            
-
         elif algorithmName == 'iknn':
             top_k_iknn= request.form.get('top_k_iknn')
             param['top_k_iknn'] = top_k_iknn
@@ -83,11 +77,9 @@ def models():
         # for pop = item_counts (array)
         model = Model(usr_id=current_user.id,name=modelName,algorithm=algorithmName,scenario_id=scenario_id,parameters=parameters,date_time=dt_string)
         if algorithmName in ['ease', 'iknn']:
-            #modelDB.add_model(model, pickle.dumps(alg.similarity_matrix_))
-            print(alg.similarity_matrix_)
+            modelDB.add_model(model, pickle.dumps(alg.similarity_matrix_))
         elif algorithmName == 'wmf':
-            print(alg.model.item_factors)
-            #modelDB.add_model(model, pickle.dumps(alg.model.item_factors))
+            modelDB.add_model(model, pickle.dumps(alg.model.item_factors))
         elif algorithmName == 'pop':
             modelDB.add_model(model, pickle.dumps(alg.item_counts))
 

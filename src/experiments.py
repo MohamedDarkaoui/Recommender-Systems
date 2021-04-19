@@ -31,16 +31,27 @@ def experiments():
 def experimentdata(experiment_name):
     experiment = experimentDB.getExperimentByName(experiment_name, current_user.id)
     scenario_id = modelDB.getScenarioIDFromModel(experiment.model_id)
-    itemcount = scenarioDB.getScenarioItemCount(scenario_id)
-    algorithmName = modelDB.getAlgorithmName(experiment.model_id)
-    
-    if request.method == 'POST' and request.form.get('which-form') == 'addClient':
-        clientName = request.form.get('clientName')
-        if len(clientName) > 0:
-            type = request.form.get('flexRadioDefault')
-            history = []
-            historyMatrix = scipy.sparse.csr_matrix((1, itemcount), dtype=np.int8)
+    clientsFromScenario = scenarioDB.getAllClients(scenario_id)
+    itemsFromScenario = scenarioDB.getAllItems(scenario_id)
 
+    if request.method == 'POST' and request.form.get('which-form') == 'addClient':
+        algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
+        maxItemId = scenarioDB.getMaxItem(scenario_id)
+        addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId)
+
+    clients = experimentDB.getExperimentClients(experiment.id)
+    return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario)
+
+
+def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId):
+    clients = experimentDB.getExperimentClients(experiment.id)
+    clientName = request.form.get('clientName')
+    if len(clientName) > 0:
+        type = request.form.get('flexRadioDefault')
+        if type in ['emptyClient', 'randomClient', 'isCopyFromScenario', 'randomItems']:
+            history = []
+            historyMatrix = scipy.sparse.csr_matrix((1, maxItemId+1), dtype=np.int8)
+        
             if type == 'emptyClient':
                 pass
             elif type == 'randomClient':
@@ -50,14 +61,20 @@ def experimentdata(experiment_name):
                     historyMatrix[0, item] = 1
 
             elif type == 'randomItems':
-                historyMatrix = modelDB.getMatrix(experiment.model_id)
-                history = scenarioDB.getRandomItems(scenario_id,5)
-            elif type == 'allClientsWithItem':
-                pass                
-            elif type == 'isCopyFromExperiment':
-                pass                
-            elif type == 'isCopyFromList':
-                pass
+                #read amount
+                amount = request.form.get('amountItems')
+                if len(amount) == 0:
+                    amount = 5
+                    
+                history = scenarioDB.getRandomItems(scenario_id, amount)
+                for item in history:
+                    historyMatrix[0, item] = 1
+
+            elif type == 'isCopyFromScenario':
+                copyClientId = request.form.get('copyClientId')
+                history = scenarioDB.getClientHistory(scenario_id, copyClientId)
+                for item in history:
+                    historyMatrix[0, item] = 1
             
             #create algorithm
             alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id))
@@ -66,13 +83,47 @@ def experimentdata(experiment_name):
             predictions = alg.predict(historyMatrix)
             recommendations, scores = util.predictions_to_recommendations(predictions, top_k=20)
             recommendations = recommendations[0].tolist()
+            if algorithmName == 'ease':
+                recommendations = recommendations[0]
+
             #add client
             newClient = Experiment_Client(clientName, experiment.id, recommendations, history)
             experimentDB.addExperimentClient(newClient)
 
-    clients = experimentDB.getExperimentClients(experiment.id)
-    return render_template("experimentdata.html", clients=clients)
+        elif type == 'isCopyFromExperiment':
+            copyClientName = request.form.get('copyClientName')
+            for client in clients:
+                if client.name == copyClientName:
+                    newClient = client
+                    newClient.name = clientName
+                    experimentDB.addExperimentClient(newClient)
 
+        elif type == 'allClientsWithItem':
+            itemId = request.form.get('fromItemId')
+            listOfClients = scenarioDB.getAllClientsWithItem(scenarido_id, itemId)
+            #create algorithm
+            alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id))
+
+            for index, client in enumerate(listOfClients):
+                historyMatrix = scipy.sparse.csr_matrix((1, maxItemId+1), dtype=np.int8)
+                history = scenarioDB.getClientHistory(scenario_id,client)
+                for item in history:
+                    historyMatrix[0, item] = 1
+
+                #predict call
+                predictions = alg.predict(historyMatrix)
+                recommendations, scores = util.predictions_to_recommendations(predictions, top_k=20)
+                recommendations = recommendations[0].tolist()
+                if algorithmName == 'ease':
+                    recommendations = recommendations[0]
+
+                #add client
+                newClientName = clientName + '#' + str(index+1)
+                newClient = Experiment_Client(newClientName, experiment.id, recommendations, history)
+                experimentDB.addExperimentClient(newClient)
+
+def deleteExperimentClient(request):
+    pass
 
 def createAlgorithm(name, matrix):
     alg = None
@@ -98,3 +149,5 @@ def createAlgorithm(name, matrix):
         alg.model.item_factors = matrix
     
     return alg
+
+
