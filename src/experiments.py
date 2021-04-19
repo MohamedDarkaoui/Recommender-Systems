@@ -39,14 +39,16 @@ def experimentdata(experiment_name):
         if len(clientName) > 0:
             type = request.form.get('flexRadioDefault')
             history = []
-            historyMatrix = None
+            historyMatrix = scipy.sparse.csr_matrix((1, itemcount), dtype=np.int8)
 
             if type == 'emptyClient':
-                historyMatrix = scipy.sparse.csr_matrix((1, itemcount), dtype=np.int8)
+                pass
             elif type == 'randomClient':
-                historyMatrix = modelDB.getMatrix(experiment.model_id)
                 client = scenarioDB.getRandomClient(scenario_id)
                 history = scenarioDB.getClientHistory(scenario_id,client)
+                for item in history:
+                    historyMatrix[0, item] = 1
+
             elif type == 'randomItems':
                 historyMatrix = modelDB.getMatrix(experiment.model_id)
                 history = scenarioDB.getRandomItems(scenario_id,5)
@@ -94,6 +96,5 @@ def createAlgorithm(name, matrix):
         alg = WMF()
         alg.model = alg.create_model()
         alg.model.item_factors = matrix
-        #print(alg.model.item_factors)
     
     return alg

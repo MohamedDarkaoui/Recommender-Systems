@@ -13,7 +13,7 @@ class WMF(Algorithm):
     """ Recommends based on a matrix completion scheme with user and item factors. """
     model: implicit.als.AlternatingLeastSquares
 
-    def __init__(self, alpha: float = 40, num_factors: int = 100, regularization: float = 0.01, iterations: int = 20):
+    def __init__(self, alpha: float = 40, num_factors: int = 20, regularization: float = 0.01, iterations: int = 20):
         """
         Initialize the weighted matrix factorization algorithm.
         :param alpha: Alpha parameter for the confidence of positive samples. Negative samples have conf 1.
