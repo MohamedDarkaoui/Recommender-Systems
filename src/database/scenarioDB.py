@@ -318,5 +318,19 @@ class ScenarioDB:
         except:
             raise Exception('Unable to select the clients for that item')
 
+        
+    def deleteScenario(self,scenario_id):
+        """
+        deletes a scenario with the given scenario id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  DELETE FROM scenario
+                                WHERE id = %s;""", (scenario_id,))
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            print("fout")
+
 
     

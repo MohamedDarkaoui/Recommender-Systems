@@ -91,6 +91,60 @@ class ExperimentDB:
             clients.append(client)
 
         return clients
-    
+
+    def deleteExperiment(self,name, user_id):
+        """
+        deletes experiment with the given name an user 
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  DELETE FROM experiment 
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,user_id,))
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            print("fout")
 
 
+    def deleteExperimentClient(self,name, experiment_id):
+        """
+        deletes experiment_client with the given name and experiment_id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  DELETE FROM experiment_client
+                                WHERE name = %s
+                                AND experiment_id = %s;""", (name,experiment_id,))
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+
+    def getExperimentClient(self, name, experiment_id):
+        """
+            get a list of experiment_client objects from a experiment with id = experiment_id
+        """
+        cursor = self.connection.get_cursor()
+        cursor.execute("""SELECT * FROM experiment_client WHERE name = %s
+                            AND experiment_id = %s""", (name, experiment_id,))
+
+        result = cursor.fetchone()
+        client = Experiment_Client(id=result[0], name=result[1], experiment_id=result[2], recommendations=result[3], history=result[4])
+
+        return client
+
+    def updateExperimentClient(self, name, experiment_id, history, recommendations):
+        """
+        deletes experiment_client with the given name and experiment_id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  UPDATE experiment_client
+                                SET history = %s,
+                                    recommendations = %s
+                                WHERE experiment_id = %s
+                                    AND name = %s;""", (history,recommendations,experiment_id,name,))
+
+            self.connection.commit()
+        except:
+            self.connection.rollback()

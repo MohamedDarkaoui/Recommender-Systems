@@ -71,3 +71,43 @@ $body$
 
 $body$
 LANGUAGE sql;
+
+--delete scenario_elements when scenario is deleted
+CREATE OR REPLACE FUNCTION delete_scenario_elements ()
+RETURNS TRIGGER
+AS 
+$body$
+BEGIN
+	DELETE FROM scenario_element 
+	WHERE scenario_id = old.id; 
+	RETURN OLD;
+END;
+$body$
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER delete_scenario_trigger 
+BEFORE DELETE
+ON scenario
+FOR EACH ROW
+EXECUTE FUNCTION  delete_scenario_elements ();
+
+--delete interactions when dataset is deleted
+CREATE OR REPLACE FUNCTION delete_interactions()
+RETURNS TRIGGER
+AS 
+$body$
+BEGIN
+	DELETE FROM interaction 
+	WHERE dataset_id = old.id; 
+	RETURN OLD;
+END;
+$body$
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER delete_dataset_trigger 
+BEFORE DELETE
+ON dataset
+FOR EACH ROW
+EXECUTE FUNCTION  delete_interactions();

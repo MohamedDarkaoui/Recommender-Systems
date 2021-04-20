@@ -3,79 +3,12 @@ from views import *
 @views.route('/datasets', methods=['GET', 'POST'])
 @login_required
 def datasets():
-    if request.method == 'POST' and request.form.get('which-form') == "uploadDataset":
-        datasetName = request.form.get('datasetname')
-        interactionsCSV = request.files['csvinteractions']
-        metadataCSV = request.files['csvmetadata']
+    if request.method == 'POST':
+        if request.form.get('which-form') == "uploadDataset":
+            addDataset(request)
+        elif request.form.get('which-form') == "deleteDataset":
+            deleteDataset(request)
 
-        if interactionsCSV.content_type == 'text/csv' and len(datasetName) > 0:
-            # insert dataset
-            dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
-            dataset = Dataset(name=datasetName, usr_id=str(current_user.id), date_time=dt_string, private=True)
-            dataset = datasetDB.add_dataset(dataset)
-            
-            # create pandas objects
-            interactions = pd.read_csv(interactionsCSV)
-            columns = list(interactions.columns)
-            interactions.rename(columns={columns[0]: 'client_id', columns[1]: 'item_id', columns[2]: 'tmstamp'})
-            interactions.columns = ['client_id', 'item_id', 'tmstamp']
-            interactions.insert(0, 'dataset_id', dataset.id)
-            
-            items = interactions[['item_id','dataset_id']].copy()
-            items.columns = ['id','dataset_id']
-            items = items.drop_duplicates()
-
-            clients = interactions[['client_id','dataset_id']]
-            clients.columns = ['id','dataset_id']
-            clients = clients.drop_duplicates()
-
-            # insert items,clients and interactions
-            itemDB.add_item(items)
-            clientDB.add_client(clients)
-            interactionDB.add_interaction(interactions)
-            
-            #insert metadata if exists
-            if metadataCSV.content_type == 'text/csv':
-                metadata = pd.read_csv(metadataCSV)
-                columns = list(metadata.columns)
-                metadata.drop(columns[0], axis=1)
-                metadataOBJ = Metadata(dataset.id)
-
-                #insert metadata
-                metadataOBJ = metadataDB.add_metadata(metadataOBJ)
-
-                #add dataset and metadata id columns
-                metadata.insert(1, 'dataset_id', dataset.id)
-                metadata.insert(2, 'metadata_id', metadataOBJ.id)
-
-                #rename de item id
-                metadata = metadata.rename(columns={columns[0]: 'item_id'})
-
-                columns = list(metadata.columns)
-                #CREATE TEMPORARY DESC DATAFRAMES
-                tempDataframes = []
-                for column in columns[3:]:
-                    tempDataframes.append(pd.DataFrame([metadata[column]]).transpose())
-
-                #REMOVE ALL DESC FROM METADATA
-                metadata = metadata.drop(columns[3:], axis=1)
-                
-                #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
-                for tempDataframe in tempDataframes:
-                    #ADD DESC
-                    descName = tempDataframe.columns[0]
-                    metadata.insert(3, 'description', descName)
-                    tempDataframe = tempDataframe.rename(columns={descName: 'data'})
-
-                    #ADD DATA
-                    metadata = pd.concat([metadata, tempDataframe], axis=1)  
-                    if metadata['data'].dtypes == 'object':
-                        metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
-                    #COPY INTO DATABASE
-                    metadataElementDB.add_metadataElements(metadata)
-
-                    #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
-                    metadata = metadata.drop(metadata.columns[3:5], axis=1)
 
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
@@ -95,3 +28,88 @@ def data_samples(dataset_name):
  
     return render_template("dataset_sample.html",dataset_name=dataset_name, 
     client_count=client_count,item_count=item_count,interaction_count=interaction_count,interaction_sample=interaction_sample,metadata_sample=metadata_sample)
+
+
+
+def addDataset(request):
+    datasetName = request.form.get('datasetname')
+    interactionsCSV = request.files['csvinteractions']
+    metadataCSV = request.files['csvmetadata']
+    clientIdColumn = request.form.get('userIdColumn')        
+    itemIdColumn = request.form.get('itemIdColumn')
+    timestampColumn = request.form.get('timestampColumn')
+
+
+    if interactionsCSV.content_type == 'text/csv' and len(datasetName) > 0:
+        # insert dataset
+        dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+        dataset = Dataset(name=datasetName, usr_id=str(current_user.id), date_time=dt_string, private=True)
+        dataset = datasetDB.add_dataset(dataset)
+
+        # create pandas objects
+        interactions = pd.read_csv(interactionsCSV)
+        columns = list(interactions.columns)
+        
+        interactions.rename(columns={columns[0]: 'client_id', columns[1]: 'item_id', columns[2]: 'tmstamp'})
+        interactions.columns = ['client_id', 'item_id', 'tmstamp']
+        interactions.insert(0, 'dataset_id', dataset.id)
+        
+        items = interactions[['item_id','dataset_id']].copy()
+        items.columns = ['id','dataset_id']
+        items = items.drop_duplicates()
+
+        clients = interactions[['client_id','dataset_id']]
+        clients.columns = ['id','dataset_id']
+        clients = clients.drop_duplicates()
+
+        # insert items,clients and interactions
+        itemDB.add_item(items)
+        clientDB.add_client(clients)
+        interactionDB.add_interaction(interactions)
+        
+        #insert metadata if exists
+        if metadataCSV.content_type == 'text/csv':
+            metadata = pd.read_csv(metadataCSV)
+            columns = list(metadata.columns)
+            metadata.drop(columns[0], axis=1)
+            metadataOBJ = Metadata(dataset.id)
+
+            #insert metadata
+            metadataOBJ = metadataDB.add_metadata(metadataOBJ)
+
+            #add dataset and metadata id columns
+            metadata.insert(1, 'dataset_id', dataset.id)
+            metadata.insert(2, 'metadata_id', metadataOBJ.id)
+
+            #rename de item id
+            metadata = metadata.rename(columns={columns[0]: 'item_id'})
+
+            columns = list(metadata.columns)
+            #CREATE TEMPORARY DESC DATAFRAMES
+            tempDataframes = []
+            for column in columns[3:]:
+                tempDataframes.append(pd.DataFrame([metadata[column]]).transpose())
+
+            #REMOVE ALL DESC FROM METADATA
+            metadata = metadata.drop(columns[3:], axis=1)
+            
+            #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
+            for tempDataframe in tempDataframes:
+                #ADD DESC
+                descName = tempDataframe.columns[0]
+                metadata.insert(3, 'description', descName)
+                tempDataframe = tempDataframe.rename(columns={descName: 'data'})
+
+                #ADD DATA
+                metadata = pd.concat([metadata, tempDataframe], axis=1)  
+                if metadata['data'].dtypes == 'object':
+                    metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
+                #COPY INTO DATABASE
+                metadataElementDB.add_metadataElements(metadata)
+
+                #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
+                metadata = metadata.drop(metadata.columns[3:5], axis=1)
+
+def deleteDataset(request):
+    name= request.form.get('datasetName')
+    datasetDB.deleteDataset(name,current_user.id)

@@ -46,6 +46,7 @@
         <th scope="col">Name</th>
         <th scope="col">Model</th>
         <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -54,7 +55,11 @@
           <th scope="row">{{experiment[0]}}</th>
           <td>{{experiment[1].name}}</td>
           <td>{{experiment[1].model_id}}</td>
-          <td><a class="btn btn-primary" href="/experiments/{{experiment[1].name}}" role="button">More</a></td>        
+          <td><a class="btn btn-primary" href="/experiments/{{experiment[1].name}}" role="button">More</a></td>  
+          <form method="POST">
+          <input type="hidden" name="which-form" value="deleteExperiment">
+            <td><button type="submit" name="experimentName" value={{experiment[1].name}} class="btn btn-danger">X</button></td>  
+          </form>    
         </tr>
       {% endfor %}
     </tbody>

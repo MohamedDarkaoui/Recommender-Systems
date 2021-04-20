@@ -6,15 +6,23 @@ from views import *
 @login_required
 def experiments():
     #ADD EXPERIMENT
-    if request.method == 'POST' and request.form.get('which-form') == "createExperiment":
-        experimentName = request.form.get('experimentName')
-        model_id = request.form.get('modelId')
-        if len(experimentName) > 0  and model_id:
-            model_id = int(model_id)
-            dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
-            #add experiment
-            newExperiment = Experiment(current_user.id, experimentName, model_id, dt_string)
-            newExperiment = experimentDB.add_experiment(newExperiment)
+    
+    if request.method == 'POST':
+        if request.form.get('which-form') == "createExperiment":
+            experimentName = request.form.get('experimentName')
+            model_id = request.form.get('modelId')
+            if len(experimentName) > 0  and model_id:
+                model_id = int(model_id)
+                dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+                #add experiment
+                newExperiment = Experiment(current_user.id, experimentName, model_id, dt_string)
+                newExperiment = experimentDB.add_experiment(newExperiment)
+
+        elif request.form.get('which-form') == 'deleteExperiment':
+            name = request.form.get("experimentName")
+            print(name)
+            experimentDB.deleteExperiment(name,current_user.id)
+
     
 
     models = modelDB.getModelsFromUser(current_user)
@@ -25,7 +33,6 @@ def experiments():
 
     return render_template("experiments.html", models = models, experiments = experiments)
 
-
 @views.route('/experiments/<experiment_name>', methods=['GET', 'POST'])
 @login_required
 def experimentdata(experiment_name):
@@ -34,14 +41,23 @@ def experimentdata(experiment_name):
     clientsFromScenario = scenarioDB.getAllClients(scenario_id)
     itemsFromScenario = scenarioDB.getAllItems(scenario_id)
 
-    if request.method == 'POST' and request.form.get('which-form') == 'addClient':
-        algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
-        maxItemId = scenarioDB.getMaxItem(scenario_id)
-        addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId)
+    if request.method == 'POST':
+        if request.form.get('which-form') == 'addClient':
+            algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
+            maxItemId = scenarioDB.getMaxItem(scenario_id)
+            addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId)
+
+        elif request.form.get('which-form') == 'deleteClient':
+            deleteExperimentClient(request, experiment.id)
+
+        elif request.form.get('which-form') == 'deleteItem':
+            algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
+            alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id))
+            maxItemId = scenarioDB.getMaxItem(scenario_id)
+            deleteItem(request, experiment.id, alg, maxItemId, algorithmName)
 
     clients = experimentDB.getExperimentClients(experiment.id)
     return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario)
-
 
 def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId):
     clients = experimentDB.getExperimentClients(experiment.id)
@@ -122,8 +138,9 @@ def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItem
                 newClient = Experiment_Client(newClientName, experiment.id, recommendations, history)
                 experimentDB.addExperimentClient(newClient)
 
-def deleteExperimentClient(request):
-    pass
+def deleteExperimentClient(request, experiment_id):
+    name = request.form.get('clientName')
+    experimentDB.deleteExperimentClient(name, experiment_id)
 
 def createAlgorithm(name, matrix):
     alg = None
@@ -150,4 +167,24 @@ def createAlgorithm(name, matrix):
     
     return alg
 
+def deleteItem(request, experiment_id, alg, maxItemId, algorithmName):
+    clientName = request.form.get('clientName')
+    itemId = int(request.form.get('itemId'))
+    client = experimentDB.getExperimentClient(clientName, experiment_id)
 
+    client.history
+    if itemId in client.history:
+        client.history.remove(itemId)
+    
+    historyMatrix = scipy.sparse.csr_matrix((1, maxItemId+1), dtype=np.int8)
+    for item in client.history:
+        historyMatrix[0, item] = 1
+    
+    #predictCall
+    predictions = alg.predict(historyMatrix)
+    recommendations, scores = util.predictions_to_recommendations(predictions, top_k=20)
+    recommendations = recommendations[0].tolist()
+    if algorithmName == 'ease':
+        recommendations = recommendations[0]
+    
+    experimentDB.updateExperimentClient(clientName, experiment_id, client.history, recommendations)

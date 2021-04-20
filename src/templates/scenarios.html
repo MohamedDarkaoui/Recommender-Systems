@@ -86,6 +86,7 @@
         <th scope="col">Dataset</th>
         <th scope="col">Date</th>
         <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -96,6 +97,12 @@
           <td>{{scenario[2]}}</td>
           <td>{{scenario[3]}}</td>
           <td><a class="btn btn-primary" href="scenarios/{{scenario[1]}}" role="button">More</a></td>
+          <td>
+            <form method="POST">
+              <input type="hidden" name="which-form" value="deleteScenario">
+            <button type="submit" name="scenarioName" value={{scenario[1]}} class="btn btn-danger">X</button>      
+            </form>
+          </td>    
         </tr>
       {% endfor %}
     </tbody>

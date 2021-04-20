@@ -21,14 +21,14 @@
             <div class="modal-body">
               <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="Name">
               <br>
-              <b>UserID collumn name</b>
-              <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="userid">
+              <b>User ID Column</b>
+              <input name="userIdColumn" value="userId" class="form-control form-control-lg" type="text" placeholder="userId">
               <br>
-              <b>ItemID collumn name</b>
-              <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="movieid">
+              <b>Item ID Column</b>
+              <input name="itemIdColumn" value="itemId" class="form-control form-control-lg" type="text" placeholder="itemId">
               <br>
-              <b>Timestamp collumn name</b>
-              <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="Timestamp">
+              <b>Timestamp Column</b>
+              <input name="timestampColumn" value="timestamp" class="form-control form-control-lg" type="text" placeholder="timestamp">
               <br>
               Interactions:
               <div class="custom-file mb-3">
@@ -69,6 +69,7 @@
         <th scope="col">Date</th>
         <th scope="col">Share</th>
         <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -84,6 +85,10 @@
                 </div>
           </td>
           <td><a class="btn btn-primary" href="/datasets/{{dataset[1]}}" role="button">More</a></td>
+          <form method="POST">
+        <input type="hidden" name="which-form" value="deleteDataset">
+          <td><button type="submit" name="datasetName" value={{dataset[1]}} class="btn btn-danger">X</button></td>  
+      </form> 
         </tr>
       {% endfor %}
     </tbody>

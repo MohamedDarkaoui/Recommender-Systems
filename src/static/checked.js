@@ -50,7 +50,6 @@ function delete_upload(){
     if(list.childNodes.length > 3){
         var itm = document.getElementById("meta-data_upload")
         itm.remove()
-        alert("lololo")
     }
     
     

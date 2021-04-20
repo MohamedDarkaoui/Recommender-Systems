@@ -157,6 +157,7 @@
       <th scope="col">Scenario</th>
       <th scope="col">Algorithm</th>
       <th scope="col">Date</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -167,6 +168,10 @@
       <td>{{model[2]}}</td>
       <td>{{model[3]}}</td>
       <td>{{model[4]}}</td>
+      <form method="POST">
+        <input type="hidden" name="which-form" value="deleteModel">
+          <td><button type="submit" name="modelName" value={{model[1]}} class="btn btn-danger">X</button></td>  
+      </form>  
     </tr>
     {% endfor %}
   </tbody>

@@ -68,3 +68,17 @@ class DatasetDB:
             return result[0][0]
         except:
             raise Exception('Unable to select the name of the dataset')
+
+    def deleteDataset(self,name,user_id):
+        """
+        deletes a dataset with the given name and user id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  DELETE FROM dataset
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,user_id,))
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            print("fout")

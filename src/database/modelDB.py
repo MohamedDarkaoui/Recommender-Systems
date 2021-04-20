@@ -91,3 +91,17 @@ class ModelDB:
 
         except:
             raise Exception('Unable to select the algorithm')
+    
+    def deleteModel(self,name, user_id):
+        """
+        deletes model with the given name an user 
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  DELETE FROM model 
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,user_id,))
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            print("fout")

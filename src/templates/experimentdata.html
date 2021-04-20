@@ -136,7 +136,13 @@
                   <tr>
                     <th scope="row">{{i+1}}</th>
                     <td>{{client.history[i]}}</td>
-                    <td><button type="button" class="btn btn-danger">X</button></td>
+                    <td>
+                      <form method="POST">
+                        <input type="hidden" name="which-form" value="deleteItem">
+                        <input type="hidden" name="clientName" value="{{client.name}}">
+                        <button type="submit" name="itemId" value={{client.history[i]}} class="btn btn-danger">X</button>
+                      </form>
+                    </td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -202,8 +208,7 @@
       </div>
       <form method="POST">
         <input type="hidden" name="which-form" value="deleteClient">
-        <input type="hidden" name="clientName"name={{client.name}} value="deleteClient">
-        <button type="submit" class="btn btn-danger">X</button>
+        <button type="submit" name="clientName" value={{client.name}} class="btn btn-danger">X</button>
       </form>
     </div>
   </div>
