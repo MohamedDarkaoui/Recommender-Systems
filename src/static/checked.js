@@ -38,17 +38,39 @@ function checker() {
         document.getElementById("delete_but").style.display = "none";
     }
  }
-var counter = 0
-var id = "copy_id"
+var counter = 0;
 function add_upload(){
-    counter = counter + 1
+    counter = counter + 1;
+    //find
     var itm = document.getElementById("meta-data_upload");
-    var itm2 = document.getElementById("copy_id0")
-    var cln = itm.cloneNode(true);
-    var cln2 = itm2.cloneNode(true)
-    cln.id = id + counter
-    document.getElementById("upload_files").appendChild(cln);
-    alert(counter)
+    var csv = document.getElementById("csvmetadata");
+    var lab = document.getElementById("label10");
+
+    // clone
+    var clnItm = itm.cloneNode(true);
+    var clnCsv = csv.cloneNode(true);
+    var clnLab = lab.cloneNode(true);
+
+    // change id value
+    clnCsv.id = "csvmetadata" + counter;
+    clnLab.id = "label10" + counter;
+    clnItm.id = "meta-data_upload" + counter;
+    clnLab.for =  clnCsv.id
+
+    // append
+    document.getElementById("upload_files").appendChild(clnItm);
+    document.getElementById("csvmetadata").id =  "csvmetadata0"
+    document.getElementById("label10").id = "label100"
+    document.getElementById(clnItm.id).removeChild(document.getElementById("csvmetadata"));
+    document.getElementById(clnItm.id).removeChild(document.getElementById("label10"));
+
+    alert(clnCsv.id)
+    document.getElementById(clnItm.id).appendChild(clnCsv);
+    document.getElementById(clnItm.id).appendChild(clnLab);
+
+    document.getElementById("csvmetadata0").id =  "csvmetadata"
+    document.getElementById("label100").id = "label10"
+
 }
 
 function delete_upload(){
@@ -56,6 +78,7 @@ function delete_upload(){
     if(list.childNodes.length > 3){
         var itm = document.getElementById("meta-data_upload")
         itm.remove()
+        alert("lololo")
     }
     
     
