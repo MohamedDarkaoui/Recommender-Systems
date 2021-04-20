@@ -105,3 +105,35 @@ class ModelDB:
         except:
             self.connection.rollback()
             print("fout")
+    
+    def modelExists(self, name, usr_id):
+        """
+            returns true if there exists a model with name = name and usr_id = usr_id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM model
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,usr_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
+
+    def getModelId(self, name, usr_id):
+        """
+            returns the id of a model with name = name and usr_id = usr_id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM model
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,usr_id,))
+
+            result = cursor.fetchone()
+            return result[0]
+        except:
+            self.connection.rollback()

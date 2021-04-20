@@ -4,7 +4,24 @@
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
+
 <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Make model</button>
+
 
 <form method="POST">
   <div>
@@ -38,76 +55,54 @@
                 <option value="iknn">iknn</option>
                 <option value="pop">pop</option>
                 <option value="wmf">wmf</option>
-                <option value="random">random</option>
               </select>
             </div>
+
             <div id="ease" style="display: none;">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <b>Top-K</b>
-                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_ease">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <b>l2</b>
-                    <input type="number" min="0.0" class="form-control" placeholder="200.0" name="l2">
+                    <b>L2</b>
+                    <input type="number" min="0.0" value="200.0" step="0.01" class="form-control" placeholder="200.0" name="L2">
                   </div>
                 </div>
               </div>
             </div>
+
             <div id="iknn" style="display: none;">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <b>Top-K</b>
-                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_iknn">
-                  </div>
-                  <b>K</b>
-                  <div class="form-group">
-                    <input type="number" min="1" class="form-control" placeholder="200" name="k">
+                    <b>K</b>
+                    <input type="number" min="1" value="200" class="form-control" placeholder="200" name="k">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <b>l2</b>
-                    <input type="number" min="0.0" class="form-control" placeholder="200.0" name="l2">
-                  </div>
-                  <div class="form-group">
                     <b>Normalize</b>
                     <div class="input-group mb-3">
                       <select name = "normalize" class="custom-select">
-                        <option value="true">YES</option>
-                        <option selected value="false">NO</option>
+                        <option value="true">True</option>
+                        <option selected value="false">False</option>
                       </select>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div id="pop" style="display: none;">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <b>Top-K</b>
-                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_pop">
-                  </div>
-                </div>
-              </div>
-            </div>
+
             <div id="wmf" style="display: none;">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <b>Top-K</b>
-                    <input type="number" min="1" class="form-control" placeholder="5" name="top_k_wmf">
+                    <b>Alpha</b>
+                    <input type="number" min="0" value="40.0" step="0.01" class="form-control" placeholder="40.0" name="alpha">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <b>Alpha</b>
-                    <input type="number" min="0" class="form-control" placeholder="40.0" name="alpha">
+                    <b>Iterations</b>
+                    <input type="number" min="0" value="20" class="form-control" placeholder="20" name="iterations">
                   </div>
                 </div>
               </div>
@@ -115,26 +110,18 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <b>Factors</b>
-                    <input type="number" min="0" class="form-control" placeholder="20" name="factors">
+                    <input type="number" min="0" value="20" class="form-control" placeholder="20" name="factors">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <b>Regularization</b>
-                    <input type="number" min="0" class="form-control" placeholder="0.01"
-                      name="regularization">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <b>Iterations</b>
-                    <input type="number" min="0" class="form-control" placeholder="20" name="iterations">
+                    <input type="number" min="0" value="0.01" step="0.01" class="form-control" placeholder="0.01" name="regularization">
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -145,6 +132,7 @@
     </div>
   </div>
 </form>
+
 
 <br>
 <h3>My Models:</h3>

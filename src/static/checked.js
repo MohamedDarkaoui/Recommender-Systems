@@ -38,11 +38,17 @@ function checker() {
         document.getElementById("delete_but").style.display = "none";
     }
  }
-
+var counter = 0
+var id = "copy_id"
 function add_upload(){
+    counter = counter + 1
     var itm = document.getElementById("meta-data_upload");
+    var itm2 = document.getElementById("copy_id0")
     var cln = itm.cloneNode(true);
+    var cln2 = itm2.cloneNode(true)
+    cln.id = id + counter
     document.getElementById("upload_files").appendChild(cln);
+    alert(counter)
 }
 
 function delete_upload(){

@@ -82,3 +82,20 @@ class DatasetDB:
         except:
             self.connection.rollback()
             print("fout")
+
+    def datasetExists(self, name, usr_id):
+        """
+            returns true if there exists a dataset with name = name and usr_id = usr_id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM dataset
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,usr_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()

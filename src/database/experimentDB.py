@@ -148,3 +148,37 @@ class ExperimentDB:
             self.connection.commit()
         except:
             self.connection.rollback()
+
+    def experimentExists(self, name, usr_id):
+        """
+            returns true if there exists a experiment with name = name and usr_id = usr_id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM experiment
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,usr_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
+
+    def experimentClientExists(self, name, experiment_id):
+        """
+            returns true if there exists a experiment client with name = name and experiment_id = experiment_id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT name FROM experiment_client
+                                WHERE name = %s
+                                AND experiment_id = %s;""", (name,experiment_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()

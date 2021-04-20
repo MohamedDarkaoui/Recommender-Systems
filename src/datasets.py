@@ -8,8 +8,7 @@ def datasets():
             addDataset(request)
         elif request.form.get('which-form') == "deleteDataset":
             deleteDataset(request)
-
-
+            
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
         datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private)
@@ -29,12 +28,10 @@ def data_samples(dataset_name):
     return render_template("dataset_sample.html",dataset_name=dataset_name, 
     client_count=client_count,item_count=item_count,interaction_count=interaction_count,interaction_sample=interaction_sample,metadata_sample=metadata_sample)
 
-
-
 def addDataset(request):
     datasetName = request.form.get('datasetname')
     interactionsCSV = request.files['csvinteractions']
-    metadataCSV = request.files['csvmetadata']
+    metadataCSV = request.files.getlist('csvmetadata')
     clientIdColumn = request.form.get('userIdColumn')        
     itemIdColumn = request.form.get('itemIdColumn')
     timestampColumn = request.form.get('timestampColumn')
@@ -68,48 +65,56 @@ def addDataset(request):
         interactionDB.add_interaction(interactions)
         
         #insert metadata if exists
-        if metadataCSV.content_type == 'text/csv':
-            metadata = pd.read_csv(metadataCSV)
-            columns = list(metadata.columns)
-            metadata.drop(columns[0], axis=1)
-            metadataOBJ = Metadata(dataset.id)
+        if request.form.get('metadataCheck') == 'on': # and metadataCSV.content_type == 'text/csv':
+            for mdata in metadataCSV:
+                print("YOOOOO")
+                addMetadata(mdata,dataset)
 
-            #insert metadata
-            metadataOBJ = metadataDB.add_metadata(metadataOBJ)
+        flash('Dataset succesfully made.')
+        
+def addMetadata(metadataCSV,dataset):
+    metadata = pd.read_csv(metadataCSV)
+    columns = list(metadata.columns)
+    metadata.drop(columns[0], axis=1)
+    metadataOBJ = Metadata(dataset.id)
 
-            #add dataset and metadata id columns
-            metadata.insert(1, 'dataset_id', dataset.id)
-            metadata.insert(2, 'metadata_id', metadataOBJ.id)
+    #insert metadata
+    metadataOBJ = metadataDB.add_metadata(metadataOBJ)
 
-            #rename de item id
-            metadata = metadata.rename(columns={columns[0]: 'item_id'})
+    #add dataset and metadata id columns
+    metadata.insert(1, 'dataset_id', dataset.id)
+    metadata.insert(2, 'metadata_id', metadataOBJ.id)
 
-            columns = list(metadata.columns)
-            #CREATE TEMPORARY DESC DATAFRAMES
-            tempDataframes = []
-            for column in columns[3:]:
-                tempDataframes.append(pd.DataFrame([metadata[column]]).transpose())
+    #rename de item id
+    metadata = metadata.rename(columns={columns[0]: 'item_id'})
 
-            #REMOVE ALL DESC FROM METADATA
-            metadata = metadata.drop(columns[3:], axis=1)
-            
-            #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
-            for tempDataframe in tempDataframes:
-                #ADD DESC
-                descName = tempDataframe.columns[0]
-                metadata.insert(3, 'description', descName)
-                tempDataframe = tempDataframe.rename(columns={descName: 'data'})
+    columns = list(metadata.columns)
+    #CREATE TEMPORARY DESC DATAFRAMES
+    tempDataframes = []
+    for column in columns[3:]:
+        tempDataframes.append(pd.DataFrame([metadata[column]]).transpose())
 
-                #ADD DATA
-                metadata = pd.concat([metadata, tempDataframe], axis=1)  
-                if metadata['data'].dtypes == 'object':
-                    metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
-                #COPY INTO DATABASE
-                metadataElementDB.add_metadataElements(metadata)
+    #REMOVE ALL DESC FROM METADATA
+    metadata = metadata.drop(columns[3:], axis=1)
+    
+    #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
+    for tempDataframe in tempDataframes:
+        #ADD DESC
+        descName = tempDataframe.columns[0]
+        metadata.insert(3, 'description', descName)
+        tempDataframe = tempDataframe.rename(columns={descName: 'data'})
 
-                #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
-                metadata = metadata.drop(metadata.columns[3:5], axis=1)
+        #ADD DATA
+        metadata = pd.concat([metadata, tempDataframe], axis=1)  
+        if metadata['data'].dtypes == 'object':
+            metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
+        #COPY INTO DATABASE
+        metadataElementDB.add_metadataElements(metadata)
+
+        #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
+        metadata = metadata.drop(metadata.columns[3:5], axis=1)
 
 def deleteDataset(request):
-    name= request.form.get('datasetName')
+    name = request.form.get('datasetName')
     datasetDB.deleteDataset(name,current_user.id)
+    flash('Dataset succesfully deleted.')

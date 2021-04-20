@@ -42,7 +42,7 @@ class WMF(Algorithm):
     def predict(self, histories: scipy.sparse.csr_matrix) -> np.ndarray:
         predictions = np.zeros(histories.shape)
         for u in range(histories.shape[0]):
-            recommendations = self.model.recommend(0, histories[u], recalculate_user=True, N=histories.shape[1])
+            recommendations = self.model.recommend(0, histories[u], filter_already_liked_items=False, recalculate_user=True, N=histories.shape[1])
             items, scores = zip(*recommendations)
             predictions[u, items] = scores
         return predictions

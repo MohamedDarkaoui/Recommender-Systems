@@ -4,6 +4,21 @@
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
 <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Make Experiment</button>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -20,10 +35,10 @@
             <input name = "experimentName" class="form-control form-control-lg" type="text" placeholder="Name">
             <br>
             <div class="input-group mb-3">
-              <select name = "modelId" class="custom-select" id="inputGroupSelect01">
+              <select name = "modelName" class="custom-select" id="inputGroupSelect01">
                 <option disabled selected>Choose Model</option>
                 {% for model in models %}
-                  <option value={{model.id}}>{{model.name}}</option>
+                  <option value={{model.name}}>{{model.name}}</option>
                 {% endfor %}
               </select>
             </div>            
