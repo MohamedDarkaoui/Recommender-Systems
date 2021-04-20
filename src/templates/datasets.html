@@ -1,111 +1,127 @@
 {% extends "index.html" %}
 {% block title %} Datasets {% endblock %}
-{% block activate_datasets %} 
+{% block activate_datasets %}
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
 
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                <span>{{ message }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
-    {% endif %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
+  <span>{{ message }}</span>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+{% endif %}
 {% endwith %}
 
 <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Add Dataset</button>
-  
-  <!-- Popup -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New Dataset</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <form method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="which-form" value="uploadDataset">
-            <div class="modal-body">
-              <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="Name">
-              <br>
-              <b>User ID Column</b>
-              <input name="userIdColumn" value="userId" class="form-control form-control-lg" type="text" placeholder="userId">
-              <br>
-              <b>Item ID Column</b>
-              <input name="itemIdColumn" value="itemId" class="form-control form-control-lg" type="text" placeholder="itemId">
-              <br>
-              <b>Timestamp Column</b>
-              <input name="timestampColumn" value="timestamp" class="form-control form-control-lg" type="text" placeholder="timestamp">
-              <br>
-              Interactions:
-              <div class="custom-file mb-3">
-                <input type="file" class="custom-file-input" id="csvinteractions" name="csvinteractions">
-                <label class="custom-file-label" for="csvinteractions">Choose file</label>
-              </div>
-              <br>
-              <div class="form-check">
-                <input id="checkbox" type="checkbox" onclick="checker2()" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Metadata (optional):</label>
-                <div id="upload_files" style="display: none;">
-                  <div class="custom-file mb-3" id="meta-data_upload">
-                    <input type="file" class="custom-file-input" id="csvmetadata" name="csvmetadata" >
-                    <label class="custom-file-label" id = "label10" for="csvmetadata">Choose file</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button id="delete_but" onclick="delete_upload()" type="button" class="btn btn-outline-danger" style="display: none;">-</button>
-              <button id="add" onclick="add_upload()" type="button" class="btn btn-outline-primary" style="display: none;">+</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Upload</button>
-            </div>
-          </form>
-        </div>
+
+<!-- Popup -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Dataset</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="which-form" value="uploadDataset">
+        <div class="modal-body">
+          <input name="datasetname" class="form-control form-control-lg" type="text" placeholder="Name">
+          <br>
+          <b>User ID Column</b>
+          <input name="userIdColumn" value="userId" class="form-control form-control-lg" type="text"
+            placeholder="userId">
+          <br>
+          <b>Item ID Column</b>
+          <input name="itemIdColumn" value="itemId" class="form-control form-control-lg" type="text"
+            placeholder="itemId">
+          <br>
+          <b>Timestamp Column</b>
+          <input name="timestampColumn" value="timestamp" class="form-control form-control-lg" type="text"
+            placeholder="timestamp">
+          <br>
+          Interactions:
+          <div class="custom-file mb-3">
+            <input type="file" class="custom-file-input" id="csvinteractions" name="csvinteractions">
+            <label class="custom-file-label" for="csvinteractions">Choose file</label>
+          </div>
+          <br>
+          <div class="form-check">
+            <input id="checkbox" type="checkbox" onclick="checker2()" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Metadata (optional):</label>
+            <div id="upload_files" style="display: none;">
+              <div class="custom-file mb-3" id="meta-data_upload">
+                <input type="file" class="custom-file-input" id="csvmetadata" name="csvmetadata">
+                <label class="custom-file-label" for="csvmetadata">Choose file</label>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Filename</th>
+                  </tr>
+                </thead>
+                <tbody id="filetabel">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="delete_but" onclick="delete_upload()" type="button" class="btn btn-outline-danger"
+            style="display: none;">-</button>
+          <button id="add" onclick="add_upload()" type="button" class="btn btn-outline-primary"
+            style="display: none;">+</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+      </form>
     </div>
-  
-  <br><br>
-  <h3>My Datasets:</h3> 
-  <br>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Date</th>
-        <th scope="col">Share</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for dataset in datasets %}
-        <tr>
-          <th scope="row">{{dataset[0]}}</th>
-          <td>{{dataset[1]}}</td>
-          <td>{{dataset[2]}}</td>
-          <td>
-              <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="customSwitch{{dataset[0]}}">
-                  <label class="custom-control-label" for="customSwitch{{dataset[0]}}"></label>
-                </div>
-          </td>
-          <td><a class="btn btn-primary" href="/datasets/{{dataset[1]}}" role="button">More</a></td>
-          <form method="POST">
+  </div>
+</div>
+
+<br><br>
+<h3>My Datasets:</h3>
+<br>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Share</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for dataset in datasets %}
+    <tr>
+      <th scope="row">{{dataset[0]}}</th>
+      <td>{{dataset[1]}}</td>
+      <td>{{dataset[2]}}</td>
+      <td>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="customSwitch{{dataset[0]}}">
+          <label class="custom-control-label" for="customSwitch{{dataset[0]}}"></label>
+        </div>
+      </td>
+      <td><a class="btn btn-primary" href="/datasets/{{dataset[1]}}" role="button">More</a></td>
+      <form method="POST">
         <input type="hidden" name="which-form" value="deleteDataset">
-          <td><button type="submit" name="datasetName" value={{dataset[1]}} class="btn btn-danger">X</button></td>  
-      </form> 
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  
+        <td><button type="submit" name="datasetName" value={{dataset[1]}} class="btn btn-danger">X</button></td>
+      </form>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}

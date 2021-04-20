@@ -38,48 +38,24 @@ function checker() {
         document.getElementById("delete_but").style.display = "none";
     }
  }
-var counter = 0;
+
+ var counter = 0
 function add_upload(){
-    counter = counter + 1;
-    //find
-    var itm = document.getElementById("meta-data_upload");
-    var csv = document.getElementById("csvmetadata");
-    var lab = document.getElementById("label10");
-
-    // clone
-    var clnItm = itm.cloneNode(true);
-    var clnCsv = csv.cloneNode(true);
-    var clnLab = lab.cloneNode(true);
-
-    // change id value
-    clnCsv.id = "csvmetadata" + counter;
-    clnLab.id = "label10" + counter;
-    clnItm.id = "meta-data_upload" + counter;
-    clnLab.for =  clnCsv.id
-
-    // append
-    document.getElementById("upload_files").appendChild(clnItm);
-    document.getElementById("csvmetadata").id =  "csvmetadata0"
-    document.getElementById("label10").id = "label100"
-    document.getElementById(clnItm.id).removeChild(document.getElementById("csvmetadata"));
-    document.getElementById(clnItm.id).removeChild(document.getElementById("label10"));
-
-    alert(clnCsv.id)
-    document.getElementById(clnItm.id).appendChild(clnCsv);
-    document.getElementById(clnItm.id).appendChild(clnLab);
-
-    document.getElementById("csvmetadata0").id =  "csvmetadata"
-    document.getElementById("label100").id = "label10"
-
+    counter = counter + 1
+    var tmp = document.getElementById("csvmetadata")
+    var tabel = document.getElementById("filetabel")
+    if(tmp.value.length > 0){
+        var rij = document.createElement("tr")
+        rij.innerHTML = "<th>" + counter + "</th>" + "<th>" + tmp.value.split("\\").pop() + "</th>"
+        tabel.appendChild(rij)
+    }
+    
 }
 
 function delete_upload(){
-    var list = document.getElementById("upload_files")
-    if(list.childNodes.length > 3){
-        var itm = document.getElementById("meta-data_upload")
-        itm.remove()
-        alert("lololo")
-    }
-    
-    
+    var tabel = document.getElementById("filetabel")
+    if(tabel.rows.length > 0){
+        counter = counter - 1  
+        tabel.deleteRow(-1)
+    }  
 }
