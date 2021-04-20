@@ -55,23 +55,13 @@
           </div>
           <br>
           <div class="form-check">
-            <input id="checkbox" type="checkbox" onclick="checker2()" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Metadata (optional):</label>
+            <input id="checkbox" type="checkbox" onclick="checker2()" class="form-check-input" id="exampleCheck1" name="metadataCheck">
+            <label class="form-check-label" for="exampleCheck1" >Metadata (optional):</label>
             <div id="upload_files" style="display: none;">
               <div class="custom-file mb-3" id="meta-data_upload">
-                <input type="file" class="custom-file-input" id="csvmetadata" name="csvmetadata">
-                <label class="custom-file-label" for="csvmetadata">Choose file</label>
+                <input multiple type="file" class="custom-file-input" id="csvmetadata0" name="csvmetadata">
+                <label class="custom-file-label" for="csvmetadata0">Choose file</label>
               </div>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Filename</th>
-                  </tr>
-                </thead>
-                <tbody id="filetabel">
-                </tbody>
-              </table>
             </div>
           </div>
         </div>

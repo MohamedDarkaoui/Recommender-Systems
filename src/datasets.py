@@ -47,8 +47,8 @@ def addDataset(request):
         interactions = pd.read_csv(interactionsCSV)
         columns = list(interactions.columns)
         
-        interactions.rename(columns={columns[0]: 'client_id', columns[1]: 'item_id', columns[2]: 'tmstamp'})
-        interactions.columns = ['client_id', 'item_id', 'tmstamp']
+        interactions.rename(columns={clientIdColumn: 'client_id', itemIdColumn: 'item_id', timestampColumn: 'tmstamp'})
+        interactions = interactions['client_id', 'item_id', 'tmstamp']
         interactions.insert(0, 'dataset_id', dataset.id)
         
         items = interactions[['item_id','dataset_id']].copy()
@@ -66,6 +66,8 @@ def addDataset(request):
         
         #insert metadata if exists
         if request.form.get('metadataCheck') == 'on': # and metadataCSV.content_type == 'text/csv':
+            print("ONNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN")
+            print(metadataCSV)
             for mdata in metadataCSV:
                 print("YOOOOO")
                 addMetadata(mdata,dataset)

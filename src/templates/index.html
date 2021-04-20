@@ -92,12 +92,6 @@
         {% block unique %}
         {% endblock %}
     </div>
-    <script>
-        $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
-    </script>
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" />
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js%22%3E"</script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js%22%3E"</script>
@@ -105,6 +99,12 @@
     <script type="text/javascript" src="{{ url_for('static',filename='algo_input_getter.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='datepicker.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='checked.js') }}"></script>
+     <script>
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
     </body>
 
 </html>
