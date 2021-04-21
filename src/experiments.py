@@ -290,17 +290,22 @@ def addItem(request, experiment_id, alg, maxItemId, algorithmName, itemCount, re
             recommendations = recommendations[0]
 
         recommendations = retargetingFilter(recommendations, client.history, retargeting)
+        print(recommendations)
         experimentDB.updateExperimentClient(clientName, experiment_id, client.history, recommendations)
         flash('Item added.')
 
 def retargetingFilter(recommendations, history, retargeting):
-    temp = recommendations
+    items = []
+    duplicates = []
     if not retargeting:
-        for item in temp:
+        for item in recommendations:
             if item in history:
-                temp.remove(item)
-        
-    if len(temp) > top_k:
-        return temp[:top_k]
+                duplicates.append(item)
+    
+    for item in duplicates:
+        recommendations.remove(item)
+    
+    if len(recommendations) > top_k:
+        return recommendations[:top_k]
 
-    return temp
+    return recommendations
