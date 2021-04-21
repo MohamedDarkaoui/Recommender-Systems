@@ -11,3 +11,10 @@ Flask-SQLAlchemy==2.5.1
 Flask-Login==0.5.0
 pandas==1.2.3
 python-csv==0.0.13
+
+numpy==1.20.1
+scikit-learn==0.24.1
+scipy==1.6.0
+typer==0.3.2
+implicit==0.4.4
+pickle==4.0
