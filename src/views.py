@@ -56,12 +56,18 @@ def profile():
         confirm = request.form.get('Confirm')
         username = request.form.get('Username')
         user = Users.query.filter_by(email=current_user.email).first()
-        if username != "":
-            user.username = username
-            db.session.commit()
-        if current != "" and new != "" and confirm != "":
+
+        if username:
+            if check_password_hash(user.password, current):
+                user.username = username
+                db.session.commit()
+                flash('Username succesfully changed.')
+
+        if current and new and confirm:
             if new == confirm:
                 if check_password_hash(user.password, current):
                     user.password = generate_password_hash(new, method='sha256')
                     db.session.commit()
+                    flash('Password succesfully changed.')
+                    
     return render_template("profile.html", currentUser = current_user)

@@ -94,6 +94,7 @@ CREATE TABLE experiment (
   name VARCHAR(50) NOT NULL,
   model_id INT NOT NULl REFERENCES model(id) ON DELETE CASCADE,
   date_time TIMESTAMP NOT NULL,
+  retargeting BOOL NOT NULL,
   PRIMARY KEY (usr_id,name)
 );
 

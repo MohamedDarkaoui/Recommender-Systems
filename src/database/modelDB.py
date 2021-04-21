@@ -7,11 +7,6 @@ class ModelDB:
 
     def add_model(self, ModelOBJ, matrix):
         cursor = self.connection.get_cursor()
-        #params = '{'
-        #for i in ModelOBJ.parameters:
-            #params += '{' + '"' + i[0] + ',' + i[1] + '"' + '},'
-        #params = params [:-1]
-        #params += '}'
 
         cursor.execute(
             'INSERT INTO Model (usr_id,name,algorithm,scenario_id,date_time,parameters,matrix) VALUES (%s,%s,%s,%s,%s,%s,%s)', 
@@ -132,6 +127,20 @@ class ModelDB:
             cursor.execute("""  SELECT id FROM model
                                 WHERE name = %s
                                 AND usr_id = %s;""", (name,usr_id,))
+
+            result = cursor.fetchone()
+            return result[0]
+        except:
+            self.connection.rollback()
+
+    def getParameters(self, id):
+        """
+            returns the parameters of a model with id = id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT parameters FROM model
+                                WHERE id = %s;""", (id,))
 
             result = cursor.fetchone()
             return result[0]

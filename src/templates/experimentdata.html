@@ -53,7 +53,7 @@
               Client with random items
             </label>
               <div class="form-group">
-                <input id="isRandomItems_readonly" name="amountItems" type="number" min="1" class="form-control" placeholder="Amount" readonly>
+                <input id="isRandomItems_readonly" name="amountItems" type="number" min="0" class="form-control" placeholder="Amount" readonly>
               </div>
             
           </div>
@@ -63,7 +63,7 @@
               All Clients with the following item in their history:
             </label>
               <div class="input-group mb-3">
-                <select id="copy_disabled" class="selectpicker" name = "fromItemId" data-live-search="true" title="Search Item:" data-dropup-auto="false">
+                <select id="copy_disabled" data-size="5" class="selectpicker" name = "fromItemId" data-live-search="true" title="Search Item:" data-dropup-auto="false">
                   {% for item in itemsFromScenario %}
                     <option>{{item}}</option>
                   {% endfor %}
@@ -76,7 +76,7 @@
               Copy Client from Experiment
             </label>
               <div class="input-group mb-3">
-                <select id="copy_disabled" name="copyClientName" class="selectpicker" data-live-search="true" title="Search Client:" data-dropup-auto="false">
+                <select id="copy_disabled" data-size="5" name="copyClientName" class="selectpicker" data-live-search="true" title="Search Client:" data-dropup-auto="false">
                   {% for client in clients %}
                     <option>{{client.name}}</option>
                   {% endfor %}
@@ -89,7 +89,7 @@
               Copy Client from Scenario
             </label>
               <div class="input-group mb-3">
-                <select class="selectpicker" name="copyClientId" id="search_reset" data-live-search="true" title="Search Client:" data-dropup-auto="false">
+                <select class="selectpicker" data-size="5" name="copyClientId" id="search_reset" data-live-search="true" title="Search Client:" data-dropup-auto="false">
                   {% for client in clientsFromScenario %}
                     <option>{{client}}</option>
                   {% endfor %}
@@ -113,7 +113,7 @@
         <h5 class="card-title">Client: {{client.name}}</h5>
         <div class="row">
           <div class="column">
-            <h5>Top-K Recommendations:</h5>
+            <h5>Top-20 Recommendations:</h5>
             <div style="height: 300px; overflow-y: scroll; width: 100%;">
               <table class="table">
                 <thead>
@@ -164,21 +164,15 @@
             </div>
             <br>
             <br>
-            <select class="selectpicker" data-live-search="true" title="Search Item" data-dropup-auto="false">
-              <option>mohamed</option>
-              <option>mounir</option>
-              <option>ferit</option>
-              <option>mohamed</option>
-              <option>mounir</option>
-              <option>ferit</option>
-              <option>mohamed</option>
-              <option>mounir</option>
-              <option>ferit</option>
-              <option>mohamed</option>
-              <option>mounir</option>
-              <option>ferit</option>
-            </select>
-            <button type="button" class="btn btn-primary class">Add Item</button>
+            <form method="POST">
+              <input type="hidden" name="which-form" value="addItem">
+              <select class="selectpicker" name="itemId" data-size="5" data-live-search="true" title="Search Item" data-dropup-auto="false">
+                {% for item in itemsFromScenario %}
+                  <option>{{item}}</option>
+                {% endfor %}
+              </select>
+            <button type="submit" name="clientName" value="{{client.name}}" class="btn btn-primary class">Add Item</button>
+            </form>
             <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal2">Show
               Metadata</button>
 
@@ -220,11 +214,11 @@
           </div>
         </div>
       </div>
-      <form method="POST">
-        <input type="hidden" name="which-form" value="deleteClient">
-        <button type="submit" name="clientName" value={{client.name}} class="btn btn-danger">X</button>
-      </form>
     </div>
+    <form method="POST">
+      <input type="hidden" name="which-form" value="deleteClient">
+      <button type="submit" name="clientName" style="height: 540px;" value={{client.name}} class="btn btn-danger">X</button>
+    </form>
   </div>
 <br>
 {% endfor %}

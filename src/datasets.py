@@ -17,7 +17,8 @@ def datasets():
 @views.route('/datasets/<dataset_name>')
 @login_required
 def data_samples(dataset_name):
-
+    if not datasetDB.datasetExists(dataset_name, current_user.id):
+        return redirect(url_for('views.datasets'))
     dataset_id = datasetDB.getDatasetID(current_user.id,dataset_name)
     client_count = clientDB.getCountClients(dataset_id)
     item_count = itemDB.getCountItems(dataset_id)
@@ -32,91 +33,127 @@ def addDataset(request):
     datasetName = request.form.get('datasetname')
     interactionsCSV = request.files['csvinteractions']
     metadataCSV = request.files.getlist('csvmetadata')
-    clientIdColumn = request.form.get('userIdColumn')        
+
+    clientIdColumn = request.form.get('userIdColumn')
     itemIdColumn = request.form.get('itemIdColumn')
     timestampColumn = request.form.get('timestampColumn')
 
+    datasetExists = datasetDB.datasetExists(datasetName, current_user.id)
 
-    if interactionsCSV.content_type == 'text/csv' and len(datasetName) > 0:
+    if interactionsCSV.content_type == 'text/csv' and not datasetExists and datasetName:
+        # create pandas objects
+        interactions = pd.read_csv(interactionsCSV)
+        columns = list(interactions.columns)
+        if not (clientIdColumn in columns and itemIdColumn in columns and timestampColumn in columns):
+            flash('Column doesn\'t exist in the csv file.')
+            return
+        
+        if clientIdColumn == itemIdColumn or itemIdColumn == timestampColumn or timestampColumn == clientIdColumn:
+            flash('There cannot be 2 columns witht the same name.')
+            return
+
         # insert dataset
         dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
         dataset = Dataset(name=datasetName, usr_id=str(current_user.id), date_time=dt_string, private=True)
         dataset = datasetDB.add_dataset(dataset)
 
-        # create pandas objects
-        interactions = pd.read_csv(interactionsCSV)
-        columns = list(interactions.columns)
-        
-        interactions.rename(columns={clientIdColumn: 'client_id', itemIdColumn: 'item_id', timestampColumn: 'tmstamp'})
-        interactions = interactions['client_id', 'item_id', 'tmstamp']
+        #MAKE STRUCTURE FOR INTERACTIONS
+        interactions = interactions.rename(columns={clientIdColumn: 'client_id', itemIdColumn: 'item_id', timestampColumn: 'tmstamp'})
+        interactions = interactions[['client_id','item_id','tmstamp']]
         interactions.insert(0, 'dataset_id', dataset.id)
-        
-        items = interactions[['item_id','dataset_id']].copy()
+
+        #MAKE STRUCTURE ITEMS
+        items = interactions[['item_id','dataset_id']]
         items.columns = ['id','dataset_id']
         items = items.drop_duplicates()
 
+        #MAKE STRUCTURE CLIENTS
         clients = interactions[['client_id','dataset_id']]
         clients.columns = ['id','dataset_id']
         clients = clients.drop_duplicates()
 
-        # insert items,clients and interactions
-        itemDB.add_item(items)
-        clientDB.add_client(clients)
-        interactionDB.add_interaction(interactions)
-        
+        try:
+            # insert items,clients and interactions
+            itemDB.add_item(items)
+            clientDB.add_client(clients)
+            interactionDB.add_interaction(interactions)
+        except:
+            datasetDB.deleteDataset(dataset.name, current_user.id)
+            flash('Unable to create the dataset.')
+            return
+            
         #insert metadata if exists
         if request.form.get('metadataCheck') == 'on': # and metadataCSV.content_type == 'text/csv':
-            print("ONNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN")
-            print(metadataCSV)
             for mdata in metadataCSV:
-                print("YOOOOO")
-                addMetadata(mdata,dataset)
+                if mdata.filename:
+                    if mdata.content_type != 'text/csv':
+                        flash('Please select a csv file for the metadata.')
+                        datasetDB.deleteDataset(dataset.name, current_user.id)
+                        return
+                    if not addMetadata(mdata, dataset):
+                        return
 
-        flash('Dataset succesfully made.')
-        
+        flash('Dataset succesfully added.')
+    
+    if not datasetName:
+        flash('Please enter a name for the dataset.')
+    elif datasetExists:
+        flash('There already exists a dataset with the same name.')
+    
+    if interactionsCSV.content_type != 'text/csv':
+        flash('Please select a csv file for the interactions.')
+
 def addMetadata(metadataCSV,dataset):
     metadata = pd.read_csv(metadataCSV)
     columns = list(metadata.columns)
     metadata.drop(columns[0], axis=1)
     metadataOBJ = Metadata(dataset.id)
 
-    #insert metadata
-    metadataOBJ = metadataDB.add_metadata(metadataOBJ)
+    try:
+        #insert metadata
+        metadataOBJ = metadataDB.add_metadata(metadataOBJ)
 
-    #add dataset and metadata id columns
-    metadata.insert(1, 'dataset_id', dataset.id)
-    metadata.insert(2, 'metadata_id', metadataOBJ.id)
+        #add dataset and metadata id columns
+        metadata.insert(1, 'dataset_id', dataset.id)
+        metadata.insert(2, 'metadata_id', metadataOBJ.id)
 
-    #rename de item id
-    metadata = metadata.rename(columns={columns[0]: 'item_id'})
+        #rename de item id
+        metadata = metadata.rename(columns={columns[0]: 'item_id'})
 
-    columns = list(metadata.columns)
-    #CREATE TEMPORARY DESC DATAFRAMES
-    tempDataframes = []
-    for column in columns[3:]:
-        tempDataframes.append(pd.DataFrame([metadata[column]]).transpose())
+        columns = list(metadata.columns)
+        #CREATE TEMPORARY DESC DATAFRAMES
+        tempDataframes = []
+        for column in columns[3:]:
+            tempDataframes.append(pd.DataFrame([metadata[column]]).transpose())
 
-    #REMOVE ALL DESC FROM METADATA
-    metadata = metadata.drop(columns[3:], axis=1)
-    
-    #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
-    for tempDataframe in tempDataframes:
-        #ADD DESC
-        descName = tempDataframe.columns[0]
-        metadata.insert(3, 'description', descName)
-        tempDataframe = tempDataframe.rename(columns={descName: 'data'})
+        #REMOVE ALL DESC FROM METADATA
+        metadata = metadata.drop(columns[3:], axis=1)
+        
+        #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
+        for tempDataframe in tempDataframes:
+            #ADD DESC
+            descName = tempDataframe.columns[0]
+            metadata.insert(3, 'description', descName)
+            tempDataframe = tempDataframe.rename(columns={descName: 'data'})
 
-        #ADD DATA
-        metadata = pd.concat([metadata, tempDataframe], axis=1)  
-        if metadata['data'].dtypes == 'object':
-            metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
-        #COPY INTO DATABASE
-        metadataElementDB.add_metadataElements(metadata)
+            #ADD DATA
+            metadata = pd.concat([metadata, tempDataframe], axis=1)  
+            if metadata['data'].dtypes == 'object':
+                metadata['data'] = metadata['data'].astype(str).str.replace("\r","")
+            #COPY INTO DATABASE
+            metadataElementDB.add_metadataElements(metadata)
 
-        #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
-        metadata = metadata.drop(metadata.columns[3:5], axis=1)
+            #REMOVE FROM CURRENT DESC AND DATA FORM METADATA DATAFRAME
+            metadata = metadata.drop(metadata.columns[3:5], axis=1)
+        return True
+
+    except:
+        datasetDB.deleteDataset(dataset.name, current_user.id)
+        flash('Unexpected error in the metadata, unable to create the dataset.')
+        return False
 
 def deleteDataset(request):
     name = request.form.get('datasetName')
-    datasetDB.deleteDataset(name,current_user.id)
+    if datasetDB.datasetExists(name, current_user.id):
+        datasetDB.deleteDataset(name,current_user.id)
     flash('Dataset succesfully deleted.')

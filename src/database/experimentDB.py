@@ -8,8 +8,8 @@ class ExperimentDB:
         cursor = self.connection.get_cursor()
         try:
             cursor.execute(
-                'INSERT INTO Experiment (usr_id,name,model_id,date_time) VALUES (%s,%s,%s,%s)', 
-                (ExpOBJ.usr_id,ExpOBJ.name, ExpOBJ.model_id, ExpOBJ.date_time,))
+                'INSERT INTO Experiment (usr_id,name,model_id,date_time,retargeting) VALUES (%s,%s,%s,%s,%s)', 
+                (ExpOBJ.usr_id,ExpOBJ.name, ExpOBJ.model_id, ExpOBJ.date_time, ExpOBJ.retargeting,))
 
             cursor.execute('SELECT LASTVAL()')
             ExpOBJ.id = cursor.fetchone()[0]
@@ -29,7 +29,7 @@ class ExperimentDB:
         cursor.execute('SELECT * FROM experiment WHERE usr_id = %s ORDER BY date_time', (id,))
 
         for row in cursor:
-            experiment = Experiment(id=row[0],usr_id=row[1],name=row[2],model_id=row[3],date_time=row[4])
+            experiment = Experiment(id=row[0],usr_id=row[1],name=row[2],model_id=row[3],date_time=row[4], retargeting=row[5])
             experiments.append(experiment)
 
         return experiments
@@ -56,11 +56,11 @@ class ExperimentDB:
         
         cursor = self.connection.get_cursor()
         try:
-            cursor.execute("""  SELECT I.id, I.usr_id, I.name, I.model_id, I.date_time FROM experiment I
+            cursor.execute("""  SELECT I.id, I.usr_id, I.name, I.model_id, I.date_time, I.retargeting FROM experiment I
                                 WHERE I.name = %s
                                 AND I.usr_id = %s""",(name,user_id,))
             result = cursor.fetchall()
-            return Experiment(id=result[0][0], usr_id=result[0][1], name=result[0][2] ,model_id=result[0][3], date_time=result[0][4])
+            return Experiment(id=result[0][0], usr_id=result[0][1], name=result[0][2] ,model_id=result[0][3], date_time=result[0][4], retargeting=result[0][5])
 
         except:
             raise Exception('Unable to select the experiment')
@@ -83,11 +83,13 @@ class ExperimentDB:
             get a list of experiment_client objects from a experiment with id = experiment_id
         """
         cursor = self.connection.get_cursor()
-        cursor.execute('SELECT * FROM experiment_client WHERE experiment_id = %s', (experiment_id,))
+        cursor.execute('SELECT * FROM experiment_client WHERE experiment_id = %s ORDER BY id;', (experiment_id,))
 
         clients = []
         for row in cursor:
-            client = Experiment_Client(id=row[0], name=row[1], experiment_id=row[2], recommendations=row[3], history=row[4])
+            history = row[4]
+            history.sort()
+            client = Experiment_Client(id=row[0], name=row[1], experiment_id=row[2], recommendations=row[3], history=history)
             clients.append(client)
 
         return clients

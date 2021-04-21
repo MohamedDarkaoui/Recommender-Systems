@@ -22,13 +22,14 @@ def registration():
             if check_password_hash(user.password, password):
                 login_user(user)
                 return redirect(url_for('views.home'))
+
     elif request.method == 'POST' and request.form.get('which-form') == "sign-up":
         email = request.form.get('email')
         password = request.form.get('password')
         passwordConf = request.form.get('passwordConf')
         name = request.form.get('name')
         username = request.form.get('username')
-        if password == passwordConf:
+        if password == passwordConf and email and password and name and username:
             user = Users.query.filter_by(email=email).first()
             if not user:
                 new_user = Users(email=email, password=generate_password_hash(password, method='sha256'), name = name, username = username)
