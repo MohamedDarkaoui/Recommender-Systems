@@ -4,6 +4,7 @@
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
+<h3>Metadata for item {{item_id}}</h3>
  <div class="modal-body">
     <div style="overflow-x: scroll; width: 100%;">
         <table class="table">
@@ -17,7 +18,13 @@
             {% for index, row in metadata.iterrows() %}
                   <tr>
                     <td>{{row["description"]}}</td>
-                    <td>{{row["data"]}}</td>
+                    
+                    {% if row["description"] != 'poster_path' %}
+                        <td>{{row["data"]}}</td>
+                    {% else %}
+                        <td> <img src= {{row["data"]}}> </td>
+                    {% endif %}    
+                    
                   </tr>
             {% endfor %}
         </tbody>
