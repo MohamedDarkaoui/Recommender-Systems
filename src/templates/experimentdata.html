@@ -120,6 +120,7 @@
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Recommendations</th>
+                    <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,6 +128,7 @@
                   <tr>
                     <th scope="row">{{i+1}}</th>
                     <td>{{client.recommendations[i]}}</td>
+                    <td><a class="btn btn-primary" href="/experiments/metadata/{{scenario_id}}/{{client.recommendations[i]}}" role="button">metadata</a></td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -143,6 +145,7 @@
                     <th scope="col">#</th>
                     <th scope="col">History</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,6 +153,7 @@
                   <tr>
                     <th scope="row">{{i+1}}</th>
                     <td>{{client.history[i]}}</td>
+                    <td><a class="btn btn-primary" href="/experiments/metadata/{{scenario_id}}/{{client.recommendations[i]}}" role="button">metadata</a></td> 
                     <td>
                       <form method="POST">
                         <input type="hidden" name="which-form" value="deleteItem">

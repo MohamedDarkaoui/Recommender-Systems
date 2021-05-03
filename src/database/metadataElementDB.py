@@ -30,3 +30,18 @@ class MetadataElementDB:
             return returnResult
         except:
             raise Exception('Unable to select 50 metadata elements')
+
+    def getItemMetadata(self, item_id, dataset_id):
+        """
+        returns a pandas object with 50 metadata elements (random order) that belong to a certain dataset given the dataset_id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT distinct I.description, I.data FROM metadata_element I
+                                WHERE I.dataset_id = %s
+                                AND I.item_id = %s;""",(dataset_id,item_id,))
+            result = cursor.fetchall()
+            returnResult = DataFrame (result, columns=['description','data'])
+            return returnResult
+        except:
+            raise Exception('Unable to select 50 metadata elements')

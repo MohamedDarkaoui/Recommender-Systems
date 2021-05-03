@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block title %} metadata for item {{item_id}} {% endblock %}
+{% block activate_experiments %}
+"nav__link active not-active"
+{% endblock %}
+{% block unique %}
+ <div class="modal-body">
+    <div style="overflow-x: scroll; width: 100%;">
+        <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">Description</th>
+            <th scope="col">Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in metadata.iterrows() %}
+                  <tr>
+                    <td>{{row["description"]}}</td>
+                    <td>{{row["data"]}}</td>
+                  </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

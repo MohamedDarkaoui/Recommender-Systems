@@ -30,8 +30,10 @@ def experimentdata(experiment_name):
 
     experiment = experimentDB.getExperimentByName(experiment_name, current_user.id)
     scenario_id = modelDB.getScenarioIDFromModel(experiment.model_id)
+    dataset_id = scenarioDB.getDatasetID(scenario_id)
     clientsFromScenario = scenarioDB.getAllClients(scenario_id)
     itemsFromScenario = scenarioDB.getAllItems(scenario_id)
+
 
     if request.method == 'POST':
         if request.form.get('which-form') == 'addClient':
@@ -56,9 +58,20 @@ def experimentdata(experiment_name):
             alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id), parameters)
             maxItemId = scenarioDB.getMaxItem(scenario_id)
             addItem(request, experiment.id, alg, maxItemId, algorithmName, len(itemsFromScenario), experiment.retargeting)
+        
+        elif request.form.get('which-form') == 'showItemMetadata':
+            return itemMetadata(request,dataset_id)
 
     clients = experimentDB.getExperimentClients(experiment.id)
-    return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario)
+    return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id)
+
+@views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
+@login_required
+def itemMetadata(scenario_id,item_id):
+    dataset_id = scenarioDB.getDatasetID(scenario_id)
+    metadataPD = metadataElementDB.getItemMetadata(item_id, dataset_id)
+    print (metadataPD)
+    return render_template("metadata_experiment.html", metadata=metadataPD, item_id=item_id)
     
 def makeExperiment(request):
     experimentName = request.form.get('experimentName')
@@ -295,6 +308,7 @@ def addItem(request, experiment_id, alg, maxItemId, algorithmName, itemCount, re
         flash('Item added.')
 
 def retargetingFilter(recommendations, history, retargeting):
+
     items = []
     duplicates = []
     if not retargeting:

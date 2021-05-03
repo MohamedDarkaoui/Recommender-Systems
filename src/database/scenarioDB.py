@@ -180,10 +180,6 @@ class ScenarioDB:
             raise Exception('Unable to select the preprocessing steps')
     
     def getScenarioName(self,id):
-        """
-        returns the name of the scenario with the given ID that belongs to the current user
-        """
-
         cursor = self.connection.get_cursor()
         try:
             cursor.execute("""  SELECT D.name FROM scenario D
@@ -192,6 +188,17 @@ class ScenarioDB:
             return result[0][0]
         except:
             raise Exception('Unable to select the name of the scenario')
+    
+    def getDatasetID(self,id):
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT S.dataset_id FROM scenario S
+                                WHERE S.id =  %s """,(id,))
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            raise Exception('Unable to select the dataset_id')
+
 
     def getScenarioDataframe(self, scenarioID):
         """
