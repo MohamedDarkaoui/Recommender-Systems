@@ -1,125 +1,136 @@
 {% extends "index.html" %}
 {% block title %} Scenarios {% endblock %}
-{% block activate_scenarios %} 
+{% block activate_scenarios %}
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
 
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                <span>{{ message }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
-    {% endif %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
+  <span>{{ message }}</span>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+{% endif %}
 {% endwith %}
 
 
-<button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Make Scenario</button>
+<button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Make
+  Scenario</button>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Scenario</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="which-form" value="makeScenario">
-            <div class="modal-body">
-              <input name="scenarioName" class="form-control form-control-lg" type="text" placeholder="Name">
-              <br>
-              <div class="input-group mb-3">
-                <select name = "datasetSelect" class="custom-select" id="inputGroupSelect01">
-                  <option disabled selected>Choose Dataset</option>
-                  {% for dataset in datasets %}
-                    <option value={{dataset[1]}}>{{dataset[1]}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <br>
-              <b>Timestamp:</b><br>
-              Start date: <input name = startDate type="text" id="from" name="from"> 
-              End date: <input name = endDate type="text" id="to" name = "to">
-              <br>
-              <b>Users activity:</b><br>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label>MIN</label>
-                    <input name = "user_min" type="number" min="0" class="form-control">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label>MAX</label>
-                    <input name = "user_max" type="number" min="0" class="form-control">
-                  </div>
-                </div>
-              
-              </div>
-              <br>
-              <b>Items activity:</b><br>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label>MIN</label>
-                    <input name = "item_min" type="number" min="0" class="form-control">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label>MAX</label>
-                    <input name = "item_max" type="number" min="0" class="form-control">
-                  </div>
-                </div>
-              
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Make</button>
-            </div>
-        </form>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Scenario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="which-form" value="makeScenario">
+        <div class="modal-body">
+          <div class="input-group mb-3 col-md-6">
+            <input id="checkbox1" type="checkbox" class="form-check-input" onclick="copy_scen()">
+            <label class="form-check-label">Copy scenario</label>
+          </div>
+          <input name="scenarioName" class="form-control form-control-lg" type="text" placeholder="Name">
+          <br>
+          <div class="input-group mb-3" id="datasetSelect">
+            <select name="datasetSelect" class="custom-select">
+              <option disabled selected>Choose Dataset</option>
+              {% for dataset in datasets %}
+              <option value={{dataset[1]}}>{{dataset[1]}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="input-group mb-3" id="scenarioselect" style="display:none;">
+            <select name="" class="custom-select">
+              <option disabled selected>Choose Scenario</option>
+              <option value="">test</option>
+            </select>
+          </div>
+          <br>
+          <b>Timestamp:</b><br>
+          Start date: <input name=startDate type="text" id="from" name="from">
+          End date: <input name=endDate type="text" id="to" name="to">
+          <br>
+          <b>Users activity:</b><br>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>MIN</label>
+                <input name="user_min" type="number" min="0" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>MAX</label>
+                <input name="user_max" type="number" min="0" class="form-control">
+              </div>
+            </div>
+
+          </div>
+          <br>
+          <b>Items activity:</b><br>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>MIN</label>
+                <input name="item_min" type="number" min="0" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>MAX</label>
+                <input name="item_max" type="number" min="0" class="form-control">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Make</button>
+        </div>
+      </form>
     </div>
   </div>
-  <br><br>
-  <h3>My Scenarios:</h3> 
-  <br>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Dataset</th>
-        <th scope="col">Date</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for scenario in scenarios %}
-        <tr>
-          <th scope="row">{{scenario[0]}}</th>
-          <td>{{scenario[1]}}</td>
-          <td>{{scenario[2]}}</td>
-          <td>{{scenario[3]}}</td>
-          <td><a class="btn btn-primary" href="scenarios/{{scenario[1]}}" role="button">More</a></td>
-          <td>
-            <form method="POST">
-              <input type="hidden" name="which-form" value="deleteScenario">
-            <button type="submit" name="scenarioName" value={{scenario[1]}} class="btn btn-danger">X</button>      
-            </form>
-          </td>    
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+</div>
+<br><br>
+<h3>My Scenarios:</h3>
+<br>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Dataset</th>
+      <th scope="col">Date</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for scenario in scenarios %}
+    <tr>
+      <th scope="row">{{scenario[0]}}</th>
+      <td>{{scenario[1]}}</td>
+      <td>{{scenario[2]}}</td>
+      <td>{{scenario[3]}}</td>
+      <td><a class="btn btn-primary" href="scenarios/{{scenario[1]}}" role="button">More</a></td>
+      <td>
+        <form method="POST">
+          <input type="hidden" name="which-form" value="deleteScenario">
+          <button type="submit" name="scenarioName" value={{scenario[1]}} class="btn btn-danger">X</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

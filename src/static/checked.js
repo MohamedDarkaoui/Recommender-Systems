@@ -38,27 +38,6 @@ function checker() {
         document.getElementById("delete_but").style.display = "none";
     }
  }
-
-//  var counter = 0
-// function add_upload(){
-//     counter = counter + 1
-//     var tmp = document.getElementById("csvmetadata")
-//     var tabel = document.getElementById("filetabel")
-//     if(tmp.value.length > 0){
-//         var rij = document.createElement("tr")
-//         rij.innerHTML = "<th>" + counter + "</th>" + "<th>" + tmp.value.split("\\").pop() + "</th>"
-//         tabel.appendChild(rij)
-//     }
-    
-// }
-
-// function delete_upload(){
-//     var tabel = document.getElementById("filetabel")
-//     if(tabel.rows.length > 0){
-//         counter = counter - 1  
-//         tabel.deleteRow(-1)
-//     }  
-// }
 var counter = -1;
 function add_upload(){
     counter = counter + 1;
@@ -78,5 +57,19 @@ function delete_upload(){
     var list = document.getElementById("upload_files")
     if(list.childNodes.length > 3){
         list.removeChild(list.lastChild)
+    }
+}
+
+function copy_scen(){
+    var name = document.getElementsByName("scenarioName");
+    if (document.getElementById("checkbox1").checked){
+        name[0].placeholder = "Name Copy Scenario"
+        document.getElementById("datasetSelect").style.display = "none";
+        document.getElementById("scenarioselect").style.display = "";
+    }
+    else{
+        name[0].placeholder = "Name";
+        document.getElementById("datasetSelect").style.display = "";
+        document.getElementById("scenarioselect").style.display = "none";
     }
 }
