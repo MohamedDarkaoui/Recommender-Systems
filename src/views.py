@@ -45,12 +45,27 @@ def home():
 @views.route('/users')
 @login_required
 def users():
-    return render_template("users.html")
+    users = Users.query.all()
+    return render_template("users.html", users = enumerate(users))
 
-@views.route('users/user')
+@views.route('users/<username>')
 @login_required
-def user():
-    return render_template("userset.html")
+def user(username):
+    user = Users.query.filter_by(username=username).first()
+    if not user:
+        return redirect(url_for('views.users'))
+    #get public datasets
+    datasets = datasetDB.getDatasetsFromUser(user)
+    for i in range(len(datasets)):
+        client_count = clientDB.getCountClients(datasets[i].id)
+        item_count = itemDB.getCountItems(datasets[i].id)
+        interaction_count = interactionDB.getCountInteractions(datasets[i].id)
+        datasets[i] = (datasets[i], interaction_count, item_count, client_count)
+
+    #get private experiments
+    experiments = experimentDB.getExperimentsFromUser(user)
+
+    return render_template("user.html", datasets=enumerate(datasets), experiments=enumerate(experiments))
 
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required

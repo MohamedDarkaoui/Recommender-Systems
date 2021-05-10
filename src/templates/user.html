@@ -1,0 +1,99 @@
+{% extends "index.html" %}
+{% block title %} User {% endblock %}
+{% block activate_users%}
+"nav__link active not-active"
+{% endblock %}
+{% block unique %}
+<h3>Datasets:</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row, dataset in datasets %}
+        {% set temp = "'hidden_rowdatasets" + (row+1)|string + "'" %}
+        {% set temp2 = "hidden_rowdatasets" + (row+1)|string %}
+        <tr onclick="showHideRow({{temp}});">
+            <th scope="row">{{row+1}}</th>
+            <td>{{dataset[0].name}}</td>
+            <td>
+                <button type="button" class="btn btn-outline-primary">Follow</button>
+            </td>
+        </tr>
+        <tr id={{temp2}} style="display: none;">
+            <td colspan=3>
+                <div class="card card-body">
+                    <b>More Info:</b>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Number of Interactions
+                          <span class="badge badge-primary badge-pill">{{dataset[1]}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Number of Items
+                          <span class="badge badge-primary badge-pill">{{dataset[2]}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Number of Clients
+                          <span class="badge badge-primary badge-pill">{{dataset[3]}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h3>Experiments:</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row, experiment in experiments %}
+        {% set temp = "'hidden_rowexperiments" + (row+1)|string + "'" %}
+        {% set temp2 = "hidden_rowexperiments" + (row+1)|string %}
+        <tr onclick="showHideRow({{temp}});">
+            <th scope="row">{{row+1}}</th>
+            <td>{{experiment.name}}</td>
+            <td>
+                <button type="submit" class="btn btn-outline-primary">Follow</button>
+            </td>
+        </tr>
+        <tr id={{temp2}} style="display: none;">
+            <td colspan=3>
+                <div class="card card-body">
+                    info
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<style>
+    table td:nth-child(1) {
+        width: 33%;
+    }
+
+    table td:nth-child(2) {
+        width: 33%;
+    }
+
+    table td:nth-child(3) {
+        width: 33%;
+    }
+</style>
+<script type="text/javascript">
+    function showHideRow(row) {
+        $("#" + row).toggle();
+    }
+</script>
+{% endblock %}

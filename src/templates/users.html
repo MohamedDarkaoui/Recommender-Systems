@@ -13,46 +13,18 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Name</th>
+      <th scope="col">Username</th>
       <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
+    {% for user in users %}
     <tr>
-      <th scope="row">1</th>
-      <td>tom</td>
-      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+      <th scope="row">{{user[0]+1}}</th>
+      <td>{{user[1].username}}</td>
+      <td><a class="btn btn-primary" href="/users/{{user[1].username}}" role="button">More</a></td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>khalil</td>
-      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>mohamed</td>
-      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td>mounir</td>
-      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
-    </tr>
-    <tr>
-      <th scope="row">5</th>
-      <td>ferit</td>
-      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
-    </tr>
-    <tr>
-      <th scope="row">6</th>
-      <td>tim</td>
-      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
-    </tr>
-    <tr>
-      <th scope="row">7</th>
-      <td>tam</td>
-      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
-    </tr>
+    {% endfor %}
   </tbody>
 </table>
 {% endblock %}
