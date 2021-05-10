@@ -99,3 +99,19 @@ class DatasetDB:
             return True
         except:
             self.connection.rollback()
+    
+    def datasetExistsById(self, id):
+        """
+            returns true if there exists a dataset with id=id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM dataset
+                                WHERE id = %s;""", (id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()

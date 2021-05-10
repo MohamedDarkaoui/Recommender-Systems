@@ -109,6 +109,13 @@ CREATE TABLE experiment_client (
   PRIMARY KEY (experiment_id, name)
 );
 
+CREATE TABLE dataset_follows (
+    usr_id INT NOT NULL REFERENCES users(id),
+    dataset_id INT NOT NULL REFERENCES dataset(id),
+    tmstamp TIMESTAMP NOT NULL,
+    PRIMARY KEY (usr_id, dataset_id)
+)
+
 
 
 -- FUNCTIONS AND TRIGGERS

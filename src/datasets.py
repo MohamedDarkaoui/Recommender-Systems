@@ -11,15 +11,21 @@ def datasets():
             
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
-        datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private)
+        datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private, datasets[i].id)
     return render_template("datasets.html", datasets = datasets)
 
-@views.route('/datasets/<dataset_name>')
+@views.route('/datasets/<dataset_id>')
 @login_required
-def data_samples(dataset_name):
-    if not datasetDB.datasetExists(dataset_name, current_user.id):
+def data_samples(dataset_id):
+    try:
+        dataset_id=int(dataset_id)
+    except:
         return redirect(url_for('views.datasets'))
-    dataset_id = datasetDB.getDatasetID(current_user.id,dataset_name)
+
+    if not datasetDB.datasetExistsById(dataset_id):
+        return redirect(url_for('views.datasets'))
+    
+    dataset_name = datasetDB.getDatasetName(dataset_id)
     client_count = clientDB.getCountClients(dataset_id)
     item_count = itemDB.getCountItems(dataset_id)
     interaction_count = interactionDB.getCountInteractions(dataset_id)
@@ -27,7 +33,8 @@ def data_samples(dataset_name):
     metadata_sample = metadataElementDB.getMetadataSample(dataset_id)
  
     return render_template("dataset_sample.html",dataset_name=dataset_name, 
-    client_count=client_count,item_count=item_count,interaction_count=interaction_count,interaction_sample=interaction_sample,metadata_sample=metadata_sample)
+    client_count=client_count,item_count=item_count,interaction_count=interaction_count,
+    interaction_sample=interaction_sample,metadata_sample=metadata_sample)
 
 def addDataset(request):
     datasetName = request.form.get('datasetname')
