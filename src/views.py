@@ -47,6 +47,11 @@ def home():
 def users():
     return render_template("users.html")
 
+@views.route('users/user')
+@login_required
+def user():
+    return render_template("userset.html")
+
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():

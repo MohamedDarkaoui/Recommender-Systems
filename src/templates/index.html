@@ -99,7 +99,8 @@
     <script type="text/javascript" src="{{ url_for('static',filename='algo_input_getter.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='datepicker.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='checked.js') }}"></script>
-     <script>
+    <script type="text/javascript" src="{{ url_for('static',filename='filter.js') }}"></script> 
+    <script>
         $(".custom-file-input").on("change", function () {
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);

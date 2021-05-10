@@ -1,12 +1,58 @@
 {% extends "index.html" %}
 {% block title %} Users {% endblock %}
-{% block activate_users%} 
+{% block activate_users%}
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
 <form class="form-inline">
-    <input class="form-control mr-sm-2 search_width" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-primary class" type="submit">Search</button>
+  <input class="form-control mr-sm-2 search_width" id="input" onkeyup="filter()" type="text" placeholder="Search">
 </form>
-
+<br><br>
+<h3>Users:</h3>
+<table class="table" id="table_user">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>tom</td>
+      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>khalil</td>
+      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>mohamed</td>
+      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+    </tr>
+    <tr>
+      <th scope="row">4</th>
+      <td>mounir</td>
+      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+    </tr>
+    <tr>
+      <th scope="row">5</th>
+      <td>ferit</td>
+      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+    </tr>
+    <tr>
+      <th scope="row">6</th>
+      <td>tim</td>
+      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+    </tr>
+    <tr>
+      <th scope="row">7</th>
+      <td>tam</td>
+      <td><a class="btn btn-primary" href="{{url_for('views.user')}}" role="button">More</a></td>
+    </tr>
+  </tbody>
+</table>
 {% endblock %}
