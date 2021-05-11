@@ -8,16 +8,20 @@ def datasets():
             addDataset(request)
         elif request.form.get('which-form') == "deleteDataset":
             deleteDataset(request)
-            
+        elif request.form.get('which-form') == "makePublic":
+            changeDatasetPublic(request)
+        elif request.form.get('which-form') == "makePrivate":
+            changeDatasetPrivate(request)
+
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
-        datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private, datasets[i].id, datasets[i].usr_id)
+        datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private, datasets[i].id, datasets[i].usr_id, True)
 
     followedDatasets = datasetDB.getFollowedDatasets(current_user)
     for i in range(len(followedDatasets)):
         owner = Users.query.filter_by(id=followedDatasets[i].usr_id).first()
         followedDatasets[i] = (i+len(datasets)+1, followedDatasets[i].name + ' (' + owner.username + ')', followedDatasets[i].date_time,
-            followedDatasets[i].private, followedDatasets[i].id, followedDatasets[i].usr_id)
+            followedDatasets[i].private, followedDatasets[i].id, followedDatasets[i].usr_id, False)
 
     return render_template("datasets.html", datasets = datasets+followedDatasets)
 
@@ -28,9 +32,14 @@ def data_samples(dataset_id):
         dataset_id=int(dataset_id)
     except:
         return redirect(url_for('views.datasets'))
-
+    
     if not datasetDB.datasetExistsById(dataset_id):
         return redirect(url_for('views.datasets'))
+    
+    dataset = datasetDB.getDatasetById(dataset_id)
+    if dataset.usr_id != current_user.id and not datasetDB.followsDataset(current_user, dataset_id):
+        return redirect(url_for('views.datasets'))
+
     
     dataset_name = datasetDB.getDatasetName(dataset_id)
     client_count = clientDB.getCountClients(dataset_id)
@@ -179,4 +188,15 @@ def deleteDataset(request):
         datasetDB.deleteDataset(name,current_user.id)
         flash('Dataset succesfully deleted.')
 
+def changeDatasetPublic(request):
+    dataset_id = request.form.get('dataset_id')
+    if datasetDB.datasetExistsById(dataset_id):
+        if datasetDB.isPrivate(dataset_id):
+            datasetDB.changePrivacy(current_user, dataset_id, False)
+
+def changeDatasetPrivate(request):
+    dataset_id = request.form.get('dataset_id')
+    if datasetDB.datasetExistsById(dataset_id):
+        if not datasetDB.isPrivate(dataset_id):
+            datasetDB.changePrivacy(current_user, dataset_id, True)
     

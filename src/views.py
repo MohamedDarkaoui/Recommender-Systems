@@ -70,21 +70,25 @@ def user(username):
 
     #get public datasets
     datasets = datasetDB.getDatasetsFromUser(user)
+    publicDatasets = []
     for i in range(len(datasets)):
-        client_count = clientDB.getCountClients(datasets[i].id)
-        item_count = itemDB.getCountItems(datasets[i].id)
-        interaction_count = interactionDB.getCountInteractions(datasets[i].id)
-        follows = datasetDB.followsDataset(current_user, datasets[i].id)
-        datasets[i] = (datasets[i], interaction_count, item_count, client_count, follows)
+        if not datasets[i].private:
+            client_count = clientDB.getCountClients(datasets[i].id)
+            item_count = itemDB.getCountItems(datasets[i].id)
+            interaction_count = interactionDB.getCountInteractions(datasets[i].id)
+            follows = datasetDB.followsDataset(current_user, datasets[i].id)
+            publicDatasets.append((datasets[i], interaction_count, item_count, client_count, follows))
 
     #get private experiments
     experiments = experimentDB.getExperimentsFromUser(user)
+    publicExperiments = []
     for i in range(len(experiments)):
-        follows = experimentDB.followsExperiment(current_user, experiments[i].id)
-        experiments[i] = (experiments[i], follows)
+        if not experiments[i].private:
+            follows = experimentDB.followsExperiment(current_user, experiments[i].id)
+            publicExperiments.append((experiments[i], follows))
 
 
-    return render_template("user.html", datasets=enumerate(datasets), experiments=enumerate(experiments), followOption = current_user.username != username, username=username)
+    return render_template("user.html", datasets=enumerate(publicDatasets), experiments=enumerate(publicExperiments), followOption = current_user.username != username, username=username)
 
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -112,20 +116,24 @@ def profile():
     return render_template("profile.html", currentUser = current_user)
 
 def followDataset(dataset_id):
-    if not datasetDB.followsDataset(current_user, dataset_id):
-        dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
-        datasetDB.followDataset(current_user, dataset_id, dt_string)
+    if datasetDB.datasetExistsById(dataset_id):
+        if not datasetDB.followsDataset(current_user, dataset_id) and not datasetDB.isPrivate(dataset_id):
+            dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+            datasetDB.followDataset(current_user, dataset_id, dt_string)
 
 def unfollowDataset(dataset_id):
-    if datasetDB.followsDataset(current_user, dataset_id):
-        datasetDB.unfollowDataset(current_user, dataset_id)
+    if datasetDB.datasetExistsById(dataset_id):
+        if datasetDB.followsDataset(current_user, dataset_id):
+            datasetDB.unfollowDataset(current_user, dataset_id)
 
 
 def followExperiment(experiment_id):
-    if not experimentDB.followsExperiment(current_user, experiment_id):
-        dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
-        experimentDB.followExperiment(current_user, experiment_id, dt_string)
+    if experimentDB.experimentExistsById(experiment_id):
+        if not experimentDB.followsExperiment(current_user, experiment_id) and not experimentDB.isPrivate(experiment_id):
+            dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+            experimentDB.followExperiment(current_user, experiment_id, dt_string)
 
 def unfollowExperiment(experiment_id):
-    if experimentDB.followsExperiment(current_user, experiment_id):
-        experimentDB.unfollowExperiment(current_user, experiment_id)
+    if experimentDB.experimentExistsById(experiment_id):
+        if experimentDB.followsExperiment(current_user, experiment_id):
+            experimentDB.unfollowExperiment(current_user, experiment_id)

@@ -65,6 +65,7 @@
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Model</th>
+        <th scope="col">Status</th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
@@ -75,6 +76,24 @@
           <th scope="row">{{experiment[0]}}</th>
           <td>{{experiment[1].name}}</td>
           <td>{{experiment[1].model_id}}</td>
+          
+          {% if experiment[2] %}
+            {% if experiment[1].private %}
+            <form method="POST">
+            <input type="hidden" name="which-form" value="makePublic">
+            <td><button type="submit" name='experiment_id' value={{experiment[1].id}} class="btn btn-primary">PRIVATE</button></td>
+            </form>
+            {% else %}
+            <form method="POST">
+            <input type="hidden" name="which-form" value="makePrivate">
+            <td><button type="submit" name='experiment_id' value={{experiment[1].id}} class="btn btn-primary">PUBLIC</button></td>
+            </form>
+            {% endif %}
+          {% else %}
+          <td><button type="button" class="btn btn-primary">SHARED</button></td>
+          {% endif %}
+
+
           <td><a class="btn btn-primary" href="/experiments/{{experiment[1].id}}" role="button">More</a></td>  
           <form method="POST">
           <input type="hidden" name="which-form" value="deleteExperiment">

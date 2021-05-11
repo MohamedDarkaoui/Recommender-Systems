@@ -294,6 +294,21 @@ class ExperimentDB:
 
         except:
             self.connection.rollback()
+    
+    def unfollowAllExperiment(self, experiment_id):
+        """
+        deletes al follows to the given experiment
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            #REMOVE all FOLLOWS
+            cursor.execute("""  DELETE FROM experiment_follows
+                                WHERE experiment_id = %s;""", (experiment_id,))
+
+            self.connection.commit()
+
+        except:
+            self.connection.rollback()
 
     def getFollowedExperiments(self, usr):
         """
@@ -308,3 +323,32 @@ class ExperimentDB:
             experiments.append(experiment)
 
         return experiments
+
+    def isPrivate(self, experiment_id):
+        """
+            returns true if the experiment with the given id is private else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT private FROM experiment
+                                WHERE id = %s;""", (experiment_id,))
+
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            self.connection.rollback()
+    
+    def changePrivacy(self, experiment_id, private):
+        """
+            changes the privacy of the given experiment
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  UPDATE experiment 
+                                SET private = %s 
+                                WHERE id = %s;""", (private, experiment_id,))
+            self.connection.commit()
+            self.unfollowAllExperiment(experiment_id)
+        except:
+            
+            self.connection.rollback()

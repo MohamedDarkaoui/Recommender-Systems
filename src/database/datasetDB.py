@@ -176,6 +176,27 @@ class DatasetDB:
 
         except:
             self.connection.rollback()
+    
+    def unfollowAllDataset(self, usr, dataset_id):
+        """
+        deletes al follows to the given dataset
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            #REMOVE all FOLLOWS
+            cursor.execute("""  DELETE FROM dataset_follows
+                                WHERE dataset_id = %s;""", (dataset_id,))
+
+            #REMOVE SCENARIOS WITH DATASET_ID = DATASET_ID
+            cursor.execute("""  DELETE FROM scenario
+                                WHERE dataset_id = %s
+                                AND usr_id != %s;""", (dataset_id, usr.id))
+
+
+            self.connection.commit()
+
+        except:
+            self.connection.rollback()
 
     def getFollowedDatasets(self, usr):
         """
@@ -206,3 +227,33 @@ class DatasetDB:
             return True
         except:
             self.connection.rollback()
+    
+    def isPrivate(self, dataset_id):
+        """
+            returns true if the dataset with the given id is private else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT private FROM dataset
+                                WHERE id = %s;""", (dataset_id,))
+
+            result = cursor.fetchall()
+            return result[0][0]
+        except:
+            self.connection.rollback()
+    
+    def changePrivacy(self, usr, dataset_id, private):
+        """
+            changes the privacy of the given dataset
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  UPDATE dataset 
+                                SET private = %s 
+                                WHERE id = %s;""", (private, dataset_id,))
+            self.connection.commit()
+            self.unfollowAllDataset(usr, dataset_id)
+        except:
+            
+            self.connection.rollback()
+            

@@ -12,31 +12,43 @@ def experiments():
     if request.method == 'POST':
         if request.form.get('which-form') == "createExperiment":
             makeExperiment(request)
-
         elif request.form.get('which-form') == 'deleteExperiment':
             deleteExperiment(request)
+        elif request.form.get('which-form') == 'makePublic':
+            changeExperimentPublic(request)
+        elif request.form.get('which-form') == 'makePrivate':
+            changeExperimentPrivate(request)
 
     models = modelDB.getModelsFromUser(current_user)
     experiments = experimentDB.getExperimentsFromUser(current_user)
     for i in range(len(experiments)):
         experiments[i].model_id = modelDB.getModelName(experiments[i].model_id)
-        experiments[i] = (i+1, experiments[i])
+        experiments[i] = (i+1, experiments[i], True)
 
     followedExperiments = experimentDB.getFollowedExperiments(current_user)
     for i in range(len(followedExperiments)):
         owner = Users.query.filter_by(id=followedExperiments[i].usr_id).first()
         followedExperiments[i].model_id = modelDB.getModelName(followedExperiments[i].model_id) + ' (' + owner.username + ')'
-        followedExperiments[i] = (i+len(followedExperiments)+1, followedExperiments[i])
+        followedExperiments[i] = (i+len(followedExperiments)+1, followedExperiments[i], False)
 
     return render_template("experiments.html", models = models, experiments = experiments + followedExperiments)
 
 @views.route('/experiments/<experiment_id>', methods=['GET', 'POST'])
 @login_required
 def experimentdata(experiment_id):
+    try:
+        experiment_id=int(experiment_id)
+    except:
+        return redirect(url_for('views.experiments'))
+
     if not experimentDB.experimentExistsById(experiment_id):
         return redirect(url_for('views.experiments'))
 
     experiment = experimentDB.getExperimentById(experiment_id)
+    if experiment.usr_id != current_user.id and not experimentDB.followsExperiment(current_user, experiment_id):
+        return redirect(url_for('views.experiments'))
+
+    
     scenario_id = modelDB.getScenarioIDFromModel(experiment.model_id)
     dataset_id = scenarioDB.getDatasetID(scenario_id)
     clientsFromScenario = scenarioDB.getAllClients(scenario_id)
@@ -93,7 +105,7 @@ def makeExperiment(request):
         modelId = int(modelDB.getModelId(modelName, current_user.id))
         dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
         #add experiment
-        newExperiment = Experiment(current_user.id, experimentName, modelId, dt_string, retargeting, False)
+        newExperiment = Experiment(current_user.id, experimentName, modelId, dt_string, retargeting, True)
         newExperiment = experimentDB.add_experiment(newExperiment)
         flash("Experiment succesfully made.")
         return
@@ -336,3 +348,15 @@ def retargetingFilter(recommendations, history, retargeting):
         return recommendations[:top_k]
 
     return recommendations
+
+def changeExperimentPublic(request):
+    experiment_id = request.form.get('experiment_id')
+    if experimentDB.experimentExistsById(experiment_id):
+        if experimentDB.isPrivate(experiment_id):
+            experimentDB.changePrivacy(experiment_id, False)
+
+def changeExperimentPrivate(request):
+    experiment_id = request.form.get('experiment_id')
+    if experimentDB.experimentExistsById(experiment_id):
+        if not experimentDB.isPrivate(experiment_id):
+            experimentDB.changePrivacy(experiment_id, True)
