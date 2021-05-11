@@ -97,6 +97,7 @@ CREATE TABLE experiment (
   model_id INT NOT NULl REFERENCES model(id) ON DELETE CASCADE,
   date_time TIMESTAMP NOT NULL,
   retargeting BOOL NOT NULL,
+  private BOOL NOT NULL,
   PRIMARY KEY (usr_id,name)
 );
 
@@ -111,10 +112,17 @@ CREATE TABLE experiment_client (
 
 CREATE TABLE dataset_follows (
     usr_id INT NOT NULL REFERENCES users(id),
-    dataset_id INT NOT NULL REFERENCES dataset(id),
+    dataset_id INT NOT NULL REFERENCES dataset(id) ON DELETE CASCADE,
     tmstamp TIMESTAMP NOT NULL,
     PRIMARY KEY (usr_id, dataset_id)
-)
+);
+
+CREATE TABLE experiment_follows (
+    usr_id INT NOT NULL REFERENCES users(id),
+    experiment_id INT NOT NULL REFERENCES experiment(id),
+    tmstamp TIMESTAMP NOT NULL,
+    PRIMARY KEY (usr_id, experiment_id)
+);
 
 
 

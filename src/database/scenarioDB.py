@@ -337,7 +337,6 @@ class ScenarioDB:
             self.connection.commit()
         except:
             self.connection.rollback()
-            print("fout")
 
 
     def scenarioExists(self, name, usr_id):

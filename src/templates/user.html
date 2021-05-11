@@ -4,7 +4,11 @@
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
-<h3>Datasets:</h3>
+<h3><b>User: {{username}}</b></h3>
+<br>
+<br>
+
+<h3>Public Datasets:</h3>
 <table class="table table-hover">
     <thead>
         <tr>
@@ -21,7 +25,19 @@
             <th scope="row">{{row+1}}</th>
             <td>{{dataset[0].name}}</td>
             <td>
-                <button type="button" class="btn btn-outline-primary">Follow</button>
+                {% if followOption %}
+                {% if dataset[4] %}
+                    <form method="POST">
+                        <input type="hidden" name="which-form" value="unfollowDataset">
+                        <button type="submit" onclick="follow(unfollow);" id="unfollow" name=dataset_id value={{dataset[0].id}} class="btn btn-outline-primary">Unfollow</button>
+                    </form>
+                {% else %}
+                    <form method="POST">
+                        <input type="hidden" name="which-form" value="followDataset">
+                        <button type="submit" onclick="follow(follow);" id="follow" name=dataset_id value={{dataset[0].id}} class="btn btn-outline-primary">Follow</button>
+                    </form>
+                {% endif %}
+                {% endif %}
             </td>
         </tr>
         <tr id={{temp2}} style="display: none;">
@@ -48,7 +64,7 @@
         {% endfor %}
     </tbody>
 </table>
-<h3>Experiments:</h3>
+<h3>Public Experiments:</h3>
 <table class="table table-hover">
     <thead>
         <tr>
@@ -63,10 +79,24 @@
         {% set temp2 = "hidden_rowexperiments" + (row+1)|string %}
         <tr onclick="showHideRow({{temp}});">
             <th scope="row">{{row+1}}</th>
-            <td>{{experiment.name}}</td>
+            <td>{{experiment[0].name}}</td>
+            
             <td>
-                <button type="submit" class="btn btn-outline-primary">Follow</button>
+                {% if followOption %}
+                {% if experiment[1] %}
+                    <form method="POST">
+                        <input type="hidden" name="which-form" value="unfollowExperiment">
+                        <button type="submit" name=experiment_id value={{experiment[0].id}} class="btn btn-outline-primary">Unfollow</button>
+                    </form>
+                {% else %}
+                    <form method="POST">
+                        <input type="hidden" name="which-form" value="followExperiment">
+                        <button type="submit" name=experiment_id value={{experiment[0].id}} class="btn btn-outline-primary">Follow</button>
+                    </form>
+                {% endif %}
+                {% endif %}
             </td>
+            
         </tr>
         <tr id={{temp2}} style="display: none;">
             <td colspan=3>
@@ -94,6 +124,16 @@
 <script type="text/javascript">
     function showHideRow(row) {
         $("#" + row).toggle();
+    }
+    function follow(row) {
+        if (row == "follow") {
+            var tmp = document.getElementById(row)
+            tmp.style.backgroundColor = "white"
+        }
+        else if (row == "unfollow") {
+            var tmp = document.getElementById(row)
+            tmp.style.backgroundColor = "blue"
+        }
     }
 </script>
 {% endblock %}

@@ -107,6 +107,8 @@
       <td><a class="btn btn-primary" href="/datasets/{{dataset[4]}}" role="button">More</a></td>
       <form method="POST">
         <input type="hidden" name="which-form" value="deleteDataset">
+        <input type="hidden" name="dataset_id" value={{dataset[4]}}>
+        <input type="hidden" name="owner" value={{dataset[5]}}>
         <td><button type="submit" name="datasetName" value={{dataset[1]}} class="btn btn-danger">X</button></td>
       </form>
     </tr>

@@ -48,24 +48,43 @@ def users():
     users = Users.query.all()
     return render_template("users.html", users = enumerate(users))
 
-@views.route('users/<username>')
+@views.route('users/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
     user = Users.query.filter_by(username=username).first()
     if not user:
         return redirect(url_for('views.users'))
+    
+    if request.method == 'POST':
+        if request.form.get('which-form') == 'followDataset':
+            followDataset(request.form.get('dataset_id'))
+
+        elif request.form.get('which-form') == 'unfollowDataset':
+            unfollowDataset(request.form.get('dataset_id'))
+
+        elif request.form.get('which-form') == 'followExperiment':
+            followExperiment(request.form.get('experiment_id'))
+
+        elif request.form.get('which-form') == 'unfollowExperiment':
+            unfollowExperiment(request.form.get('experiment_id'))
+
     #get public datasets
     datasets = datasetDB.getDatasetsFromUser(user)
     for i in range(len(datasets)):
         client_count = clientDB.getCountClients(datasets[i].id)
         item_count = itemDB.getCountItems(datasets[i].id)
         interaction_count = interactionDB.getCountInteractions(datasets[i].id)
-        datasets[i] = (datasets[i], interaction_count, item_count, client_count)
+        follows = datasetDB.followsDataset(current_user, datasets[i].id)
+        datasets[i] = (datasets[i], interaction_count, item_count, client_count, follows)
 
     #get private experiments
     experiments = experimentDB.getExperimentsFromUser(user)
+    for i in range(len(experiments)):
+        follows = experimentDB.followsExperiment(current_user, experiments[i].id)
+        experiments[i] = (experiments[i], follows)
 
-    return render_template("user.html", datasets=enumerate(datasets), experiments=enumerate(experiments))
+
+    return render_template("user.html", datasets=enumerate(datasets), experiments=enumerate(experiments), followOption = current_user.username != username, username=username)
 
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -91,3 +110,22 @@ def profile():
                     flash('Password succesfully changed.')
                     
     return render_template("profile.html", currentUser = current_user)
+
+def followDataset(dataset_id):
+    if not datasetDB.followsDataset(current_user, dataset_id):
+        dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+        datasetDB.followDataset(current_user, dataset_id, dt_string)
+
+def unfollowDataset(dataset_id):
+    if datasetDB.followsDataset(current_user, dataset_id):
+        datasetDB.unfollowDataset(current_user, dataset_id)
+
+
+def followExperiment(experiment_id):
+    if not experimentDB.followsExperiment(current_user, experiment_id):
+        dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
+        experimentDB.followExperiment(current_user, experiment_id, dt_string)
+
+def unfollowExperiment(experiment_id):
+    if experimentDB.followsExperiment(current_user, experiment_id):
+        experimentDB.unfollowExperiment(current_user, experiment_id)

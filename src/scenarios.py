@@ -14,14 +14,25 @@ def scenarios():
 
     scenarios = scenarioDB.getScenariosFromUser(current_user)
     for i in range(len(scenarios)):
-        datasetName = datasetDB.getDatasetName(scenarios[i].dataset_id)
-        scenarios[i] = (i+1, scenarios[i].name, datasetName, scenarios[i].date_time)
+        dataset = datasetDB.getDatasetById(scenarios[i].dataset_id)
+        if dataset.usr_id != current_user.id:
+            dataset.name += ' (' + Users.query.filter_by(id=dataset.usr_id).first().username + ')'
+
+        scenarios[i] = (i+1, scenarios[i].name, dataset.name, scenarios[i].date_time)
 
     
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
-        datasets[i] = (i+1, datasets[i].name)
-    return render_template("scenarios.html", datasets = datasets,scenarios=scenarios)
+        datasets[i] = (i+1, datasets[i].name, datasets[i].id)
+
+
+    followedDatasets = datasetDB.getFollowedDatasets(current_user)
+    for i in range(len(followedDatasets)):
+        owner = Users.query.filter_by(id=followedDatasets[i].usr_id).first()
+        followedDatasets[i] = (i+len(datasets)+1, followedDatasets[i].name + ' (' + owner.username + ')', followedDatasets[i].id)
+
+
+    return render_template("scenarios.html", datasets=datasets+followedDatasets, scenarios=scenarios)
 
 @views.route('/scenarios/<scenario_name>')
 @login_required
@@ -41,7 +52,7 @@ def scen_samples(scenario_name):
     
 def makeScenario(request):
     scenarioName = request.form.get('scenarioName')
-    datasetName = request.form.get('datasetSelect')
+    datasetID = int(request.form.get('datasetSelect'))
     time1 = request.form.get('startDate')
     time2 = request.form.get('endDate')
     umin = request.form.get('user_min')
@@ -49,11 +60,10 @@ def makeScenario(request):
     imin = request.form.get('item_min')
     imax = request.form.get('item_max')
 
-    existsDataset = datasetDB.datasetExists(datasetName, current_user.id)
+    existsDataset = datasetDB.datasetExists(datasetID)
     existsScenario = scenarioDB.scenarioExists(scenarioName, current_user.id)
 
     if existsDataset and scenarioName and not existsScenario:
-        datasetID = datasetDB.getDatasetID(current_user.id, datasetName)
         #SET DEFAULT FILTERS IF NOT GIVEN
         if len(time1) == 0:
             time1 = '-infinity' 
@@ -82,13 +92,14 @@ def makeScenario(request):
         flash('Please enter a name for the scenario.')
     if existsScenario:
         flash('There already exists a scenario with the given name.')
-    if not datasetName:
+    if not datasetID:
         flash('Please select a dataset.')
     elif not existsDataset:
         flash('The selected dataset doesnt exist anymore')
 
 def deleteScenario(request):
     scenarioName = request.form.get('scenarioName')
+    print(scenarioName)
     if scenarioDB.scenarioExists(scenarioName, current_user.id):
         scenario_id = scenarioDB.getScenarioID(scenarioName, current_user.id)
         scenarioDB.deleteScenario(scenario_id)

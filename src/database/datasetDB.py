@@ -39,6 +39,17 @@ class DatasetDB:
             datasets.append(dataset)
 
         return datasets
+    
+    def getDatasetById(self, dataset_id):
+        """
+        returns the dataset with the given id
+        """
+        cursor = self.connection.get_cursor()
+        cursor.execute('SELECT * FROM dataset WHERE id = %s', (dataset_id,))
+
+        for row in cursor:
+            dataset = Dataset(id=row[0],name=row[1],usr_id=row[2],date_time=row[3],private=row[4])
+            return dataset
 
     def getDatasetID(self,usr_id,name):
         """
@@ -81,7 +92,6 @@ class DatasetDB:
             self.connection.commit()
         except:
             self.connection.rollback()
-            print("fout")
 
     def datasetExists(self, name, usr_id):
         """
@@ -108,6 +118,87 @@ class DatasetDB:
         try:
             cursor.execute("""  SELECT id FROM dataset
                                 WHERE id = %s;""", (id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
+    
+    def followsDataset(self, usr, dataset_id):
+        """
+            returns true if the user follows the dataset with the given id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT * FROM dataset_follows
+                                WHERE usr_id = %s
+                                AND dataset_id = %s;""", (usr.id, dataset_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
+    
+    def followDataset(self, usr, dataset_id, date_time):
+        """
+        adds a dataset follow
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute(
+                'INSERT INTO dataset_follows (usr_id, dataset_id, tmstamp) VALUES (%s,%s,%s)', 
+                (usr.id, dataset_id, date_time),)
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            raise Exception('Unable to save the follow.')
+    
+    def unfollowDataset(self, usr, dataset_id):
+        """
+        deletes a dataset follow
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            #REMOVE FOLLOW
+            cursor.execute("""  DELETE FROM dataset_follows
+                                WHERE usr_id = %s
+                                AND dataset_id = %s;""", (usr.id, dataset_id,))
+
+            #REMOVE SCENARIOS WITH DATASET_ID = DATASET_ID
+            cursor.execute("""  DELETE FROM scenario
+                                WHERE dataset_id = %s
+                                AND usr_id = %s;""", (dataset_id,usr.id))
+            self.connection.commit()
+
+        except:
+            self.connection.rollback()
+
+    def getFollowedDatasets(self, usr):
+        """
+            returns all datasets that the user follows
+        """
+        datasets = []
+        cursor = self.connection.get_cursor()
+        cursor.execute('SELECT dataset_id FROM dataset_follows WHERE usr_id = %s', (usr.id,))
+
+        for row in cursor:
+            dataset = self.getDatasetById(row[0])
+            datasets.append(dataset)
+
+        return datasets
+
+    def datasetExists(self, dataset_id):
+        """
+            returns true if there exists a dataset with name = name and usr_id = usr_id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM dataset
+                                WHERE id = %s;""", (dataset_id,))
 
             result = cursor.fetchall()
             if len(result) == 0:

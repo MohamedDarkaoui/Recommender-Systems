@@ -41,13 +41,14 @@ class Model:
         self.parameters = parameters
 
 class Experiment:
-    def __init__(self,usr_id,name,model_id,date_time,retargeting,id=None):
+    def __init__(self,usr_id,name,model_id,date_time,retargeting,private,id=None):
         self.id = id
         self.usr_id = usr_id
         self.name = name
         self.model_id = model_id
         self.date_time = date_time
         self.retargeting = retargeting
+        self.private = private
 
 class Experiment_Client:
     def __init__(self, name, experiment_id, recommendations, history, id = None):

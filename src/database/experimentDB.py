@@ -8,8 +8,8 @@ class ExperimentDB:
         cursor = self.connection.get_cursor()
         try:
             cursor.execute(
-                'INSERT INTO Experiment (usr_id,name,model_id,date_time,retargeting) VALUES (%s,%s,%s,%s,%s)', 
-                (ExpOBJ.usr_id,ExpOBJ.name, ExpOBJ.model_id, ExpOBJ.date_time, ExpOBJ.retargeting,))
+                'INSERT INTO Experiment (usr_id,name,model_id,date_time,retargeting,private) VALUES (%s,%s,%s,%s,%s,%s)', 
+                (ExpOBJ.usr_id,ExpOBJ.name, ExpOBJ.model_id, ExpOBJ.date_time, ExpOBJ.retargeting,ExpOBJ.private,))
 
             cursor.execute('SELECT LASTVAL()')
             ExpOBJ.id = cursor.fetchone()[0]
@@ -29,7 +29,7 @@ class ExperimentDB:
         cursor.execute('SELECT * FROM experiment WHERE usr_id = %s ORDER BY date_time', (id,))
 
         for row in cursor:
-            experiment = Experiment(id=row[0],usr_id=row[1],name=row[2],model_id=row[3],date_time=row[4], retargeting=row[5])
+            experiment = Experiment(id=row[0],usr_id=row[1],name=row[2],model_id=row[3],date_time=row[4], retargeting=row[5], private=row[6])
             experiments.append(experiment)
 
         return experiments
@@ -56,14 +56,33 @@ class ExperimentDB:
         
         cursor = self.connection.get_cursor()
         try:
-            cursor.execute("""  SELECT I.id, I.usr_id, I.name, I.model_id, I.date_time, I.retargeting FROM experiment I
+            cursor.execute("""  SELECT I.id, I.usr_id, I.name, I.model_id, I.date_time, I.retargeting, I.private FROM experiment I
                                 WHERE I.name = %s
                                 AND I.usr_id = %s""",(name,user_id,))
             result = cursor.fetchall()
-            return Experiment(id=result[0][0], usr_id=result[0][1], name=result[0][2] ,model_id=result[0][3], date_time=result[0][4], retargeting=result[0][5])
+            return Experiment(id=result[0][0], usr_id=result[0][1], name=result[0][2] ,model_id=result[0][3], date_time=result[0][4],
+                retargeting=result[0][5], private=result[0][6])
 
         except:
             raise Exception('Unable to select the experiment')
+        
+    def getExperimentById(self, experiment_id):
+        """
+        returns an experiment object
+        """
+        
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT I.id, I.usr_id, I.name, I.model_id, I.date_time, I.retargeting, I.private FROM experiment I
+                                WHERE I.id = %s""",(experiment_id,))
+            result = cursor.fetchall()
+            return Experiment(id=result[0][0], usr_id=result[0][1], name=result[0][2] ,model_id=result[0][3], date_time=result[0][4],
+                retargeting=result[0][5], private=result[0][6])
+
+        except:
+            raise Exception('Unable to select the experiment')
+
+    
 
     def addExperimentClient(self, client):
         """
@@ -106,7 +125,18 @@ class ExperimentDB:
             self.connection.commit()
         except:
             self.connection.rollback()
-            print("fout")
+    
+    def deleteExperimentById(self, experiment_id):
+        """
+        deletes experiment with the given id
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  DELETE FROM experiment 
+                                WHERE id = %s;""", (experiment_id,))
+            self.connection.commit()
+        except:
+            self.connection.rollback()
 
 
     def deleteExperimentClient(self,name, experiment_id):
@@ -167,6 +197,22 @@ class ExperimentDB:
             return True
         except:
             self.connection.rollback()
+    
+    def experimentExistsById(self, experiment_id):
+        """
+            returns true if there exists a experiment with id = experiment_id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM experiment
+                                WHERE id = %s;""", (experiment_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
 
     def experimentClientExists(self, name, experiment_id):
         """
@@ -184,3 +230,81 @@ class ExperimentDB:
             return True
         except:
             self.connection.rollback()
+
+    def followsExperiment(self, usr, experiment_id):
+        """
+            returns true if the user follows the experiment with the given id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT * FROM experiment_follows
+                                WHERE usr_id = %s
+                                AND experiment_id = %s;""", (usr.id, experiment_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
+
+    
+    def followsExperiment(self, usr, experiment_id):
+        """
+            returns true if the user follows the experiment with the given id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT * FROM experiment_follows
+                                WHERE usr_id = %s
+                                AND experiment_id = %s;""", (usr.id, experiment_id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
+    
+    def followExperiment(self, usr, experiment_id, date_time):
+        """
+        adds a experiment follow
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute(
+                'INSERT INTO experiment_follows (usr_id, experiment_id, tmstamp) VALUES (%s,%s,%s)', 
+                (usr.id, experiment_id, date_time),)
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            raise Exception('Unable to save the follow.')
+    
+    def unfollowExperiment(self, usr, experiment_id):
+        """
+        deletes a experiment follow
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  DELETE FROM experiment_follows
+                                WHERE usr_id = %s
+                                AND experiment_id = %s;""", (usr.id, experiment_id,))
+
+            self.connection.commit()
+
+        except:
+            self.connection.rollback()
+
+    def getFollowedExperiments(self, usr):
+        """
+            returns all experiments that the user follows
+        """
+        experiments = []
+        cursor = self.connection.get_cursor()
+        cursor.execute('SELECT experiment_id FROM experiment_follows WHERE usr_id = %s', (usr.id,))
+
+        for row in cursor:
+            experiment = self.getExperimentById(row[0])
+            experiments.append(experiment)
+
+        return experiments

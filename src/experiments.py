@@ -1,3 +1,5 @@
+
+from flask.globals import current_app
 from database.scenarioDB import ScenarioDB
 from views import *
 
@@ -20,15 +22,21 @@ def experiments():
         experiments[i].model_id = modelDB.getModelName(experiments[i].model_id)
         experiments[i] = (i+1, experiments[i])
 
-    return render_template("experiments.html", models = models, experiments = experiments)
+    followedExperiments = experimentDB.getFollowedExperiments(current_user)
+    for i in range(len(followedExperiments)):
+        owner = Users.query.filter_by(id=followedExperiments[i].usr_id).first()
+        followedExperiments[i].model_id = modelDB.getModelName(followedExperiments[i].model_id) + ' (' + owner.username + ')'
+        followedExperiments[i] = (i+len(followedExperiments)+1, followedExperiments[i])
 
-@views.route('/experiments/<experiment_name>', methods=['GET', 'POST'])
+    return render_template("experiments.html", models = models, experiments = experiments + followedExperiments)
+
+@views.route('/experiments/<experiment_id>', methods=['GET', 'POST'])
 @login_required
-def experimentdata(experiment_name):
-    if not experimentDB.experimentExists(experiment_name, current_user.id):
+def experimentdata(experiment_id):
+    if not experimentDB.experimentExistsById(experiment_id):
         return redirect(url_for('views.experiments'))
 
-    experiment = experimentDB.getExperimentByName(experiment_name, current_user.id)
+    experiment = experimentDB.getExperimentById(experiment_id)
     scenario_id = modelDB.getScenarioIDFromModel(experiment.model_id)
     dataset_id = scenarioDB.getDatasetID(scenario_id)
     clientsFromScenario = scenarioDB.getAllClients(scenario_id)
@@ -70,7 +78,6 @@ def experimentdata(experiment_name):
 def itemMetadata(scenario_id,item_id):
     dataset_id = scenarioDB.getDatasetID(scenario_id)
     metadataPD = metadataElementDB.getItemMetadata(item_id, dataset_id)
-    print (metadataPD)
     return render_template("metadata_experiment.html", metadata=metadataPD, item_id=item_id)
     
 def makeExperiment(request):
@@ -86,7 +93,7 @@ def makeExperiment(request):
         modelId = int(modelDB.getModelId(modelName, current_user.id))
         dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
         #add experiment
-        newExperiment = Experiment(current_user.id, experimentName, modelId, dt_string, retargeting)
+        newExperiment = Experiment(current_user.id, experimentName, modelId, dt_string, retargeting, False)
         newExperiment = experimentDB.add_experiment(newExperiment)
         flash("Experiment succesfully made.")
         return
@@ -101,10 +108,17 @@ def makeExperiment(request):
         flash('Selected model doesnt exists anymore.')
 
 def deleteExperiment(request):
-    experimentName = request.form.get("experimentName")
-    if experimentDB.experimentExists(experimentName, current_user.id):
-        experimentDB.deleteExperiment(experimentName,current_user.id)
-    flash('Experiment succesfully deleted.')
+    experiment_id = int(request.form.get("experiment_id"))
+    usr_id = int(request.form.get("experiment_id"))
+
+    if usr_id != current_user.id:
+        experimentDB.unfollowExperiment(current_user, experiment_id)
+        flash('Experiment succesfully unfollowed.')
+        return
+
+    if experimentDB.experimentExistsById(experiment_id):
+        experimentDB.deleteExperimentById(experiment_id)
+        flash('Experiment succesfully deleted.')
 
 def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId, parameters, itemCount):
     clients = experimentDB.getExperimentClients(experiment.id)
@@ -303,7 +317,6 @@ def addItem(request, experiment_id, alg, maxItemId, algorithmName, itemCount, re
             recommendations = recommendations[0]
 
         recommendations = retargetingFilter(recommendations, client.history, retargeting)
-        print(recommendations)
         experimentDB.updateExperimentClient(clientName, experiment_id, client.history, recommendations)
         flash('Item added.')
 

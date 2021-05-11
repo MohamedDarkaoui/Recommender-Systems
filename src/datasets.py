@@ -11,8 +11,15 @@ def datasets():
             
     datasets = datasetDB.getDatasetsFromUser(current_user)
     for i in range(len(datasets)):
-        datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private, datasets[i].id)
-    return render_template("datasets.html", datasets = datasets)
+        datasets[i] = (i+1, datasets[i].name, datasets[i].date_time, datasets[i].private, datasets[i].id, datasets[i].usr_id)
+
+    followedDatasets = datasetDB.getFollowedDatasets(current_user)
+    for i in range(len(followedDatasets)):
+        owner = Users.query.filter_by(id=followedDatasets[i].usr_id).first()
+        followedDatasets[i] = (i+len(datasets)+1, followedDatasets[i].name + ' (' + owner.username + ')', followedDatasets[i].date_time,
+            followedDatasets[i].private, followedDatasets[i].id, followedDatasets[i].usr_id)
+
+    return render_template("datasets.html", datasets = datasets+followedDatasets)
 
 @views.route('/datasets/<dataset_id>')
 @login_required
@@ -161,6 +168,15 @@ def addMetadata(metadataCSV,dataset):
 
 def deleteDataset(request):
     name = request.form.get('datasetName')
+    owner = int(request.form.get('owner'))
+    dataset_id = request.form.get('dataset_id')
+    if owner != current_user.id:
+        datasetDB.unfollowDataset(current_user, dataset_id)
+        flash('Dataset succesfully unfollowed.')
+        return
+
     if datasetDB.datasetExists(name, current_user.id):
         datasetDB.deleteDataset(name,current_user.id)
-    flash('Dataset succesfully deleted.')
+        flash('Dataset succesfully deleted.')
+
+    
