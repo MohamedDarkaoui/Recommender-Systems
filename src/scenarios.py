@@ -60,7 +60,7 @@ def makeScenario(request):
     imin = request.form.get('item_min')
     imax = request.form.get('item_max')
 
-    existsDataset = datasetDB.datasetExists(datasetID)
+    existsDataset = datasetDB.datasetExistsById(datasetID)
     existsScenario = scenarioDB.scenarioExists(scenarioName, current_user.id)
 
     if existsDataset and scenarioName and not existsScenario:

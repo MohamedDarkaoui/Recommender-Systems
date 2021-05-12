@@ -211,22 +211,6 @@ class DatasetDB:
             datasets.append(dataset)
 
         return datasets
-
-    def datasetExists(self, dataset_id):
-        """
-            returns true if there exists a dataset with name = name and usr_id = usr_id else false
-        """
-        cursor = self.connection.get_cursor()
-        try:
-            cursor.execute("""  SELECT id FROM dataset
-                                WHERE id = %s;""", (dataset_id,))
-
-            result = cursor.fetchall()
-            if len(result) == 0:
-                return False
-            return True
-        except:
-            self.connection.rollback()
     
     def isPrivate(self, dataset_id):
         """
