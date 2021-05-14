@@ -73,3 +73,13 @@ function copy_scen(){
         document.getElementById("scenarioselect").style.display = "none";
     }
 }
+
+function show_cross_val(){
+    var check = document.getElementById("check_cross");
+    if (check.checked){
+        document.getElementById("generalization").style.display = "";
+    }
+    else{
+        document.getElementById("generalization").style.display = "none";
+    }
+}

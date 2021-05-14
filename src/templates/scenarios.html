@@ -92,6 +92,37 @@
               </div>
             </div>
           </div>
+          <div class="input-group mb-3 col-md-6">
+            <input id="check_cross" type="checkbox" class="form-check-input" onclick="show_cross_val()">
+            <label class="form-check-label">Cross validation</label>
+          </div>
+
+          <div id="generalization" style="display: none;">
+            <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="test" checked>
+            <label class="form-check-label" for="test">
+              Weak generalization
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="test">
+            <label class="form-check-label" for="test">
+              Strong generalization
+            </label>
+          </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Test users">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="perc history">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
