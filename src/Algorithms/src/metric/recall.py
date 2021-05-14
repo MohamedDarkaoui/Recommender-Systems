@@ -1,7 +1,7 @@
 import scipy.sparse
 import numpy as np
 
-import src.util as util
+import Algorithms.src.util as util
 
 
 def recall_k(predictions: np.ndarray, Xval_out: scipy.sparse.csr_matrix, top_k):

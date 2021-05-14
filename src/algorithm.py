@@ -8,6 +8,11 @@ import typer
 import Algorithms.src.util as util
 from Algorithms.src.algorithm.algorithm import Algorithm
 
+from Algorithms.src.cross_validation.strong_generalization import strong_generalization
+from Algorithms.src.cross_validation.weak_generalization import weak_generalization
+from Algorithms.src.metric.recall import recall_k
+
+
 PathArgument = typer.Argument(
     ...,
     exists=True,
@@ -66,7 +71,6 @@ def iknn(dataframe, k: int = 200, normalize: bool = False):
 
 def trainAlgorithm(algorithmName, paramdict, dataframe):
     """ returns a dictionnary with all data """
-    # voor de path gan we misschien de pandas.to_csv() functie gebruiken om dat in onze directory op te slaan
     if algorithmName == 'wmf':
         return wmf(dataframe, float(paramdict['alpha']), int(paramdict['factors']), 
             float(paramdict['regularization']), int(paramdict['iterations']))

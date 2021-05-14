@@ -97,7 +97,7 @@ class ScenarioDB:
 
     def getScenarioID(self, name, user_id):
         """
-        returns the id of the scenario given the name of the scenario and the dataset id
+        returns the id of the scenario given the name of the scenario and the user id
         """
         
         cursor = self.connection.get_cursor()
@@ -355,4 +355,6 @@ class ScenarioDB:
             return True
         except:
             self.connection.rollback()
+    
+
     

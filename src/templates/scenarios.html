@@ -93,19 +93,19 @@
             </div>
           </div>
           <div class="input-group mb-3 col-md-6">
-            <input id="check_cross" type="checkbox" class="form-check-input" onclick="show_cross_val()">
+            <input id="check_cross" type="checkbox" class="form-check-input" onclick="show_cross_val()" name = "cross_validation">
             <label class="form-check-label">Cross validation</label>
           </div>
 
           <div id="generalization" style="display: none;">
             <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="test" checked>
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="test" checked value ='w_generalization'> 
             <label class="form-check-label" for="test">
               Weak generalization
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="test">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="test" value = 's_generalization'>
             <label class="form-check-label" for="test">
               Strong generalization
             </label>
@@ -113,12 +113,12 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Test users">
+                  <input type="number" min='0' class="form-control" value = '1000' placeholder="Test users" name = 'testUsers'>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="perc history">
+                  <input type="number" step = '0.01' value='0.8' class="form-control" placeholder="perc history" name = 'percHistory'>
                 </div>
               </div>
             </div>

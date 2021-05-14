@@ -3,13 +3,34 @@ from views import *
 @views.route('/scenarios',methods=['GET', 'POST'])
 @login_required
 def scenarios():
-    if request.method == 'POST':       
+    if request.method == 'POST':     
         if request.form.get('which-form') == 'makeScenario':
-            makeScenario(request)
+            #try:
+                df = makeScenario(request)
+                df.drop('tmstamp', inplace=True, axis=1)
+                df.drop('scenario_id', inplace=True, axis=1)
+                clients = df['client_id']
+                clients = clients.drop_duplicates()
+                if request.form.get('cross_validation') == 'on':
+                    X = util.df_to_csr(df)
+                    if request.form.get('flexRadioDefault') == 's_generalization':
+                        test_users = int(request.form.get('testUsers'))
+                        perc_history = float(request.form.get('percHistory'))
+                        train, val_in, val_out = strong_generalization(X,test_users,perc_history,clients)
+
+                        print('train', train)
+                        print('val_in', val_in)
+                        print('val_out', val_out)
+                    elif request.form.get('flexRadioDefault') == 'w_generalization':
+                        pass
+            
+            #except:
+             #   flash('Something went wrong, please fill in all the mandatory fields, deleteng scenario')
+              #  deleteScenario(request)
         elif request.form.get('which-form') == 'deleteScenario':
             deleteScenario(request)
             flash('Scenario succesfully deleted.')
-            
+        
             
 
     scenarios = scenarioDB.getScenariosFromUser(current_user)
@@ -62,7 +83,7 @@ def makeScenario(request):
 
     existsDataset = datasetDB.datasetExistsById(datasetID)
     existsScenario = scenarioDB.scenarioExists(scenarioName, current_user.id)
-
+    scen_elem = None
     if existsDataset and scenarioName and not existsScenario:
         #SET DEFAULT FILTERS IF NOT GIVEN
         if len(time1) == 0:
@@ -96,6 +117,8 @@ def makeScenario(request):
         flash('Please select a dataset.')
     elif not existsDataset:
         flash('The selected dataset doesnt exist anymore')
+
+    return scen_elem
 
 def deleteScenario(request):
     scenarioName = request.form.get('scenarioName')
