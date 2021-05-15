@@ -17,7 +17,7 @@ class Metadata:
         self.dataset_id=dataset_id
 
 class Scenario:
-    def __init__(self, name, usr_id, date_time, dataset_id,item_min,item_max,client_min,client_max,time_min,time_max, id=None):
+    def __init__(self, name, usr_id, date_time, dataset_id,item_min,item_max,client_min,client_max,time_min,time_max,cross_validation=False, id=None):
         self.name = name
         self.usr_id = usr_id
         self.date_time = date_time
@@ -29,6 +29,7 @@ class Scenario:
         self.client_max=client_max
         self.time_min=time_min
         self.time_max=time_max
+        self.cross_validation = cross_validation
 
 class Model:
     def __init__(self,usr_id,name,algorithm,scenario_id,date_time,parameters,id=None):
@@ -51,10 +52,11 @@ class Experiment:
         self.private = private
 
 class Experiment_Client:
-    def __init__(self, name, experiment_id, recommendations, history, id = None):
+    def __init__(self, name, experiment_id, recommendations, history, expectations=None, id = None,):
         self.id = id
         self.name = name
         self.experiment_id = experiment_id
         self.history = history
         self.recommendations = recommendations
+        self.expectations = expectations
         

@@ -36,53 +36,69 @@ def return_run(alg: Algorithm, X: scipy.sparse.csr_matrix):
     alg.fit(X)
     return alg
 
-def wmf(dataframe, alpha: float = 40.0, factors: int = 20, regularization: float = 0.01, iterations: int = 20):
+def wmf(dataframe, alpha: float = 40.0, factors: int = 20, regularization: float = 0.01, iterations: int = 20, train=None):
     """ Train and predict with the WMF model. """
     from Algorithms.src.algorithm.wmf import WMF
 
     alg = WMF(alpha=alpha, num_factors=factors, regularization=regularization, iterations=iterations)
-    X = util.df_to_csr(dataframe)
+    X = None
+    if train == None:
+        X = util.df_to_csr(dataframe)
+    else:
+        X = train
     return return_run(alg, X)
 
-def ease(dataframe, l2: float = 200.0):
+def ease(dataframe, l2: float = 200.0, train=None):
     """ Train and predict with the EASE model. """
     from Algorithms.src.algorithm.ease import EASE
     
 
     alg = EASE(l2=l2)
-    X = util.df_to_csr(dataframe)
+    X = None
+    if train == None:
+        X = util.df_to_csr(dataframe)
+    else:
+        X = train
     return return_run(alg, X)
 
-def pop(dataframe):
+def pop(dataframe, train=None):
     """ Train and predict the popularity model. """
     from Algorithms.src.algorithm.popularity import Popularity
 
     alg = Popularity()
-    X = util.df_to_csr(dataframe)
+    X = None
+    if train == None:
+        X = util.df_to_csr(dataframe)
+    else:
+        X = train
     return return_run(alg, X)
 
-def iknn(dataframe, k: int = 200, normalize: bool = False):
+def iknn(dataframe, k: int = 200, normalize: bool = False, train=None):
     """ Train and predict with the Item KNN model. """
     from Algorithms.src.algorithm.item_knn import ItemKNN
 
     alg = ItemKNN(k=k, normalize=normalize)
-    X = util.df_to_csr(dataframe)
+    X = None
+    if train == None:
+        X = util.df_to_csr(dataframe)
+    else:
+        X = train
     return return_run(alg, X)
 
-def trainAlgorithm(algorithmName, paramdict, dataframe):
+def trainAlgorithm(algorithmName, paramdict, dataframe, train=None):
     """ returns a dictionnary with all data """
     if algorithmName == 'wmf':
         return wmf(dataframe, float(paramdict['alpha']), int(paramdict['factors']), 
-            float(paramdict['regularization']), int(paramdict['iterations']))
+            float(paramdict['regularization']), int(paramdict['iterations']),train)
 
     elif algorithmName == 'ease':
-        return ease(dataframe, float(paramdict['l2']))
+        return ease(dataframe, float(paramdict['l2']),train)
 
     elif algorithmName == 'pop':
-        return pop(dataframe)
+        return pop(dataframe,train)
         
     elif algorithmName == 'iknn':
         normalize = False
         if paramdict['normalize'] == 'true' or paramdict['normalize'] == 'True':
             normalize = True
-        return iknn(dataframe, int(paramdict['k']), normalize)
+        return iknn(dataframe, int(paramdict['k']), normalize, train)

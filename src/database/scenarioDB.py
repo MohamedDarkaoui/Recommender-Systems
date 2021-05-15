@@ -1,6 +1,7 @@
 import io
 from database.entitiesDB import Scenario
 from pandas import DataFrame
+import pickle
 
 class ScenarioDB:
     def __init__(self, connection):
@@ -10,9 +11,9 @@ class ScenarioDB:
         cursor = self.connection.get_cursor()
         try:
             cursor.execute(
-                'INSERT INTO scenario (name,usr_id,date_time,dataset_id,sDate,eDate,max_items,min_items,max_clients,min_clients) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', 
+                'INSERT INTO scenario (name,usr_id,date_time,dataset_id,sDate,eDate,max_items,min_items,max_clients,min_clients,cross_validation) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', 
                 (scenarioOBJ.name,scenarioOBJ.usr_id,scenarioOBJ.date_time, scenarioOBJ.dataset_id, scenarioOBJ.time_min,scenarioOBJ.time_max,scenarioOBJ.item_max,
-                scenarioOBJ.item_min,scenarioOBJ.client_max,scenarioOBJ.client_min))
+                scenarioOBJ.item_min,scenarioOBJ.client_max,scenarioOBJ.client_min,scenarioOBJ.cross_validation))
             cursor.execute('SELECT LASTVAL()')
             scenarioOBJ.id = cursor.fetchone()[0]
             self.connection.commit()
@@ -356,5 +357,63 @@ class ScenarioDB:
         except:
             self.connection.rollback()
     
+    def cross_validation_on(self,name,usr_id):
+        """
+        changes the cross validation of the given scenario to true
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  UPDATE scenario SET cross_validation = true
+                                WHERE name = %s
+                                AND usr_id = %s;""", (name,usr_id,))
 
+            self.connection.commit()
+
+        except:
+            self.connection.rollback()
     
+    def add_cross_validation(self,scenario_id, train, val_in, val_out):
+        try:
+            cursor = self.connection.get_cursor()
+
+            cursor.execute(
+                'INSERT INTO cross_validation (scenario_id,train,val_in,val_out) VALUES (%s,%s,%s,%s)', 
+                (scenario_id,train,val_in,val_out,))
+        
+            self.connection.commit()
+                       
+        except:
+            self.connection.rollback()
+
+    def has_cross_validation(self, name, user_id):
+      
+        cursor = self.connection.get_cursor()
+        cursor.execute("""  SELECT cross_validation FROM scenario
+                            WHERE name = %s
+                            AND usr_id = %s""",(name,user_id,))
+        result = cursor.fetchall()
+        return result[0][0]
+    
+    def getTrain(self, scenario_id):
+        cursor = self.connection.get_cursor()
+        cursor.execute("""  SELECT train FROM cross_validation
+                            WHERE scenario_id = %s""",(scenario_id,))
+        
+        result = pickle.loads(cursor.fetchone()[0])
+        return result
+    
+    def getValIn(self, scenario_id):
+        cursor = self.connection.get_cursor()
+        cursor.execute("""  SELECT val_in FROM cross_validation
+                            WHERE scenario_id = %s""",(scenario_id,))
+        
+        result = pickle.loads(cursor.fetchone()[0])
+        return result
+
+    def getValOut(self, scenario_id):
+        cursor = self.connection.get_cursor()
+        cursor.execute("""  SELECT val_out FROM cross_validation
+                            WHERE scenario_id = %s""",(scenario_id,))
+        
+        result = pickle.loads(cursor.fetchone()[0])
+        return result

@@ -47,20 +47,30 @@ def experimentdata(experiment_id):
     experiment = experimentDB.getExperimentById(experiment_id)
     if experiment.usr_id != current_user.id and not experimentDB.followsExperiment(current_user, experiment_id):
         return redirect(url_for('views.experiments'))
-
     
     scenario_id = modelDB.getScenarioIDFromModel(experiment.model_id)
     dataset_id = scenarioDB.getDatasetID(scenario_id)
     clientsFromScenario = scenarioDB.getAllClients(scenario_id)
     itemsFromScenario = scenarioDB.getAllItems(scenario_id)
-
+    scenarioName = scenarioDB.getScenarioName(scenario_id)
 
     if request.method == 'POST':
         if request.form.get('which-form') == 'addClient':
             algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
             maxItemId = scenarioDB.getMaxItem(scenario_id)
             parameters = modelDB.getParameters(experiment.model_id)
-            addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId, parameters, len(itemsFromScenario))
+            if scenarioDB.has_cross_validation(scenarioName, current_user.id):
+                parameters = modelDB.getParameters(experiment.model_id)
+                algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
+               
+
+                maxItemId = scenarioDB.getMaxItem(scenario_id)
+                parameters = modelDB.getParameters(experiment.model_id)
+                algorithmName = modelDB.getAlgorithmName(experiment.model_id)
+                addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId, parameters, len(itemsFromScenario),True)
+            
+            else:
+                addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId, parameters, len(itemsFromScenario))
 
         elif request.form.get('which-form') == 'deleteClient':
             deleteExperimentClient(request, experiment.id)
@@ -83,6 +93,10 @@ def experimentdata(experiment_id):
             return itemMetadata(request,dataset_id)
 
     clients = experimentDB.getExperimentClients(experiment.id)
+    for client in clients:
+        print(client.name)
+        print(client.recommendations)
+        print(client.expectations)
     return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id)
 
 @views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
@@ -132,10 +146,11 @@ def deleteExperiment(request):
         experimentDB.deleteExperimentById(experiment_id)
         flash('Experiment succesfully deleted.')
 
-def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId, parameters, itemCount):
+def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId, parameters, itemCount, cv = False):
     clients = experimentDB.getExperimentClients(experiment.id)
     clientName = request.form.get('clientName')
     existsClient = experimentDB.experimentClientExists(clientName, experiment.id)
+    
     if clientName and not existsClient:
         type = request.form.get('flexRadioDefault')
         if type in ['emptyClient', 'randomClient', 'isCopyFromScenario', 'randomItems']:
@@ -227,6 +242,45 @@ def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItem
                 newClientName = clientName + '#' + str(index+1)
                 newClient = Experiment_Client(newClientName, experiment.id, recommendations, history)
                 experimentDB.addExperimentClient(newClient)
+
+        elif type == 'validation-in' and cv:
+ 
+            alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id), parameters)
+
+            val_in = scenarioDB.getValIn(scenario_id)
+            val_out = scenarioDB.getValOut(scenario_id)
+            clients = list(range(val_in.shape[0])) #list of numbers from 0 to #clients
+            histories = val_in[clients, :]
+            expectations = val_out[clients, :]
+            predictions = alg.predict(histories)
+            recommendations, scores = util.predictions_to_recommendations(predictions, top_k=itemCount)
+            """
+            for index, u in enumerate(clients):
+                clientName = "Client" + str(u)
+                History = list(np.where(histories[index].toarray().flatten())[0].tolist())
+                recommendation = recommendations[index].tolist()
+                expectation = list(np.where(expectations[index].toarray().flatten())[0].tolist())
+                score = scores[index].tolist()
+            """
+            history = list(np.where(histories[experimentDB.counter].toarray().flatten())[0].tolist())
+            recommendation = recommendations[experimentDB.counter].tolist()
+            expectation = list(np.where(expectations[experimentDB.counter].toarray().flatten())[0].tolist())
+            score = scores[experimentDB.counter].tolist()
+
+            if algorithmName == 'ease':
+                    recommendation = recommendation[0]
+
+            recommendation = retargetingFilter(recommendation, history, experiment.retargeting)
+
+            if experimentDB.counter < len(clients):
+                experimentDB.counter += 1
+            else:
+                experimentDB.counter = 0
+
+            maxItemId = scenarioDB.getMaxItem(scenario_id)
+
+            newClient = Experiment_Client(clientName, experiment.id, recommendation, history, expectation)
+            experimentDB.addExperimentClient(newClient)
 
         flash('Experiment client succesfully made.')
 

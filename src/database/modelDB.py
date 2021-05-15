@@ -6,15 +6,19 @@ class ModelDB:
         self.connection = connection
 
     def add_model(self, ModelOBJ, matrix):
-        cursor = self.connection.get_cursor()
+        try:
+            cursor = self.connection.get_cursor()
 
-        cursor.execute(
-            'INSERT INTO Model (usr_id,name,algorithm,scenario_id,date_time,parameters,matrix) VALUES (%s,%s,%s,%s,%s,%s,%s)', 
-            (ModelOBJ.usr_id,ModelOBJ.name,ModelOBJ.algorithm,ModelOBJ.scenario_id,ModelOBJ.date_time,ModelOBJ.parameters,matrix,))
-        cursor.execute('SELECT LASTVAL()')
-        ModelOBJ.id = cursor.fetchone()[0]
-        self.connection.commit()
-        return ModelOBJ
+            cursor.execute(
+                'INSERT INTO Model (usr_id,name,algorithm,scenario_id,date_time,parameters,matrix) VALUES (%s,%s,%s,%s,%s,%s,%s)', 
+                (ModelOBJ.usr_id,ModelOBJ.name,ModelOBJ.algorithm,ModelOBJ.scenario_id,ModelOBJ.date_time,ModelOBJ.parameters,matrix,))
+            cursor.execute('SELECT LASTVAL()')
+            ModelOBJ.id = cursor.fetchone()[0]
+            self.connection.commit()
+            return ModelOBJ
+            
+        except:
+            self.connection.rollback()
 
     def getModelsFromUser(self, usr):
         """

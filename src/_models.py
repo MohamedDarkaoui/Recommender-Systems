@@ -87,7 +87,12 @@ def makeModel(request):
         dfScenario = scenarioDB.getScenarioDataframe(scenario_id)
 
         #train algorithm 
-        alg = trainAlgorithm(algorithmName,param, dfScenario) 
+        alg = None
+        if scenarioDB.has_cross_validation(scenarioName,current_user.id):
+            train = scenarioDB.getTrain(scenario_id)
+            alg = trainAlgorithm(algorithmName,param, dfScenario,train)
+        else:
+            alg = trainAlgorithm(algorithmName,param, dfScenario) 
 
         #save model
         model = Model(usr_id=current_user.id,name=modelName,algorithm=algorithmName,scenario_id=scenario_id,parameters=parameters,date_time=dt_string)

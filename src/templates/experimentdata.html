@@ -97,6 +97,16 @@
               </div>
           </div>
         </div>
+        <div class="form-check">
+          <input class="form-check-input" value="validation-in" onclick="checker()" type="radio" name="flexRadioDefault" id="isValidation-in">
+          <label class="form-check-label" for="isValidation-in">
+            Client from validation-in
+          </label>
+            <div class="form-group">
+              <input id="isRandomItems_readonly" name="amountItems" type="number" min="0" class="form-control" placeholder="Amount" readonly>
+            </div>
+          
+        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Add</button>
@@ -121,6 +131,10 @@
                     <th scope="col">#</th>
                     <th scope="col">Recommendations</th>
                     <th scope="col"></th>
+                    {% if client.expectations is not none %}
+                    <th scope="col">peet</th>
+                    {% endif %}
+                    <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -129,6 +143,11 @@
                     <th scope="row">{{i+1}}</th>
                     <td>{{client.recommendations[i]}}</td>
                     <td><a class="btn btn-primary" href="/experiments/metadata/{{scenario_id}}/{{client.recommendations[i]}}" role="button">metadata</a></td>
+                    {% if client.expectations is not none and client.recommendations[i] in client.expectations %}
+                    <td>peet</td>
+                    {%elif client.expectations is not none%}
+                    <td></td>
+                    {% endif %}
                   </tr>
                   {% endfor %}
                 </tbody>

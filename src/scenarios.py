@@ -5,28 +5,31 @@ from views import *
 def scenarios():
     if request.method == 'POST':     
         if request.form.get('which-form') == 'makeScenario':
-            #try:
+            try:
+
                 df = makeScenario(request)
                 df.drop('tmstamp', inplace=True, axis=1)
                 df.drop('scenario_id', inplace=True, axis=1)
-                clients = df['client_id']
-                clients = clients.drop_duplicates()
+                scenario_name = request.form.get('scenarioName')
+                scenario_id = scenarioDB.getScenarioID(scenario_name, current_user.id)
+    
                 if request.form.get('cross_validation') == 'on':
                     X = util.df_to_csr(df)
-                    if request.form.get('flexRadioDefault') == 's_generalization':
-                        test_users = int(request.form.get('testUsers'))
-                        perc_history = float(request.form.get('percHistory'))
-                        train, val_in, val_out = strong_generalization(X,test_users,perc_history,clients)
+                    test_users = int(request.form.get('testUsers'))
+                    perc_history = float(request.form.get('percHistory'))
 
-                        print('train', train)
-                        print('val_in', val_in)
-                        print('val_out', val_out)
+                    if request.form.get('flexRadioDefault') == 's_generalization':
+                        scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
+                        train, val_in, val_out = strong_generalization(X,test_users,perc_history)
+                        scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
                     elif request.form.get('flexRadioDefault') == 'w_generalization':
-                        pass
-            
-            #except:
-             #   flash('Something went wrong, please fill in all the mandatory fields, deleteng scenario')
-              #  deleteScenario(request)
+                        scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
+                        train, val_in, val_out = weak_generalization(X,test_users,perc_history)
+                        scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
+
+            except:
+                flash('Something went wrong, please fill in all the mandatory fields, deleteng scenario')
+                deleteScenario(request)
         elif request.form.get('which-form') == 'deleteScenario':
             deleteScenario(request)
             flash('Scenario succesfully deleted.')
@@ -122,7 +125,6 @@ def makeScenario(request):
 
 def deleteScenario(request):
     scenarioName = request.form.get('scenarioName')
-    print(scenarioName)
     if scenarioDB.scenarioExists(scenarioName, current_user.id):
         scenario_id = scenarioDB.getScenarioID(scenarioName, current_user.id)
         scenarioDB.deleteScenario(scenario_id)

@@ -3,6 +3,7 @@ from database.entitiesDB import Experiment, Experiment_Client
 class ExperimentDB:
     def __init__(self, connection):
         self.connection = connection
+        self.counter = 0
 
     def add_experiment(self, ExpOBJ):
         cursor = self.connection.get_cursor()
@@ -90,8 +91,12 @@ class ExperimentDB:
         """
         cursor = self.connection.get_cursor()
         try:
-            cursor.execute("""INSERT INTO experiment_client (name, experiment_id,recommendations,history) 
-                                    VALUES (%s,%s,%s,%s)""",(client.name, client.experiment_id, client.recommendations, client.history,))
+            if client.expectations == None:
+                cursor.execute("""INSERT INTO experiment_client (name, experiment_id,recommendations,history) 
+                                        VALUES (%s,%s,%s,%s)""",(client.name, client.experiment_id, client.recommendations, client.history,))
+            else:
+                cursor.execute("""INSERT INTO experiment_client (name, experiment_id,recommendations,history,expectations) 
+                                        VALUES (%s,%s,%s,%s,%s)""",(client.name, client.experiment_id, client.recommendations, client.history,client.expectations,))
             self.connection.commit()
         except:
             self.connection.rollback()
@@ -108,7 +113,7 @@ class ExperimentDB:
         for row in cursor:
             history = row[4]
             history.sort()
-            client = Experiment_Client(id=row[0], name=row[1], experiment_id=row[2], recommendations=row[3], history=history)
+            client = Experiment_Client(id=row[0], name=row[1], experiment_id=row[2], recommendations=row[3], history=history,expectations=row[5])
             clients.append(client)
 
         return clients
@@ -161,7 +166,7 @@ class ExperimentDB:
                             AND experiment_id = %s""", (name, experiment_id,))
 
         result = cursor.fetchone()
-        client = Experiment_Client(id=result[0], name=result[1], experiment_id=result[2], recommendations=result[3], history=result[4])
+        client = Experiment_Client(id=result[0], name=result[1], experiment_id=result[2], recommendations=result[3], history=result[4], expectations=result[5])
 
         return client
 
