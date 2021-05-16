@@ -6,16 +6,16 @@
 {% block unique %}
 
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                <span>{{ message }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
-    {% endif %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
+  <span>{{ message }}</span>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+{% endif %}
 {% endwith %}
 
 
@@ -36,213 +36,206 @@
           <input name="clientName" class="form-control form-control-lg" type="text" placeholder="Name">
           <br>
           <div class="form-check">
-            <input class="form-check-input" value="emptyClient" onclick="checker()"  type="radio" name="flexRadioDefault" id="isEmptyClient" checked>
+            <input class="form-check-input" value="emptyClient" onclick="checker()" type="radio" name="flexRadioDefault"
+              id="isEmptyClient" checked>
             <label class="form-check-label" for="isEmptyClient">
               Empty Client
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" value="randomClient" onclick="checker()"   type="radio" name="flexRadioDefault" id="isRandomClient" checked>
+            <input class="form-check-input" value="randomClient" onclick="checker()" type="radio"
+              name="flexRadioDefault" id="isRandomClient">
             <label class="form-check-label" for="isRandomClient">
               Random Client
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" value="randomItems" onclick="checker()" type="radio" name="flexRadioDefault" id="isRandomItems" checked>
+            <input class="form-check-input" value="randomItems" onclick="checker()" type="radio" name="flexRadioDefault"
+              id="isRandomItems">
             <label class="form-check-label" for="isRandomItems">
               Client with random items
             </label>
-              <div class="form-group">
-                <input id="isRandomItems_readonly" name="amountItems" type="number" min="0" class="form-control" placeholder="Amount" readonly>
-              </div>
-            
+            <div class="form-group">
+              <input id="isRandomItems_readonly" name="amountItems" type="number" min="0" class="form-control"
+                placeholder="Amount" readonly>
+            </div>
+
           </div>
           <div class="form-check">
-            <input class="form-check-input" value="allClientsWithItem" onclick="checker()" type="radio" name="flexRadioDefault" id="isAllClients" checked>
+            <input class="form-check-input" value="allClientsWithItem" onclick="checker()" type="radio"
+              name="flexRadioDefault" id="isAllClients">
             <label class="form-check-label" for="isAllClients">
               All Clients with the following item in their history:
             </label>
-              <div class="input-group mb-3">
-                <select id="copy_disabled" data-size="5" class="selectpicker" name = "fromItemId" data-live-search="true" title="Search Item:" data-dropup-auto="false">
-                  {% for item in itemsFromScenario %}
-                    <option>{{item}}</option>
-                  {% endfor %}
-                </select>
-              </div>
+            <div class="input-group mb-3">
+              <select id="copy_disabled" data-size="5" class="selectpicker" name="fromItemId" data-live-search="true"
+                title="Search Item:" data-dropup-auto="false">
+                {% for item in itemsFromScenario %}
+                <option>{{item}}</option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
           <div class="form-check">
-            <input class="form-check-input" value="isCopyFromExperiment" onclick="checker()" type="radio" name="flexRadioDefault" id="isCopyFromExperiment" checked>
+            <input class="form-check-input" value="isCopyFromExperiment" onclick="checker()" type="radio"
+              name="flexRadioDefault" id="isCopyFromExperiment">
             <label class="form-check-label" for="isCopyFromExperiment">
               Copy Client from Experiment
             </label>
-              <div class="input-group mb-3">
-                <select id="copy_disabled" data-size="5" name="copyClientName" class="selectpicker" data-live-search="true" title="Search Client:" data-dropup-auto="false">
-                  {% for client in clients %}
-                    <option>{{client.name}}</option>
-                  {% endfor %}
-                </select>
-              </div>
+            <div class="input-group mb-3">
+              <select id="copy_disabled" data-size="5" name="copyClientName" class="selectpicker"
+                data-live-search="true" title="Search Client:" data-dropup-auto="false">
+                {% for client in clients %}
+                <option>{{client.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
           <div class="form-check">
-            <input class="form-check-input" value="isCopyFromScenario" onclick="checker()" type="radio" name="flexRadioDefault" id="isCopyFromList">
+            <input class="form-check-input" value="isCopyFromScenario" onclick="checker()" type="radio"
+              name="flexRadioDefault" id="isCopyFromList">
             <label class="form-check-label" for="isCopyFromScenario">
               Copy Client from Scenario
             </label>
-              <div class="input-group mb-3">
-                <select class="selectpicker" data-size="5" name="copyClientId" id="search_reset" data-live-search="true" title="Search Client:" data-dropup-auto="false">
-                  {% for client in clientsFromScenario %}
-                    <option>{{client}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-          </div>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" value="validation-in" onclick="checker()" type="radio" name="flexRadioDefault" id="isValidation-in">
-          <label class="form-check-label" for="isValidation-in">
-            Client from validation-in
-          </label>
-            <div class="form-group">
-              <input id="isRandomItems_readonly" name="amountItems" type="number" min="0" class="form-control" placeholder="Amount" readonly>
+            <div class="input-group mb-3">
+              <select class="selectpicker" data-size="5" name="copyClientId" id="search_reset" data-live-search="true"
+                title="Search Client:" data-dropup-auto="false">
+                {% for client in clientsFromScenario %}
+                <option>{{client}}</option>
+                {% endfor %}
+              </select>
             </div>
-          
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" value="validation-in" onclick="checker()" type="radio"
+              name="flexRadioDefault" id="isValidation-in">
+            <label class="form-check-label" for="isValidation-in">
+              Client from validation-in
+            </label>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Add</button>
         </div>
       </div>
-   </form>
+    </form>
   </div>
 </div>
 <br><br>
 {% for client in clients %}
-  <div class="card-group">
-    <div class="card" style="background-color: lightgray;">
-      <div class="card-body">
-        <h5 class="card-title">Client: {{client.name}}</h5>
-        <div class="row">
-          <div class="column">
-            <h5>Top-20 Recommendations:</h5>
-            <div style="height: 300px; overflow-y: scroll; width: 100%;">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Recommendations</th>
-                    <th scope="col"></th>
-                    {% if client.expectations is not none %}
-                    <th scope="col">peet</th>
-                    {% endif %}
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for i in range(client.recommendations|length) %}
-                  <tr>
-                    <th scope="row">{{i+1}}</th>
-                    <td>{{client.recommendations[i]}}</td>
-                    <td><a class="btn btn-primary" href="/experiments/metadata/{{scenario_id}}/{{client.recommendations[i]}}" role="button">metadata</a></td>
-                    {% if client.expectations is not none and client.recommendations[i] in client.expectations %}
-                    <td>peet</td>
-                    {%elif client.expectations is not none%}
-                    <td></td>
-                    {% endif %}
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-          <div class="column">
-            <h5>History:</h5>
-            <div style="height: 300px; overflow-y: scroll; width: 100%;">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">History</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for i in range(client.history|length) %}
-                  <tr>
-                    <th scope="row">{{i+1}}</th>
-                    <td>{{client.history[i]}}</td>
-                    <td><a class="btn btn-primary" href="/experiments/metadata/{{scenario_id}}/{{client.history[i]}}" role="button">metadata</a></td> 
-                    <td>
-                      <form method="POST">
-                        <input type="hidden" name="which-form" value="deleteItem">
-                        <input type="hidden" name="clientName" value="{{client.name}}">
-                        <button type="submit" name="itemId" value={{client.history[i]}} class="btn btn-danger">X</button>
-                      </form>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <br>
-            <br>
-            <form method="POST">
-              <input type="hidden" name="which-form" value="addItem">
-              <select class="selectpicker" name="itemId" data-size="5" data-live-search="true" title="Search Item" data-dropup-auto="false">
-                {% for item in itemsFromScenario %}
-                  <option>{{item}}</option>
+<div class="card-group">
+  <div class="card" style="background-color: lightgray;">
+    <div class="card-body">
+      <h5 class="card-title">Client: {{client.name}}</h5>
+      <div class="row">
+        <div class="column">
+          <h5>Top-20 Recommendations:</h5>
+          <div style="height: 300px; overflow-y: scroll; width: 100%;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Recommendations</th>
+                  <th scope="col"></th>
+                  {% if client.expectations is not none %}
+                  <th scope="col">Valid</th>
+                  {% endif %}
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in range(client.recommendations|length) %}
+                <tr>
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{client.recommendations[i]}}</td>
+                  <td><a class="btn btn-primary"
+                      href="/experiments/metadata/{{scenario_id}}/{{client.recommendations[i]}}" role="button"
+                      target="_blank">metadata</a></td>
+                  {% if client.expectations is not none and client.recommendations[i] in client.expectations %}
+                  <td>
+                    &nbsp; &nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-check-lg" viewBox="0 0 16 16">
+                      <path
+                        d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z" />
+                    </svg>
+                  </td>
+                  {%elif client.expectations is not none%}
+                  <td></td>
+                  {% endif %}
+                </tr>
                 {% endfor %}
-              </select>
-            <button type="submit" name="clientName" value="{{client.name}}" class="btn btn-primary class">Add Item</button>
-            </form>
-            <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal2">Show
-              Metadata</button>
-
-            <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Metadata</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div style="height: 300px; overflow-x: scroll; width: 100%;">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Item</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Data</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <br>
+          <div class="col-md-6">
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Recall@</span>
+              </div>
+              <input type="number" min="0" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button">Button</button>
               </div>
             </div>
           </div>
         </div>
+        <div class="column">
+          <h5>History:</h5>
+          <div style="height: 300px; overflow-y: scroll; width: 100%;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">History</th>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in range(client.history|length) %}
+                <tr>
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{client.history[i]}}</td>
+                  <td><a class="btn btn-primary" href="/experiments/metadata/{{scenario_id}}/{{client.history[i]}}"
+                      role="button">metadata</a></td>
+                  <td>
+                    <form method="POST">
+                      <input type="hidden" name="which-form" value="deleteItem">
+                      <input type="hidden" name="clientName" value="{{client.name}}">
+                      <button type="submit" name="itemId" value={{client.history[i]}} class="btn btn-danger">X</button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <br>
+          <form method="POST">
+            <input type="hidden" name="which-form" value="addItem">
+            <select class="selectpicker" name="itemId" data-size="5" data-live-search="true" title="Search Item"
+              data-dropup-auto="false">
+              {% for item in itemsFromScenario %}
+              <option>{{item}}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" name="clientName" value="{{client.name}}" class="btn btn-primary class">Add
+              Item</button>
+          </form>
+        </div>
       </div>
     </div>
-    <form method="POST">
-      <input type="hidden" name="which-form" value="deleteClient">
-      <button type="submit" name="clientName" style="height: 540px;" value={{client.name}} class="btn btn-danger">X</button>
-    </form>
   </div>
+  <form method="POST">
+    <input type="hidden" name="which-form" value="deleteClient">
+    <button type="submit" name="clientName" style="height: 540px;" value={{client.name}}
+      class="btn btn-danger">X</button>
+  </form>
+</div>
 <br>
 {% endfor %}
 
