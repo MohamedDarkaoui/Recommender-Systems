@@ -93,10 +93,6 @@ def experimentdata(experiment_id):
             return itemMetadata(request,dataset_id)
 
     clients = experimentDB.getExperimentClients(experiment.id)
-    for client in clients:
-        print(client.name)
-        print(client.recommendations)
-        print(client.expectations)
     return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id)
 
 @views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
@@ -243,44 +239,45 @@ def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItem
                 newClient = Experiment_Client(newClientName, experiment.id, recommendations, history)
                 experimentDB.addExperimentClient(newClient)
 
-        elif type == 'validation-in' and cv:
- 
-            alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id), parameters)
+        elif type == 'validation-in':
+            if cv:
+                alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id), parameters)
+                val_in = scenarioDB.getValIn(scenario_id)
+                val_out = scenarioDB.getValOut(scenario_id)
+                clients = list(range(val_in.shape[0])) #list of numbers from 0 to #clients
+                histories = val_in[clients, :]
+                expectations = val_out[clients, :]
+                predictions = alg.predict(histories)
+                predictions2 = alg.predict(val_in)
+                recommendations, scores = util.predictions_to_recommendations(predictions, top_k=top_k)
+                """
+                for index, u in enumerate(clients):
+                    clientName = "Client" + str(u)
+                    History = list(np.where(histories[index].toarray().flatten())[0].tolist())
+                    recommendation = recommendations[index].tolist()
+                    expectation = list(np.where(expectations[index].toarray().flatten())[0].tolist())
+                    score = scores[index].tolist()
+                """
+                rand = randint(0,len(clients)-1)
+                history = list(np.where(histories[rand].toarray().flatten())[0].tolist())
+                recommendation = recommendations[rand].tolist()
+                expectation = list(np.where(expectations[rand].toarray().flatten())[0].tolist())
+                score = scores[rand].tolist()
+                if algorithmName == 'ease':
+                        recommendation = recommendation[0]
 
-            val_in = scenarioDB.getValIn(scenario_id)
-            val_out = scenarioDB.getValOut(scenario_id)
-            clients = list(range(val_in.shape[0])) #list of numbers from 0 to #clients
-            histories = val_in[clients, :]
-            expectations = val_out[clients, :]
-            predictions = alg.predict(histories)
-            recommendations, scores = util.predictions_to_recommendations(predictions, top_k=itemCount)
-            """
-            for index, u in enumerate(clients):
-                clientName = "Client" + str(u)
-                History = list(np.where(histories[index].toarray().flatten())[0].tolist())
-                recommendation = recommendations[index].tolist()
-                expectation = list(np.where(expectations[index].toarray().flatten())[0].tolist())
-                score = scores[index].tolist()
-            """
-            history = list(np.where(histories[experimentDB.counter].toarray().flatten())[0].tolist())
-            recommendation = recommendations[experimentDB.counter].tolist()
-            expectation = list(np.where(expectations[experimentDB.counter].toarray().flatten())[0].tolist())
-            score = scores[experimentDB.counter].tolist()
+                recommendation = retargetingFilter(recommendation, history, experiment.retargeting)
 
-            if algorithmName == 'ease':
-                    recommendation = recommendation[0]
-
-            recommendation = retargetingFilter(recommendation, history, experiment.retargeting)
-
-            if experimentDB.counter < len(clients):
-                experimentDB.counter += 1
+                if experimentDB.counter < len(clients):
+                    experimentDB.counter += 1
+                else:
+                    experimentDB.counter = 0
+                maxItemId = scenarioDB.getMaxItem(scenario_id)
+                newClient = Experiment_Client(clientName, experiment.id, recommendation, history, expectation)
+                experimentDB.addExperimentClient(newClient)
             else:
-                experimentDB.counter = 0
-
-            maxItemId = scenarioDB.getMaxItem(scenario_id)
-
-            newClient = Experiment_Client(clientName, experiment.id, recommendation, history, expectation)
-            experimentDB.addExperimentClient(newClient)
+                flash('Cross-validation is not enabeled')
+                return
 
         flash('Experiment client succesfully made.')
 
