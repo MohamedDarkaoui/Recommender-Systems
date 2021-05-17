@@ -22,6 +22,16 @@ def scenarios():
                         scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
                         train, val_in, val_out = strong_generalization(X,test_users,perc_history)
                         scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
+                        # print('train:')
+                        # print(train.toarray().tolist())
+                        print('val in:')
+                        val_in_list = val_in.toarray().tolist()[0]
+                        for i in range(len(val_in_list)):
+                            if not 1 in val_in_list[i]:
+                                print('YES')
+                    
+                        # print('val out:')
+                        # print(val_out.toarray().tolist())
                     elif request.form.get('flexRadioDefault') == 'w_generalization':
                         scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
                         train, val_in, val_out = weak_generalization(X,test_users,perc_history)
