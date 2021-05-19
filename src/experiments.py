@@ -1,6 +1,3 @@
-
-from flask.globals import current_app
-from database.scenarioDB import ScenarioDB
 from views import *
 
 top_k = 20
@@ -150,7 +147,7 @@ def makeExperiment(request):
 
 def deleteExperiment(request):
     experiment_id = int(request.form.get("experiment_id"))
-    usr_id = int(request.form.get("experiment_id"))
+    usr_id = int(request.form.get("usr_id"))
 
     if usr_id != current_user.id:
         experimentDB.unfollowExperiment(current_user, experiment_id)
