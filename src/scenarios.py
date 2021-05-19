@@ -5,35 +5,34 @@ from views import *
 def scenarios():
     if request.method == 'POST':     
         if request.form.get('which-form') == 'makeScenario':
-            try:
+            # try:
+            scen = makeScenario(request)
 
-                scen = makeScenario(request)
-    
-                if request.form.get('cross_validation') == 'on':
-                    scen.drop('tmstamp', inplace=True, axis=1)
-                    scen.drop('scenario_id', inplace=True, axis=1)
-                    scenario_name = request.form.get('scenarioName')
-                    scenario_id = scenarioDB.getScenarioID(scenario_name, current_user.id)
+            if request.form.get('cross_validation') == 'on':
+                scen.drop('tmstamp', inplace=True, axis=1)
+                scen.drop('scenario_id', inplace=True, axis=1)
+                scenario_name = request.form.get('scenarioName')
+                scenario_id = scenarioDB.getScenarioID(scenario_name, current_user.id)
 
-                    X = util.df_to_csr(scen)
+                X = util.df_to_csr(scen)
 
-                    test_users = int(request.form.get('testUsers'))
-                    perc_history = float(request.form.get('percHistory'))
+                test_users = int(request.form.get('testUsers'))
+                perc_history = float(request.form.get('percHistory'))
 
-                    if request.form.get('flexRadioDefault') == 's_generalization':
-                        scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
-                        train, val_in, val_out = strong_generalization(X,test_users,perc_history)
-                        scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
-                        print(val_in)
+                if request.form.get('flexRadioDefault') == 's_generalization':
+                    scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
+                    train, val_in, val_out = strong_generalization(X,test_users,perc_history)
+                    scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
+                    print(val_in)
 
-                    elif request.form.get('flexRadioDefault') == 'w_generalization':
-                        scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
-                        train, val_in, val_out = weak_generalization(X,test_users,perc_history)
-                        scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
+                elif request.form.get('flexRadioDefault') == 'w_generalization':
+                    scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
+                    train, val_in, val_out = weak_generalization(X,test_users,perc_history)
+                    scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
 
-            except:
-                flash('Something went wrong, please fill in all the mandatory fields, deleteng scenario')
-                deleteScenario(request)
+            # except:
+            #     flash('Something went wrong, please fill in all the mandatory fields, deleteng scenario')
+            #     deleteScenario(request)
         elif request.form.get('which-form') == 'deleteScenario':
             deleteScenario(request)
             flash('Scenario succesfully deleted.')
@@ -77,10 +76,12 @@ def scen_samples(scenario_name):
     else:
         return redirect(url_for('views.scenarios'))
 
-    
 def makeScenario(request):
     scenarioName = request.form.get('scenarioName')
-    datasetID = int(request.form.get('datasetSelect'))
+    isCopy = request.form.get('isCopy') == 'on'
+    datasetID = None
+    datasetID = int(request.form.get('datasetSelect')) if not isCopy else None
+    
     time1 = request.form.get('startDate')
     time2 = request.form.get('endDate')
     umin = request.form.get('user_min')
@@ -88,23 +89,51 @@ def makeScenario(request):
     imin = request.form.get('item_min')
     imax = request.form.get('item_max')
 
+    cpy_scen_obj = None
+    if isCopy:
+        copyScenarioName = str(request.form.get('scenarioSelect'))
+        copyScenarioID = scenarioDB.getScenarioID(name=copyScenarioName,user_id=current_user.id)
+        existsCopyScenario = scenarioDB.scenarioExists(copyScenarioName, current_user.id)
+        allScen = scenarioDB.getScenariosFromUser(current_user)
+        for s in allScen:
+            if s.name == copyScenarioName:
+                cpy_scen_obj = s
+
+        datasetID = scenarioDB.getDatasetID(copyScenarioID)
+
+    
     existsDataset = datasetDB.datasetExistsById(datasetID)
     existsScenario = scenarioDB.scenarioExists(scenarioName, current_user.id)
     scen_elem = None
     if existsDataset and scenarioName and not existsScenario:
         #SET DEFAULT FILTERS IF NOT GIVEN
-        if len(time1) == 0:
-            time1 = '-infinity' 
-        if len(time2) == 0:
-            time2 = 'infinity'
-        if len(umin) == 0:
-            umin = '0'
-        if len(umax) == 0:
-            umax =  str(interactionDB.getCountInteractions(datasetID))
-        if len(imin) == 0:
-            imin = '0'
-        if len(imax) == 0:
-            imax = str(interactionDB.getCountInteractions(datasetID))
+        if isCopy:
+            if len(time1) == 0:
+                time1 =  cpy_scen_obj.time_min
+            if len(time2) == 0:
+                time2 = cpy_scen_obj.time_max
+            if len(umin) == 0:
+                umin = cpy_scen_obj.client_min
+            if len(umax) == 0:
+                umax =  cpy_scen_obj.client_max
+            if len(imin) == 0:
+                imin = cpy_scen_obj.item_min
+            if len(imax) == 0:
+                imax = cpy_scen_obj.item_max
+        
+        else:
+            if len(time1) == 0:
+                time1 = '-infinity' 
+            if len(time2) == 0:
+                time2 = 'infinity'
+            if len(umin) == 0:
+                umin = '0'
+            if len(umax) == 0:
+                umax =  str(interactionDB.getCountInteractions(datasetID))
+            if len(imin) == 0:
+                imin = '0'
+            if len(imax) == 0:
+                imax = str(interactionDB.getCountInteractions(datasetID))
         
         dt_string = str(datetime.now().strftime("%Y/%m/%d %H:%M"))
         scenario = Scenario(name=scenarioName,usr_id=str(current_user.id),date_time=dt_string,dataset_id=datasetID,time_min=time1,time_max=time2,

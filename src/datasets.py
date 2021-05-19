@@ -66,6 +66,10 @@ def addDataset(request):
     if interactionsCSV.content_type == 'text/csv' and not datasetExists and datasetName:
         # create pandas objects
         interactions = pd.read_csv(interactionsCSV)
+        if timestampColumn not in interactions.columns and 'timestamp' not in interactions.columns:
+            timestampColumn = 'tmstamp'
+            interactions[timestampColumn] = '0001-01-01'
+
         columns = list(interactions.columns)
         if not (clientIdColumn in columns and itemIdColumn in columns and timestampColumn in columns):
             flash('Column doesn\'t exist in the csv file.')

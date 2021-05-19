@@ -36,7 +36,7 @@
         <input type="hidden" name="which-form" value="makeScenario">
         <div class="modal-body">
           <div class="input-group mb-3 col-md-6">
-            <input id="checkbox1" type="checkbox" class="form-check-input" onclick="copy_scen()">
+            <input id="checkbox1" type="checkbox" name="isCopy" class="form-check-input" onclick="copy_scen()">
             <label class="form-check-label">Copy scenario</label>
           </div>
           <input name="scenarioName" class="form-control form-control-lg" type="text" placeholder="Name">
@@ -50,9 +50,11 @@
             </select>
           </div>
           <div class="input-group mb-3" id="scenarioselect" style="display:none;">
-            <select name="" class="custom-select">
+            <select name="scenarioSelect" class="custom-select">
               <option disabled selected>Choose Scenario</option>
-              <option value="">test</option>
+              {% for scenario in scenarios %}
+              <option value={{scenario[1]}}>{{scenario[1]}}</option>
+              {% endfor %}
             </select>
           </div>
           <br>

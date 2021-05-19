@@ -94,9 +94,9 @@ def experimentdata(experiment_id):
 
             predictions = alg.predict(val_in)
             recall_scores = recall_k(predictions, val_out, k)
-            print(recall_scores)
+            # print(recall_scores)
             avg_recall = float(np.average(recall_scores))
-            print(avg_recall)
+            # print(avg_recall)
             # histories = val_in
             # expectations = val_out
             # recommendations, scores = util.predictions_to_recommendations(predictions, top_k=k)
