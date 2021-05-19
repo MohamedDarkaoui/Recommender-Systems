@@ -54,19 +54,13 @@ def experimentdata(experiment_id):
     itemsFromScenario = scenarioDB.getAllItems(scenario_id)
     scenarioName = scenarioDB.getScenarioName(scenario_id)
 
+    avg_recall = None
     if request.method == 'POST':
         if request.form.get('which-form') == 'addClient':
             algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
             maxItemId = scenarioDB.getMaxItem(scenario_id)
             parameters = modelDB.getParameters(experiment.model_id)
             if scenarioDB.has_cross_validation(scenarioName, current_user.id):
-                parameters = modelDB.getParameters(experiment.model_id)
-                algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
-               
-
-                maxItemId = scenarioDB.getMaxItem(scenario_id)
-                parameters = modelDB.getParameters(experiment.model_id)
-                algorithmName = modelDB.getAlgorithmName(experiment.model_id)
                 addExperimentClient(request, experiment, scenario_id, algorithmName, maxItemId, parameters, len(itemsFromScenario),True)
             
             else:
@@ -91,9 +85,34 @@ def experimentdata(experiment_id):
         
         elif request.form.get('which-form') == 'showItemMetadata':
             return itemMetadata(request,dataset_id)
+        
+        elif request.form.get('which-form') == 'showRecall':
+            k = int(request.form.get('recall_k'))
+            parameters = modelDB.getParameters(experiment.model_id)
+            algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
+
+            alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id), parameters)
+            val_in = scenarioDB.getValIn(scenario_id)
+            val_out = scenarioDB.getValOut(scenario_id)
+
+            predictions = alg.predict(val_in)
+            recall_scores = recall_k(predictions, val_out, k)
+            print(recall_scores)
+            avg_recall = float(np.average(recall_scores))
+            print(avg_recall)
+            # histories = val_in
+            # expectations = val_out
+            # recommendations, scores = util.predictions_to_recommendations(predictions, top_k=k)
+            # for rand in range (5):
+                
+            #     history = list(np.where(histories[rand].toarray().flatten())[0].tolist())
+            #     recommendation = recommendations[rand].tolist()
+            #     expectation = list(np.where(expectations[rand].toarray().flatten())[0].tolist())
+            #     print(recommendation)
+            #     print(expectation)
 
     clients = experimentDB.getExperimentClients(experiment.id)
-    return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id)
+    return render_template("experimentdata.html", clients=clients, avg_recall=avg_recall, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id)
 
 @views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
 @login_required
@@ -248,17 +267,14 @@ def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItem
                 histories = val_in[clients, :]
                 expectations = val_out[clients, :]
                 predictions = alg.predict(histories)
-                predictions2 = alg.predict(val_in)
                 recommendations, scores = util.predictions_to_recommendations(predictions, top_k=top_k)
-                """
-                for index, u in enumerate(clients):
-                    clientName = "Client" + str(u)
-                    History = list(np.where(histories[index].toarray().flatten())[0].tolist())
-                    recommendation = recommendations[index].tolist()
-                    expectation = list(np.where(expectations[index].toarray().flatten())[0].tolist())
-                    score = scores[index].tolist()
-                """
-                rand = randint(0,len(clients)-1)
+
+                rand = None
+                try:
+                    rand = randint(0,len(clients)-1)
+                except:
+                    flash('validation-in might be empty')
+                    return
                 history = list(np.where(histories[rand].toarray().flatten())[0].tolist())
                 recommendation = recommendations[rand].tolist()
                 expectation = list(np.where(expectations[rand].toarray().flatten())[0].tolist())
@@ -273,8 +289,10 @@ def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItem
                 else:
                     experimentDB.counter = 0
                 maxItemId = scenarioDB.getMaxItem(scenario_id)
+                
                 newClient = Experiment_Client(clientName, experiment.id, recommendation, history, expectation)
                 experimentDB.addExperimentClient(newClient)
+                
             else:
                 flash('Cross-validation is not enabeled')
                 return

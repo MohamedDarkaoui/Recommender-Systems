@@ -81,9 +81,10 @@ CREATE TABLE scenario_element (
  
 CREATE TABLE cross_validation (
   scenario_id INT NOT NULl REFERENCES scenario(id) ON DELETE CASCADE,
-  train BYTEA,
-  val_in BYTEA,
-  val_out BYTEA,
+  train BYTEA NOT NULL,
+  val_in BYTEA NOT NULL,
+  val_out BYTEA NOT NULL,
+
   PRIMARY KEY (scenario_id)
 );
 
