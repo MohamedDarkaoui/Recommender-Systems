@@ -108,8 +108,9 @@ def experimentdata(experiment_id):
             #     print(recommendation)
             #     print(expectation)
 
+    has_crossval = scenarioDB.has_cross_validation(scenarioDB.getScenarioName(scenario_id), current_user.id)
     clients = experimentDB.getExperimentClients(experiment.id)
-    return render_template("experimentdata.html", clients=clients, avg_recall=avg_recall, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id)
+    return render_template("experimentdata.html", clients=clients, avg_recall=float(avg_recall), clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id, has_crossval=has_crossval)
 
 @views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
 @login_required

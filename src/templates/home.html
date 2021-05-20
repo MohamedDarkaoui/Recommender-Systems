@@ -1,10 +1,204 @@
 {% extends "index.html" %}
 {% block title %} Home {% endblock %}
-{% block activate_home %} 
+{% block activate_home %}
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
-<div>
-    <img class="home_image" src="{{url_for('static', filename='home.png')}}" alt="">
+<h1>Dashboard</h1>
+<div class="card-group">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">User Activity</h5>
+            <div class="container mt-5 mb-5">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <ul class="timeline">
+                            <li>
+                                &nbsp; &nbsp; &nbsp;<a href="#">made a new dataset</a>
+                                <a href="#" class="float-right">4 March, 2014</a>
+                            </li>
+                            <li>
+                                &nbsp; &nbsp; &nbsp; <a href="#">followed a dataset from user10</a>
+                                <a href="#" class="float-right">4 March, 2014</a>
+                            </li>
+                            <li>
+                                &nbsp; &nbsp; &nbsp; <a href="#">made a new scenario</a>
+                                <a href="#" class="float-right">1 April, 2014</a>
+                            </li>
+                            <li>
+                                &nbsp; &nbsp; &nbsp; <a href="#">made a new model</a>
+                                <a href="#" class="float-right">1 April, 2014</a>
+                            </li>
+                            <li>
+                                &nbsp; &nbsp; &nbsp; <a href="#">made a new experiment</a>
+                                <a href="#" class="float-right">1 April, 2014</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <style>
+                ul.timeline {
+                    list-style-type: none;
+                    position: relative;
+                }
+
+                ul.timeline:before {
+                    content: ' ';
+                    background: #d4d9df;
+                    display: inline-block;
+                    position: absolute;
+                    left: 29px;
+                    width: 2px;
+                    height: 100%;
+                    z-index: 400;
+                }
+
+                ul.timeline>li {
+                    margin: 20px 0;
+                    padding-left: 20px;
+                }
+
+                ul.timeline>li:before {
+                    content: ' ';
+                    background: white;
+                    display: inline-block;
+                    position: absolute;
+                    border-radius: 50%;
+                    border: 3px solid #22c0e8;
+                    left: 20px;
+                    width: 20px;
+                    height: 20px;
+                    z-index: 400;
+                }
+            </style>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Number of sets</h5>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Number of Datasets
+                    <span class="badge badge-primary badge-pill">100</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Number of Scenarios
+                    <span class="badge badge-primary badge-pill">200</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Number of Models
+                    <span class="badge badge-primary badge-pill">300</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Number of Experiments
+                    <span class="badge badge-primary badge-pill">400</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="card-group">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Users that follow your datasets or experiments</h5>
+            <div style="height: 300px; overflow-y: scroll; width: 100%;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>dataset</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>Experiment</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>dataset</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>dataset</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>dataset</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Users whose dataset or experiments you follow</h5>
+            <div style="height: 300px; overflow-y: scroll; width: 100%;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>datset</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>experiment</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>datset</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>datset</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>datset</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 </div>
 {% endblock %}
