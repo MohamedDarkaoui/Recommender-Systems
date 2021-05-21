@@ -1,4 +1,5 @@
 from views import *
+import mimetypes
 
 top_k = 20
 
@@ -107,10 +108,24 @@ def experimentdata(experiment_id):
 
 @views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
 @login_required
-def itemMetadata(scenario_id,item_id):
-    dataset_id = scenarioDB.getDatasetID(scenario_id)
-    metadataPD = metadataElementDB.getItemMetadata(item_id, dataset_id)
-    return render_template("metadata_experiment.html", metadata=metadataPD, item_id=item_id)
+def itemMetadata(scenario_id, item_id):
+    try:
+        scenario_id = int(scenario_id)
+        item_id = int(item_id)
+    except:
+        return redirect(url_for('views.home'))
+
+    if scenarioDB.scenarioExistsById(scenario_id):
+        dataset_id = scenarioDB.getDatasetID(scenario_id)
+        metadataPD = metadataElementDB.getItemMetadata(item_id, dataset_id)
+        metadataPD.insert(2, 'image', False)
+        for index, row in metadataPD.iterrows():
+            if is_url_image(row['data']):
+                metadataPD.loc[index, 'image'] = True
+        return render_template("metadata_experiment.html", metadata=metadataPD, item_id=item_id)
+        
+    else:
+        return redirect(url_for('views.home'))
     
 def makeExperiment(request):
     experimentName = request.form.get('experimentName')
@@ -420,3 +435,7 @@ def changeExperimentPrivate(request):
     if experimentDB.experimentExistsById(experiment_id):
         if not experimentDB.isPrivate(experiment_id):
             experimentDB.changePrivacy(experiment_id, True)
+
+def is_url_image(url):    
+    mimetype,encoding = mimetypes.guess_type(url)
+    return (mimetype and mimetype.startswith('image'))

@@ -357,6 +357,22 @@ class ScenarioDB:
         except:
             self.connection.rollback()
     
+    def scenarioExistsById(self, id):
+        """
+            returns true if there exists a scenario with id = id else false
+        """
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT id FROM scenario
+                                WHERE id = %s;""", (id,))
+
+            result = cursor.fetchall()
+            if len(result) == 0:
+                return False
+            return True
+        except:
+            self.connection.rollback()
+    
     def cross_validation_on(self,name,usr_id):
         """
         changes the cross validation of the given scenario to true

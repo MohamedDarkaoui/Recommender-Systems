@@ -76,7 +76,7 @@ def addDataset(request):
             return
         
         if clientIdColumn == itemIdColumn or itemIdColumn == timestampColumn or timestampColumn == clientIdColumn:
-            flash('There cannot be 2 columns witht the same name.')
+            flash('There cannot be 2 columns with the same name.')
             return
 
         # insert dataset
@@ -110,15 +110,12 @@ def addDataset(request):
             return
             
         #insert metadata if exists
-        if request.form.get('metadataCheck') == 'on': # and metadataCSV.content_type == 'text/csv':
+        if request.form.get('metadataCheck') == 'on':
             for mdata in metadataCSV:
                 if mdata.filename:
-                    if mdata.content_type != 'text/csv':
-                        flash('Please select a csv file for the metadata.')
-                        datasetDB.deleteDataset(dataset.name, current_user.id)
-                        return
-                    if not addMetadata(mdata, dataset):
-                        return
+                    if mdata.content_type == 'text/csv':
+                        if not addMetadata(mdata, dataset, itemIdColumn):
+                            return
 
         flash('Dataset succesfully added.')
     
@@ -126,16 +123,23 @@ def addDataset(request):
         flash('Please enter a name for the dataset.')
     elif datasetExists:
         flash('There already exists a dataset with the same name.')
-    
     if interactionsCSV.content_type != 'text/csv':
         flash('Please select a csv file for the interactions.')
 
-def addMetadata(metadataCSV,dataset):
+def addMetadata(metadataCSV, dataset, itemIdColumn):
     metadata = pd.read_csv(metadataCSV)
     columns = list(metadata.columns)
-    metadata.drop(columns[0], axis=1)
-    metadataOBJ = Metadata(dataset.id)
+    if itemIdColumn not in columns:
+        flash('Item id column doesn\'t exist in the metadata csv file.')
+        return False
 
+    newColumns = [itemIdColumn]
+    for column in columns:
+        if column and column != itemIdColumn:
+            newColumns.append(column)
+
+    metadata = metadata[newColumns]
+    metadataOBJ = Metadata(dataset.id)
     try:
         #insert metadata
         metadataOBJ = metadataDB.add_metadata(metadataOBJ)
@@ -156,7 +160,7 @@ def addMetadata(metadataCSV,dataset):
         #REMOVE ALL DESC FROM METADATA
         metadata = metadata.drop(columns[3:], axis=1)
         
-        #ADD EACH DESC TO METADATA INSER INTO DATASET AND THEN REMOVE IT
+        #ADD EACH DESC TO METADATA INSERT INTO DATASET AND THEN REMOVE IT
         for tempDataframe in tempDataframes:
             #ADD DESC
             descName = tempDataframe.columns[0]

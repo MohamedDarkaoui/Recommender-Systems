@@ -18,13 +18,11 @@
             {% for index, row in metadata.iterrows() %}
                   <tr>
                     <td>{{row["description"]}}</td>
-                    
-                    {% if row["description"] != 'poster_path' %}
-                        <td>{{row["data"]}}</td>
+                    {% if row["image"] == True %}
+                        <td><img src={{row["data"]}} alt={{row["data"]}}"></td>
                     {% else %}
-                        <td> <img src= {{row["data"]}}> </td>
-                    {% endif %}    
-                    
+                        <td>{{row["data"]}}</td>
+                    {% endif %}
                   </tr>
             {% endfor %}
         </tbody>
