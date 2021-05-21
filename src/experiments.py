@@ -84,33 +84,26 @@ def experimentdata(experiment_id):
             return itemMetadata(request,dataset_id)
         
         elif request.form.get('which-form') == 'showRecall':
-            k = int(request.form.get('recall_k'))
-            parameters = modelDB.getParameters(experiment.model_id)
-            algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
+            k = request.form.get('recall_k')
+            if len(k) != 0:
+                k = int(k)                 
+                parameters = modelDB.getParameters(experiment.model_id)
+                algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
 
-            alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id), parameters)
-            val_in = scenarioDB.getValIn(scenario_id)
-            val_out = scenarioDB.getValOut(scenario_id)
+                alg = createAlgorithm(algorithmName, modelDB.getMatrix(experiment.model_id), parameters)
+                val_in = scenarioDB.getValIn(scenario_id)
+                val_out = scenarioDB.getValOut(scenario_id)
 
-            predictions = alg.predict(val_in)
-            recall_scores = recall_k(predictions, val_out, k)
-            # print(recall_scores)
-            avg_recall = float(np.average(recall_scores))
-            # print(avg_recall)
-            # histories = val_in
-            # expectations = val_out
-            # recommendations, scores = util.predictions_to_recommendations(predictions, top_k=k)
-            # for rand in range (5):
-                
-            #     history = list(np.where(histories[rand].toarray().flatten())[0].tolist())
-            #     recommendation = recommendations[rand].tolist()
-            #     expectation = list(np.where(expectations[rand].toarray().flatten())[0].tolist())
-            #     print(recommendation)
-            #     print(expectation)
+                predictions = alg.predict(val_in)
+                recall_scores = recall_k(predictions, val_out, k)
+                avg_recall = float(np.average(recall_scores))
+
+            else:
+                flash('please enter a k value for recall@k')
 
     has_crossval = scenarioDB.has_cross_validation(scenarioDB.getScenarioName(scenario_id), current_user.id)
     clients = experimentDB.getExperimentClients(experiment.id)
-    return render_template("experimentdata.html", clients=clients, avg_recall=float(avg_recall), clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id, has_crossval=has_crossval)
+    return render_template("experimentdata.html", clients=clients, avg_recall=avg_recall, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id, has_crossval=has_crossval)
 
 @views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
 @login_required
