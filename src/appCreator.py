@@ -7,14 +7,12 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'messicristianoneymarmbappehaaland'
-    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:mounir@localhost/ppdb'
-    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:khalil@localhost/ppdb'
-    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:mohamed@localhost/ppdb'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/ppdb'
+    from config import config_data
+    app.config['SECRET_KEY'] = 'Wvd7c|bPPOs4pow'
+    connection = 'postgresql://{0}:{1}@localhost/{2}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = connection.format(config_data["dbuser"], config_data['dbpassword'], config_data['dbname'])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
-
     from views import views
     from auth import auth
 

@@ -2,5 +2,6 @@
 
 config_data = {
     'dbname' : 'ppdb',
-    'dbuser' : 'postgres'
+    'dbuser' : 'postgres',
+    'dbpassword' : 'postgres'
 }
