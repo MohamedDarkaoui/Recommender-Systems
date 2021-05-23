@@ -116,6 +116,6 @@ but only the Users table that is used in the login manager. This file defines th
 - All the files in the src/static folder contain images, css files and javascript files for our web application.
 
 <br>
-** The following schema shows how the source files are linked with each other. **
+**The following schema shows how the source files are linked with each other.**
 
 ![alt text](https://i.ibb.co/v36mpMn/programma-Design.png)
