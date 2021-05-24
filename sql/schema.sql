@@ -51,8 +51,7 @@ CREATE TABLE metadata_element (
   metadata_id INT NOT NULL REFERENCES metadata (id),
   description TEXT NOT NULL,
   data TEXT NOT NULL,
-  FOREIGN KEY (item_id, dataset_id) REFERENCES item(id, dataset_id) ON DELETE CASCADE,
-  PRIMARY KEY (item_id, metadata_id, description)
+  FOREIGN KEY (item_id, dataset_id) REFERENCES item(id, dataset_id) ON DELETE CASCADE
 );
 
 CREATE TABLE scenario (
