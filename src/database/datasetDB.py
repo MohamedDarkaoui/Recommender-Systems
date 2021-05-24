@@ -240,4 +240,19 @@ class DatasetDB:
         except:
             
             self.connection.rollback()
-            
+    
+    def getFollowers(self, usr):
+        """
+        returns the follow to a dataset of usr
+        """
+
+        cursor = self.connection.get_cursor()
+        try:
+            cursor.execute("""  SELECT DF.usr_id, DF.dataset_id, DF.tmstamp D from dataset_follows DF, dataset D
+                                WHERE D.usr_id = %s 
+                                AND	DF.dataset_id = D.id""",(usr.id,))
+            result = cursor.fetchall()
+            return result
+
+        except:
+            raise Exception('Unable to select the name of the dataset')

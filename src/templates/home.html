@@ -13,26 +13,39 @@
                 <div class="row">
                     <div class="col-md-6 offset-md-3">
                         <ul class="timeline">
+                            {% for activity in activities %}
+                            {% if activity[0] == 'dataset' %}
                             <li>
-                                &nbsp; &nbsp; &nbsp;<a href="#">made a new dataset</a>
-                                <a href="#" class="float-right">4 March, 2014</a>
+                                &nbsp; &nbsp; &nbsp;<a href="#">Uploaded a new Dataset: {{activity[1]}}</a>
+                                <a href="#" class="float-right">{{activity[2]}}</a>
                             </li>
+                            {% elif activity[0] == 'scenario' %}
                             <li>
-                                &nbsp; &nbsp; &nbsp; <a href="#">followed a dataset from user10</a>
-                                <a href="#" class="float-right">4 March, 2014</a>
+                                &nbsp; &nbsp; &nbsp;<a href="#">Made a new Scenario: {{activity[1]}}</a>
+                                <a href="#" class="float-right">{{activity[2]}}</a>
                             </li>
+                            {% elif activity[0] == 'model' %}
                             <li>
-                                &nbsp; &nbsp; &nbsp; <a href="#">made a new scenario</a>
-                                <a href="#" class="float-right">1 April, 2014</a>
+                                &nbsp; &nbsp; &nbsp;<a href="#">Made a new Model: {{activity[1]}}</a>
+                                <a href="#" class="float-right">{{activity[2]}}</a>
                             </li>
+                            {% elif activity[0] == 'experiment' %}
                             <li>
-                                &nbsp; &nbsp; &nbsp; <a href="#">made a new model</a>
-                                <a href="#" class="float-right">1 April, 2014</a>
+                                &nbsp; &nbsp; &nbsp;<a href="#">Made a new Experiment: {{activity[1]}}</a>
+                                <a href="#" class="float-right">{{activity[2]}}</a>
                             </li>
+                            {% elif activity[0] == 'datasetFollow' %}
                             <li>
-                                &nbsp; &nbsp; &nbsp; <a href="#">made a new experiment</a>
-                                <a href="#" class="float-right">1 April, 2014</a>
+                                &nbsp; &nbsp; &nbsp; <a href="#">Started following a dataset: {{activity[1]}}</a>
+                                <a href="#" class="float-right">{{activity[2]}}</a>
                             </li>
+                            {% elif activity[0] == 'experimentFollow' %}
+                            <li>
+                                &nbsp; &nbsp; &nbsp; <a href="#">Started following an experiment: {{activity[1]}}</a>
+                                <a href="#" class="float-right">{{activity[2]}}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -76,23 +89,23 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Number of sets</h5>
+            <h5 class="card-title"></h5>
             <ul class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Number of Datasets
-                    <span class="badge badge-primary badge-pill">100</span>
+                    <span class="badge badge-primary badge-pill">{{datasets|length}}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Number of Scenarios
-                    <span class="badge badge-primary badge-pill">200</span>
+                    <span class="badge badge-primary badge-pill">{{scenarios|length}}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Number of Models
-                    <span class="badge badge-primary badge-pill">300</span>
+                    <span class="badge badge-primary badge-pill">{{models|length}}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Number of Experiments
-                    <span class="badge badge-primary badge-pill">400</span>
+                    <span class="badge badge-primary badge-pill">{{experiments|length}}</span>
                 </li>
             </ul>
         </div>

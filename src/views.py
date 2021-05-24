@@ -41,7 +41,43 @@ from experiments import experiments, experimentdata
 @views.route('/home')
 @login_required
 def home():
-    return render_template("home.html")
+    activity_number = 5
+
+    datasets = datasetDB.getDatasetsFromUser(current_user)
+    scenarios = scenarioDB.getScenariosFromUser(current_user)
+    models = modelDB.getModelsFromUser(current_user)
+    experiments = experimentDB.getExperimentsFromUser(current_user)
+    followedDatasets = datasetDB.getFollowedDatasets(current_user)
+    followedExperiments = experimentDB.getFollowedExperiments(current_user)
+    activities = datasets + scenarios + models + experiments + followedDatasets + followedExperiments
+    activities.sort(key=lambda x: x.date_time, reverse=True)
+    if len(activities) > activity_number:
+        activities = activities[:activity_number]
+    
+    temp = []
+    for activity in activities:
+        if isinstance(activity, Dataset):
+            if activity.usr_id == current_user.id:
+                temp.append(('dataset', activity.name, activity.date_time))
+            else:
+                temp.append(('datasetFollow', activity.name, activity.date_time))
+
+        elif isinstance(activity, Scenario):
+            temp.append(('scenario', activity.name, activity.date_time))
+        elif isinstance(activity, Model):
+            temp.append(('model', activity.name, activity.date_time))
+        elif isinstance(activity, Experiment):
+            if activity.usr_id == current_user.id:
+                temp.append(('experiment', activity.name, activity.date_time))
+            else:
+                temp.append(('experimentFollow', activity.name, activity.date_time))
+    
+    activities = temp
+
+    followersDatasets = datasetDB.getFollowers(current_user)
+    followedExperiments = experimentDB.getFollowers(current_user)
+
+    return render_template("home.html", datasets=datasets, scenarios=scenarios, models=models, experiments=experiments, activities = activities)
 
 @views.route('/users')
 @login_required

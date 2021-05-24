@@ -32,6 +32,7 @@ def scenarios():
             except:
                 flash('Something went wrong, please fill in all the mandatory fields, deleteng scenario')
                 deleteScenario(request)
+                
         elif request.form.get('which-form') == 'deleteScenario':
             deleteScenario(request)
             flash('Scenario succesfully deleted.')

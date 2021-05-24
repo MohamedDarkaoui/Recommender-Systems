@@ -273,8 +273,7 @@ def addExperimentClient(request, experiment, scenario_id, algorithmName, maxItem
                 histories = val_in[clients, :]
                 expectations = val_out[clients, :]
                 predictions = alg.predict(histories)
-                recommendations, scores = util.predictions_to_recommendations(predictions, top_k=top_k)
-
+                recommendations, scores = util.predictions_to_recommendations(predictions, top_k=top_k*5)
                 rand = None
                 try:
                     rand = randint(0,len(clients)-1)
