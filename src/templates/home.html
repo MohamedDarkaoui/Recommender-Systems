@@ -5,10 +5,12 @@
 {% endblock %}
 {% block unique %}
 <h1>Dashboard</h1>
+<br>
+<br>
 <div class="row">
-    <div class="card">
+    <div class="card" style="width: 60%;">
         <div class="card-body">
-            <h5 class="card-title">User Activity</h5>
+            <h5 class="card-title"><b>User Activity</b></h5>
             <div class="container mt-5 mb-5">
                 <div class="row">
                     <ul class="timeline">
@@ -16,32 +18,32 @@
                         {% if activity[0] == 'dataset' %}
                         <li>
                             &nbsp; &nbsp; &nbsp;<a href="#">Uploaded a new Dataset: {{activity[1]}}</a>
-                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                            &emsp;&emsp;&emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </li>
                         {% elif activity[0] == 'scenario' %}
                         <li>
                             &nbsp; &nbsp; &nbsp;<a href="#">Made a new Scenario: {{activity[1]}}</a>
-                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                            &emsp;&emsp;&emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </li>
                         {% elif activity[0] == 'model' %}
                         <li>
                             &nbsp; &nbsp; &nbsp;<a href="#">Made a new Model: {{activity[1]}}</a>
-                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                            &emsp;&emsp;&emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </li>
                         {% elif activity[0] == 'experiment' %}
                         <li>
                             &nbsp; &nbsp; &nbsp;<a href="#">Made a new Experiment: {{activity[1]}}</a>
-                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                            &emsp;&emsp;&emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </li>
                         {% elif activity[0] == 'datasetFollow' %}
                         <li>
                             &nbsp; &nbsp; &nbsp; <a href="#">Started following a dataset: {{activity[1]}}</a>
-                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                            &emsp;&emsp;&emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </li>
                         {% elif activity[0] == 'experimentFollow' %}
                         <li>
                             &nbsp; &nbsp; &nbsp; <a href="#">Started following an experiment: {{activity[1]}}</a>
-                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                            &emsp;&emsp;&emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </li>
                         {% endif %}
                         {% endfor %}
@@ -85,7 +87,7 @@
             </style>
         </div>
     </div>
-    <div class="card" style="width: 50%;">
+    <div class="card" style="width: 40%;">
         <div class="card-body">
             <h5 class="card-title"></h5>
             <ul class="list-group">

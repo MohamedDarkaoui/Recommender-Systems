@@ -41,7 +41,7 @@ from experiments import experiments, experimentdata
 @views.route('/home')
 @login_required
 def home():
-    activity_number = 5
+    activity_number = 10
 
     datasets = datasetDB.getDatasetsFromUser(current_user)
     scenarios = scenarioDB.getScenariosFromUser(current_user)
@@ -58,19 +58,19 @@ def home():
     for activity in activities:
         if isinstance(activity, Dataset):
             if activity.usr_id == current_user.id:
-                temp.append(('dataset', activity.name, activity.date_time))
+                temp.append(('dataset', activity.name, activity.date_time.strftime("%d %B, %Y, %H:%M")))
             else:
-                temp.append(('datasetFollow', activity.name, activity.date_time))
+                temp.append(('datasetFollow', activity.name, activity.date_time.strftime("%d %B, %Y, %H:%M")))
 
         elif isinstance(activity, Scenario):
-            temp.append(('scenario', activity.name, activity.date_time))
+            temp.append(('scenario', activity.name, activity.date_time.strftime("%d %B, %Y, %H:%M")))
         elif isinstance(activity, Model):
-            temp.append(('model', activity.name, activity.date_time))
+            temp.append(('model', activity.name, activity.date_time.strftime("%d %B, %Y, %H:%M")))
         elif isinstance(activity, Experiment):
             if activity.usr_id == current_user.id:
-                temp.append(('experiment', activity.name, activity.date_time))
+                temp.append(('experiment', activity.name, activity.date_time.strftime("%d %B, %Y, %H:%M")))
             else:
-                temp.append(('experimentFollow', activity.name, activity.date_time))
+                temp.append(('experimentFollow', activity.name, activity.date_time.strftime("%d %B, %Y, %H:%M")))
     
     activities = temp
 

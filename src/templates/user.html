@@ -8,106 +8,120 @@
 <br>
 <br>
 
-<h3>Public Datasets:</h3>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for row, dataset in datasets %}
-        {% set temp = "'hidden_rowdatasets" + (row+1)|string + "'" %}
-        {% set temp2 = "hidden_rowdatasets" + (row+1)|string %}
-        <tr onclick="showHideRow({{temp}});">
-            <th scope="row">{{row+1}}</th>
-            <td>{{dataset[0].name}}</td>
-            <td>
-                {% if followOption %}
-                {% if dataset[4] %}
-                    <form method="POST">
-                        <input type="hidden" name="which-form" value="unfollowDataset">
-                        <button type="submit" onclick="follow(unfollow);" id="unfollow" name=dataset_id value={{dataset[0].id}} class="btn btn-outline-primary">Unfollow</button>
-                    </form>
-                {% else %}
-                    <form method="POST">
-                        <input type="hidden" name="which-form" value="followDataset">
-                        <button type="submit" onclick="follow(follow);" id="follow" name=dataset_id value={{dataset[0].id}} class="btn btn-outline-primary">Follow</button>
-                    </form>
-                {% endif %}
-                {% endif %}
-            </td>
-        </tr>
-        <tr id={{temp2}} style="display: none;">
-            <td colspan=3>
-                <div class="card card-body">
-                    <b>More Info:</b>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                          Number of Interactions
-                          <span class="badge badge-primary badge-pill">{{dataset[1]}}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                          Number of Items
-                          <span class="badge badge-primary badge-pill">{{dataset[2]}}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                          Number of Clients
-                          <span class="badge badge-primary badge-pill">{{dataset[3]}}</span>
-                        </li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<h3>Public Experiments:</h3>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for row, experiment in experiments %}
-        {% set temp = "'hidden_rowexperiments" + (row+1)|string + "'" %}
-        {% set temp2 = "hidden_rowexperiments" + (row+1)|string %}
-        <tr onclick="showHideRow({{temp}});">
-            <th scope="row">{{row+1}}</th>
-            <td>{{experiment[0].name}}</td>
-            
-            <td>
-                {% if followOption %}
-                {% if experiment[1] %}
-                    <form method="POST">
-                        <input type="hidden" name="which-form" value="unfollowExperiment">
-                        <button type="submit" name=experiment_id value={{experiment[0].id}} class="btn btn-outline-primary">Unfollow</button>
-                    </form>
-                {% else %}
-                    <form method="POST">
-                        <input type="hidden" name="which-form" value="followExperiment">
-                        <button type="submit" name=experiment_id value={{experiment[0].id}} class="btn btn-outline-primary">Follow</button>
-                    </form>
-                {% endif %}
-                {% endif %}
-            </td>
-            
-        </tr>
-        <tr id={{temp2}} style="display: none;">
-            <td colspan=3>
-                <div class="card card-body">
-                    info
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="card" style="background-color: lightgray;">
+    <div class="card-body">
+        <h5 class="card-title">Public Datasets:</h5>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row, dataset in datasets %}
+                {% set temp = "'hidden_rowdatasets" + (row+1)|string + "'" %}
+                {% set temp2 = "hidden_rowdatasets" + (row+1)|string %}
+                <tr onclick="showHideRow({{temp}});">
+                    <th scope="row">{{row+1}}</th>
+                    <td>{{dataset[0].name}}</td>
+                    <td>
+                        {% if followOption %}
+                        {% if dataset[4] %}
+                        <form method="POST">
+                            <input type="hidden" name="which-form" value="unfollowDataset">
+                            <button type="submit" onclick="follow(unfollow);" id="unfollow" name=dataset_id
+                                value={{dataset[0].id}} class="btn btn-outline-primary">Unfollow</button>
+                        </form>
+                        {% else %}
+                        <form method="POST">
+                            <input type="hidden" name="which-form" value="followDataset">
+                            <button type="submit" onclick="follow(follow);" id="follow" name=dataset_id
+                                value={{dataset[0].id}} class="btn btn-outline-primary">Follow</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr id={{temp2}} style="display: none;">
+                    <td colspan=3>
+                        <div class="card card-body">
+                            <b>More Info:</b>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Number of Interactions
+                                    <span class="badge badge-primary badge-pill">{{dataset[1]}}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Number of Items
+                                    <span class="badge badge-primary badge-pill">{{dataset[2]}}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Number of Clients
+                                    <span class="badge badge-primary badge-pill">{{dataset[3]}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<br>
+<br>
+
+<div class="card" style="background-color: rgba(126, 163, 157, 0.61)">
+    <div class="card-body">
+        <h5 class="card-title">Public Experiments:</h5>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row, experiment in experiments %}
+                {% set temp = "'hidden_rowexperiments" + (row+1)|string + "'" %}
+                {% set temp2 = "hidden_rowexperiments" + (row+1)|string %}
+                <tr>
+                    <th scope="row">{{row+1}}</th>
+                    <td>{{experiment[0].name}}</td>
+
+                    <td>
+                        {% if followOption %}
+                        {% if experiment[1] %}
+                        <form method="POST">
+                            <input type="hidden" name="which-form" value="unfollowExperiment">
+                            <button type="submit" name=experiment_id value={{experiment[0].id}}
+                                class="btn btn-outline-primary">Unfollow</button>
+                        </form>
+                        {% else %}
+                        <form method="POST">
+                            <input type="hidden" name="which-form" value="followExperiment">
+                            <button type="submit" name=experiment_id value={{experiment[0].id}}
+                                class="btn btn-outline-primary">Follow</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+
 <style>
     table td:nth-child(1) {
         width: 33%;
