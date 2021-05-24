@@ -20,6 +20,25 @@
 
 
 <button type="button" class="btn btn-primary class" data-toggle="modal" data-target="#exampleModal">Add Client</button>
+{% if has_crossval %}
+<div>
+  <form method="POST" id="form">
+    <input type="hidden" name="which-form" value="showRecall">
+    <div class="col-md-6" style="position: fixed; top: 1em;right: 1em; width: 20%;">
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Average Recall@</span>
+        </div>
+        <input id="recall" type="number" name="recall_k" min="1" class="form-control" aria-label="Small"
+          aria-describedby="inputGroup-sizing-sm">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit">Calculate</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endif %}
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -106,6 +125,7 @@
               </select>
             </div>
           </div>
+          {% if has_crossval%}
           <div class="form-check">
             <input class="form-check-input" value="validation-in" onclick="checker()" type="radio"
               name="flexRadioDefault" id="isValidation-in">
@@ -113,6 +133,7 @@
               Client from validation-in
             </label>
           </div>
+          {% endif %}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -122,26 +143,8 @@
     </form>
   </div>
 </div>
-{% if has_crossval%}
-<div>
-  <form method="POST" id="form">
-    <input type="hidden" name="which-form" value="showRecall">
-    <div class="col-md-6" style="position: fixed; top: 1em;right: 1em; width: 20%;">
-      <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">Average Recall@</span>
-        </div>
-        <input id="recall" type="number" name="recall_k" min="1" class="form-control" aria-label="Small"
-          aria-describedby="inputGroup-sizing-sm">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="submit">calculate</button>
-          <button class="btn btn-outline-secondary" type="button" onclick="test()">SHOW</button>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
-{% endif %}
+
+
 <br><br>
 {% for client in clients %}
 <div class="card-group">
@@ -157,21 +160,18 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Recommendations</th>
-                  <th scope="col"></th>
                   {% if client.expectations is not none %}
-                  <th scope="col">Valid</th>
+                  <th scope="col">Match</th>
                   {% endif %}
-                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 {% for i in range(client.recommendations|length) %}
                 <tr>
                   <th scope="row">{{i+1}}</th>
-                  <td>{{client.recommendations[i]}}</td>
-                  <td><a class="btn btn-primary"
-                      href="/experiments/metadata/{{scenario_id}}/{{client.recommendations[i]}}" role="button"
-                      target="_blank">metadata</a></td>
+                  <td>&emsp;&emsp;&emsp;<a style="color: black;" href="/experiments/metadata/{{scenario_id}}/{{client.recommendations[i]}}" target="_blank">
+                    {{client.recommendations[i]}}</a></td>
+
                   {% if client.expectations is not none and client.recommendations[i] in client.expectations %}
                   <td>
                     &nbsp; &nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -199,17 +199,18 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">History</th>
+                  {% if client.expectations is none %}
                   <th scope="col"></th>
-                  <th scope="col"></th>
+                  {% endif %}
                 </tr>
               </thead>
               <tbody>
                 {% for i in range(client.history|length) %}
                 <tr>
                   <th scope="row">{{i+1}}</th>
-                  <td>{{client.history[i]}}</td>
-                  <td><a class="btn btn-primary" href="/experiments/metadata/{{scenario_id}}/{{client.history[i]}}"
-                      role="button">metadata</a></td>
+                  <td><a style="color: black;" href="/experiments/metadata/{{scenario_id}}/{{client.history[i]}}" target="_blank">{{client.history[i]}}</a></td>
+                  
+                  {% if client.expectations is none %}
                   <td>
                     <form method="POST">
                       <input type="hidden" name="which-form" value="deleteItem">
@@ -217,6 +218,7 @@
                       <button type="submit" name="itemId" value={{client.history[i]}} class="btn btn-danger">X</button>
                     </form>
                   </td>
+                  {% endif %}
                 </tr>
                 {% endfor %}
               </tbody>
@@ -224,17 +226,20 @@
           </div>
           <br>
           <br>
+          {% if client.expectations is none %}
           <form method="POST">
             <input type="hidden" name="which-form" value="addItem">
             <select class="selectpicker" name="itemId" data-size="5" data-live-search="true" title="Search Item"
-              data-dropup-auto="false">
+              data-dropup-auto="false" id="itemId">
               {% for item in itemsFromScenario %}
               <option>{{item}}</option>
               {% endfor %}
             </select>
-            <button type="submit" name="clientName" value="{{client.name}}" class="btn btn-primary class">Add
-              Item</button>
+            
+            <button type="submit" name="clientName" value="{{client.name}}" class="btn btn-primary class">Add Item</button>
+            <a role="button"  target="_blank" href="/experiments/metadata/{{scenario_id}}/" + document.getElementById(itemId).value; class="btn btn-primary class">Metadata</a>
           </form>
+          {% endif %}
         </div>
       </div>
     </div>

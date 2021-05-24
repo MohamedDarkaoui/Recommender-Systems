@@ -52,7 +52,6 @@ def experimentdata(experiment_id):
     itemsFromScenario = scenarioDB.getAllItems(scenario_id)
     scenarioName = scenarioDB.getScenarioName(scenario_id)
 
-    avg_recall = None
     if request.method == 'POST':
         if request.form.get('which-form') == 'addClient':
             algorithmName = modelDB.getAlgorithmName(experiment.model_id) 
@@ -98,13 +97,14 @@ def experimentdata(experiment_id):
                 predictions = alg.predict(val_in)
                 recall_scores = recall_k(predictions, val_out, k)
                 avg_recall = float(np.average(recall_scores))
+                flash('Average recall@' + str(k) + ': ' + str(avg_recall))
 
             else:
-                flash('please enter a k value for recall@k')
+                flash('Please enter a k value for recall@k')
 
     has_crossval = scenarioDB.has_cross_validation(scenarioDB.getScenarioName(scenario_id), current_user.id)
     clients = experimentDB.getExperimentClients(experiment.id)
-    return render_template("experimentdata.html", clients=clients, avg_recall=avg_recall, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id, has_crossval=has_crossval)
+    return render_template("experimentdata.html", clients=clients, clientsFromScenario = clientsFromScenario, itemsFromScenario=itemsFromScenario, scenario_id=scenario_id, has_crossval=has_crossval)
 
 @views.route('/experiments/metadata/<scenario_id>/<item_id>', methods=['GET', 'POST'])
 @login_required
