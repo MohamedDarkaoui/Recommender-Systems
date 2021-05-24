@@ -5,49 +5,47 @@
 {% endblock %}
 {% block unique %}
 <h1>Dashboard</h1>
-<div class="card-group">
+<div class="row">
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">User Activity</h5>
             <div class="container mt-5 mb-5">
                 <div class="row">
-                    <div class="col-md-6 offset-md-3">
-                        <ul class="timeline">
-                            {% for activity in activities %}
-                            {% if activity[0] == 'dataset' %}
-                            <li>
-                                &nbsp; &nbsp; &nbsp;<a href="#">Uploaded a new Dataset: {{activity[1]}}</a>
-                                <a href="#" class="float-right">{{activity[2]}}</a>
-                            </li>
-                            {% elif activity[0] == 'scenario' %}
-                            <li>
-                                &nbsp; &nbsp; &nbsp;<a href="#">Made a new Scenario: {{activity[1]}}</a>
-                                <a href="#" class="float-right">{{activity[2]}}</a>
-                            </li>
-                            {% elif activity[0] == 'model' %}
-                            <li>
-                                &nbsp; &nbsp; &nbsp;<a href="#">Made a new Model: {{activity[1]}}</a>
-                                <a href="#" class="float-right">{{activity[2]}}</a>
-                            </li>
-                            {% elif activity[0] == 'experiment' %}
-                            <li>
-                                &nbsp; &nbsp; &nbsp;<a href="#">Made a new Experiment: {{activity[1]}}</a>
-                                <a href="#" class="float-right">{{activity[2]}}</a>
-                            </li>
-                            {% elif activity[0] == 'datasetFollow' %}
-                            <li>
-                                &nbsp; &nbsp; &nbsp; <a href="#">Started following a dataset: {{activity[1]}}</a>
-                                <a href="#" class="float-right">{{activity[2]}}</a>
-                            </li>
-                            {% elif activity[0] == 'experimentFollow' %}
-                            <li>
-                                &nbsp; &nbsp; &nbsp; <a href="#">Started following an experiment: {{activity[1]}}</a>
-                                <a href="#" class="float-right">{{activity[2]}}</a>
-                            </li>
-                            {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
+                    <ul class="timeline">
+                        {% for activity in activities %}
+                        {% if activity[0] == 'dataset' %}
+                        <li>
+                            &nbsp; &nbsp; &nbsp;<a href="#">Uploaded a new Dataset: {{activity[1]}}</a>
+                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                        </li>
+                        {% elif activity[0] == 'scenario' %}
+                        <li>
+                            &nbsp; &nbsp; &nbsp;<a href="#">Made a new Scenario: {{activity[1]}}</a>
+                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                        </li>
+                        {% elif activity[0] == 'model' %}
+                        <li>
+                            &nbsp; &nbsp; &nbsp;<a href="#">Made a new Model: {{activity[1]}}</a>
+                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                        </li>
+                        {% elif activity[0] == 'experiment' %}
+                        <li>
+                            &nbsp; &nbsp; &nbsp;<a href="#">Made a new Experiment: {{activity[1]}}</a>
+                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                        </li>
+                        {% elif activity[0] == 'datasetFollow' %}
+                        <li>
+                            &nbsp; &nbsp; &nbsp; <a href="#">Started following a dataset: {{activity[1]}}</a>
+                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                        </li>
+                        {% elif activity[0] == 'experimentFollow' %}
+                        <li>
+                            &nbsp; &nbsp; &nbsp; <a href="#">Started following an experiment: {{activity[1]}}</a>
+                            &emsp;&emsp;&emsp;<a href="#" class="float-right">{{activity[2]}}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
             <style>
@@ -55,7 +53,7 @@
                     list-style-type: none;
                     position: relative;
                 }
-
+    
                 ul.timeline:before {
                     content: ' ';
                     background: #d4d9df;
@@ -66,12 +64,12 @@
                     height: 100%;
                     z-index: 400;
                 }
-
+    
                 ul.timeline>li {
                     margin: 20px 0;
                     padding-left: 20px;
                 }
-
+    
                 ul.timeline>li:before {
                     content: ' ';
                     background: white;
@@ -87,7 +85,7 @@
             </style>
         </div>
     </div>
-    <div class="card">
+    <div class="card" style="width: 50%;">
         <div class="card-body">
             <h5 class="card-title"></h5>
             <ul class="list-group">
@@ -109,109 +107,8 @@
                 </li>
             </ul>
         </div>
-
+    
     </div>
 </div>
-<div class="card-group">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Users that follow your datasets or experiments</h5>
-            <div style="height: 300px; overflow-y: scroll; width: 100%;">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">User</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>dataset</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>Experiment</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>dataset</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>dataset</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>dataset</td>
-                        </tr>
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Users whose dataset or experiments you follow</h5>
-            <div style="height: 300px; overflow-y: scroll; width: 100%;">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">User</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>datset</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>experiment</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>datset</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>datset</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>datset</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-</div>
 {% endblock %}
