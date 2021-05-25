@@ -26,12 +26,13 @@ def scenarios():
 
                     elif request.form.get('flexRadioDefault') == 'w_generalization':
                         scenarioDB.cross_validation_on(name=scenario_name, usr_id=current_user.id)
-                        train, val_in, val_out = weak_generalization(X,test_users,perc_history)
+                        train, val_in, val_out = weak_generalization(X,perc_history)
                         scenarioDB.add_cross_validation(scenario_id, pickle.dumps(train), pickle.dumps(val_in), pickle.dumps(val_out))
 
             except:
                 flash('Something went wrong, please fill in all the mandatory fields, deleteng scenario')
                 deleteScenario(request)
+            
                 
         elif request.form.get('which-form') == 'deleteScenario':
             deleteScenario(request)

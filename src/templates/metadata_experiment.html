@@ -18,7 +18,7 @@
             {% for index, row in metadata.iterrows() %}
                   <tr>
                     <td>{{row["description"]}}</td>
-                    {% if row["image"] == True %}
+                    {% if row["isItAnUrlForImage"] == True %}
                         <td><img src={{row["data"]}} alt={{row["data"]}}"></td>
                     {% else %}
                         <td>{{row["data"]}}</td>

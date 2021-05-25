@@ -1,93 +1,98 @@
 {% extends "index.html" %}
 {% block title %} Sample {% endblock %}
-{% block activate_datasets %} 
+{% block activate_datasets %}
 "nav__link active not-active"
 {% endblock %}
 {% block unique %}
 <div class="d-flex p-2">
-    <div class="card" style="width: 100%;">
-        <div class="card-body">
-          <h2>{{dataset_name}}</h2>
-        </div>
+  <div class="card" style="width: 100%;">
+    <div class="card-body">
+      <h2>{{dataset_name}}</h2>
     </div>
+  </div>
 </div>
 <div class="card-group">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Information</h5>
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Number of Interactions
-              <span class="badge badge-primary badge-pill">{{interaction_count}}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Number of Items
-              <span class="badge badge-primary badge-pill">{{item_count}}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Number of Clients
-              <span class="badge badge-primary badge-pill">{{client_count}}</span>
-            </li>
-            {% block scenario_sample %}
-            {% endblock %}
-          </ul>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Information</h5>
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Number of Interactions
+          <span class="badge badge-primary badge-pill">{{interaction_count}}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Number of Items
+          <span class="badge badge-primary badge-pill">{{item_count}}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Number of Clients
+          <span class="badge badge-primary badge-pill">{{client_count}}</span>
+        </li>
+        {% block scenario_sample %}
+        {% endblock %}
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Interactions Sample</h5>
+      <div style="height: 340px; overflow-y: scroll; width: 100%;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">client</th>
+              <th scope="col">item</th>
+              <th scope="col">timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for index, row in interaction_sample.iterrows() %}
+            <tr>
+              <th scope="row">{{index+1}}</th>
+              <td>{{row["client_id"]}}</td>
+              <td>{{row["item_id"]}}</td>
+              <td>{{row["tmstamp"]}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Interactions Sample</h5>
-        <div style="height: 340px; overflow-y: scroll; width: 100%;">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">client</th>
-                    <th scope="col">item</th>
-                    <th scope="col">timestamp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for index, row in interaction_sample.iterrows() %}
-                  <tr>
-                  <th scope="row">{{index+1}}</th>
-                    <td>{{row["client_id"]}}</td>
-                    <td>{{row["item_id"]}}</td>
-                    <td>{{row["tmstamp"]}}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-        </div>
-      </div>
-    </div>
-    {% block meta_delete %}
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Metadata Sample</h5>
-        <div style="height: 300px; overflow-y: scroll; width: 100%;">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Item</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {%for index, row in metadata_sample.iterrows()%}
-                    <tr>
-                    <th scope="row">{{index+1}}</th>
-                      <td>{{row["item_id"]}}</td>
-                      <td>{{row["description"]}}</td>
-                      <td>{{row["data"]}}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-        </div>
-      </div>
-    </div>
-    {% endblock %}
+  </div>
 </div>
+{% block meta_delete %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Metadata Sample</h5>
+      <div style="height: 600px; overflow-y: scroll; width: 100%;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Item</th>
+              <th scope="col">Description</th>
+              <th scope="col">Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for index, row in metadata_sample.iterrows()%}
+            <tr>
+              <th scope="row">{{index+1}}</th>
+              <td>{{row["item_id"]}}</td>
+              <td>{{row["description"]}}</td>
+              {% if row["isItAnUrlForImage"] == True %}
+              <td><img src={{row["data"]}} alt={{row["data"]}}"></td>
+              {% else %}
+              <td>{{row["data"]}}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
 {% endblock%}
+

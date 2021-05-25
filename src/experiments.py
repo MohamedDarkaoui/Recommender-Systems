@@ -1,6 +1,7 @@
 from views import *
 import mimetypes
 
+
 top_k = 20
 
 @views.route('/experiments', methods=['GET', 'POST'])
@@ -118,10 +119,10 @@ def itemMetadata(scenario_id, item_id):
     if scenarioDB.scenarioExistsById(scenario_id):
         dataset_id = scenarioDB.getDatasetID(scenario_id)
         metadataPD = metadataElementDB.getItemMetadata(item_id, dataset_id)
-        metadataPD.insert(2, 'image', False)
+        metadataPD.insert(2, 'isItAnUrlForImage', False)
         for index, row in metadataPD.iterrows():
             if is_url_image(row['data']):
-                metadataPD.loc[index, 'image'] = True
+                metadataPD.loc[index, 'isItAnUrlForImage'] = True
         return render_template("metadata_experiment.html", metadata=metadataPD, item_id=item_id)
         
     else:

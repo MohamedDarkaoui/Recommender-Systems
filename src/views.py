@@ -15,7 +15,6 @@ import csv
 import io
 
 
-
 from sqlalchemy import create_engine
 
 # /etc/postgresql/##/main/pg_hba.conf aanpassen -> 'trust'
@@ -174,3 +173,6 @@ def unfollowExperiment(experiment_id):
     if experimentDB.experimentExistsById(experiment_id):
         if experimentDB.followsExperiment(current_user, experiment_id):
             experimentDB.unfollowExperiment(current_user, experiment_id)
+
+
+

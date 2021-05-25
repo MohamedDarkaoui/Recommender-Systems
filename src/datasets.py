@@ -1,4 +1,5 @@
 from views import *
+from experiments import is_url_image
 
 @views.route('/datasets', methods=['GET', 'POST'])
 @login_required
@@ -47,7 +48,13 @@ def data_samples(dataset_id):
     interaction_count = interactionDB.getCountInteractions(dataset_id)
     interaction_sample = interactionDB.getInteractionSample(dataset_id)
     metadata_sample = metadataElementDB.getMetadataSample(dataset_id)
- 
+    
+    metadata_sample.insert(3, 'isItAnUrlForImage', False)
+    for index, row in metadata_sample.iterrows():
+        if is_url_image(row['data']):
+            metadata_sample.loc[index, 'isItAnUrlForImage'] = True
+
+
     return render_template("dataset_sample.html",dataset_name=dataset_name, 
     client_count=client_count,item_count=item_count,interaction_count=interaction_count,
     interaction_sample=interaction_sample,metadata_sample=metadata_sample)
