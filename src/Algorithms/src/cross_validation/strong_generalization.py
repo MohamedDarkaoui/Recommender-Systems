@@ -11,7 +11,6 @@ def strong_generalization(X: csr_matrix, test_users: int, perc_history: float) -
     Users in training and validation are disjoint.
     """
     users = X.shape[0]
-    print("total users", users)
     assert users > test_users, "There should be at least one train user left"
 
 
