@@ -1,5 +1,5 @@
 # Programing Project Databases TEAM 3 #
-This project is created for the course Programming project databases. This repository is the remote repository of our web application and is created by Mohamed Darkoui, Mounir Madmar, Khalil Ouailb and Ferit Murad
+This project is created for the course Programming project databases. This repository is the remote repository of our web application and is created by Mohamed Darkaoui, Mounir Madmar, Khalil Ouailb and Ferit Murad
 
 ### Configure and run our web application:
 
